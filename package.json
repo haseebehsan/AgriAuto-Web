@@ -4,7 +4,7 @@
   "description": "A sample Node.js app using Express 4",
   "engines": {
     "node": "8.9.1",
-    "npm": "5.7.x"
+    "npm": "5.6.x"
   },
   "main": "index.js",
   "scripts": {
