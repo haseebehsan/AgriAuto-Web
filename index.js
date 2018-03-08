@@ -7,7 +7,7 @@ const app = express();
   app.get('/', (req, res) => res.render('pages/index'));
 
 
-  app.get('/api/login', (req, res) => res.render('pages/login'));
+  app.get('/api/login', (req, res) => res.render('pages/hello'));
 
 
 
