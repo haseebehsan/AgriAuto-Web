@@ -1,7 +1,7 @@
 {
-  "name": "node-js-getting-started",
-  "version": "0.3.0",
-  "description": "A sample Node.js app using Express 4",
+  "name": "AgriAuto",
+  "version": "0.1",
+  "description": "Web application for AgriAuto services",
   "engines": {
     "node": "6.13.0",
     "npm": "^5.7.1"
@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "body-parser": "^1.18.2",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
     "firebase": "^4.11.0",

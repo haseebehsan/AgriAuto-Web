@@ -1,16 +1,27 @@
 const express = require('express');
 const firebase = require("firebase");
 const bodyParser = require('body-parser');
-
+//const flash = require('connect-flash');
 const PORT = process.env.PORT || 5000;
 const app = express();
+const morgan = require('morgan'); 
+var multer = require('multer'); // v1.0.5
+var upload = multer(); // for parsing multipart/form-data
+app.use(morgan('dev'));
 
 app.use('/assets', express.static('assets'));
 
 app.use(bodyParser.urlencoded({extended: true}));
 
-
 app.use(bodyParser.json());
+
+//app.use(express.cookieParser('keyboard cat'));
+
+//app.use(express.session({ cookie: { maxAge: 60000 }}));
+
+app.use(bodyParser.urlencoded({extended: true}));
+//using connect-flash to flasj error messages to user
+//app.use(flash());
 
 var config = {
   apiKey: "AIzaSyACMgec6EghmqZ5eRZGKablbh5LXvGz4Cw",
@@ -24,7 +35,41 @@ var database = firebase.database();
 
 
 app.set('view engine', 'ejs');
+
+
 app.get('/', (req, res) => res.render('pages/index'));
+
+
+
+//Firebase user state observer
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+    var displayName = user.displayName;
+    var email = user.email;
+    var emailVerified = user.emailVerified;
+    var photoURL = user.photoURL;
+    var isAnonymous = user.isAnonymous;
+    var uid = user.uid;
+    var providerData = user.providerData;
+    // ...
+  } else {
+    // User is signed out.
+    // ...
+  }
+});
+
+//Check if user is logged in
+function loggedIn()
+{
+    var user = firebase.auth().currentUser;
+    if (user){
+        return true;
+
+    }else{
+        return false;
+    }
+}
 
 
 ////// @hamza
@@ -38,49 +83,54 @@ app.get('/login', function(req, res){
   res.render('login');                           
 });
 
-app.get('/login#', function(req, res){
-  // res.status(200).json({ status: 'working' });
-  res.render('login');                           
-});
+
 //Asynchronously signs in using an email and password.
 app.post('/login', upload.array(), function(req, res,next){
   // res.status(200).json({ status: 'working' });
  // console.log(req.body.username);
 
- firebase.auth().signInWithEmailAndPassword(req.body.u_email, req.body.password).catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-  console.log(errorCode+"  "+errorMessage);
-  // ...
-});
+  firebase.auth().signInWithEmailAndPassword(req.body.u_email, req.body.password).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    console.log(errorCode+"  "+errorMessage);
+    // ...
+  });
+
+  console.log(req.body.u_email);
+  if (firebase.auth.currentuser)
+  res.send("Logged in"+ req.body.u_email+"--"+req.body.password +"   ");
+  });
+
+// app.get('pages/signup', function(req,res){
+
+  
+// });
 
 
-
- console.log(req.body.u_email);
-if (firebase.auth.currentuser)
- res.send("Logged in"+ req.body.u_email+"--"+req.body.password +"   ");
-});
 
 app.post('/signup', upload.array(), function(req, res){
   // res.status(200).json({ status: 'working' });
- // console.log(req.body.username);
- 
- 
- firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password).catch(function(error) {
- 
-  // Handle Errors here.
- 
-  var errorCode = error.code;
-  var errorMessage = error.message;
-  console.log(errorCode+"  "+errorMessage);
-  // ...
-});
+  // console.log(req.body.username);
+  
+  
+  firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password).catch(function(error) {
+  
+    // Handle Errors here.
+  
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    console.log(errorCode+"\n Messsage: "+errorMessage);
+    // ...
+    //req.flash('error', errorMessage);
+    res.redirect('pages/signup');
+    });
 
-app.get()
 
- console.log(req.body.u_email);
-  res.send("Signed up"+ req.body.u_email+"--"+req.body.password +"   ");
+    console.log(req.body.u_email);
+    res.send("Signed up"+ req.body.u_email+"--"+req.body.password +"   ");
+
+
 });
 
 
@@ -253,8 +303,5 @@ app.post('/', function(req, res){
   );
 });
 
-
-
-
-
-  app.listen(PORT, () => console.log(`Listening on ${ PORT }`))
+//Start Appliation on the given PORT number
+app.listen(PORT, () => console.log(`Listening on ${ PORT }`))
