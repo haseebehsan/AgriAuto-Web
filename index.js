@@ -32,14 +32,55 @@ app.get('/api/test', function(req, res){
   // res.status(200).json({ status: 'working' });
   res.render('index');
 });
-app.get('/api/login', function(req, res){
+
+app.get('/login', function(req, res){
   // res.status(200).json({ status: 'working' });
-  res.render('login');
+  res.render('login');                           
 });
 
-app.get('/api/dashboard', function(req, res){
+app.get('/login#', function(req, res){
   // res.status(200).json({ status: 'working' });
-  res.render('dashboard',urlencoded);
+  res.render('login');                           
+});
+//Asynchronously signs in using an email and password.
+app.post('/login', upload.array(), function(req, res,next){
+  // res.status(200).json({ status: 'working' });
+ // console.log(req.body.username);
+
+ firebase.auth().signInWithEmailAndPassword(req.body.u_email, req.body.password).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  console.log(errorCode+"  "+errorMessage);
+  // ...
+});
+
+
+
+ console.log(req.body.u_email);
+if (firebase.auth.currentuser)
+ res.send("Logged in"+ req.body.u_email+"--"+req.body.password +"   ");
+});
+
+app.post('/signup', upload.array(), function(req, res){
+  // res.status(200).json({ status: 'working' });
+ // console.log(req.body.username);
+ 
+ 
+ firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password).catch(function(error) {
+ 
+  // Handle Errors here.
+ 
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  console.log(errorCode+"  "+errorMessage);
+  // ...
+});
+
+app.get()
+
+ console.log(req.body.u_email);
+  res.send("Signed up"+ req.body.u_email+"--"+req.body.password +"   ");
 });
 
 
