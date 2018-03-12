@@ -15,6 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
 
+var emailSent=false;
+
 //app.use(express.cookieParser('keyboard cat'));
 
 //app.use(express.session({ cookie: { maxAge: 60000 }}));
@@ -53,9 +55,8 @@ firebase.auth().onAuthStateChanged(function (user) {
     var uid = user.uid;
     var providerData = user.providerData;
     // ...
-  } else {
-    // User is signed out.
-    // ...
+  }else{
+
   }
 });
 
@@ -94,6 +95,7 @@ app.post('/login', upload.array(), function (req, res, next) {
     console.log(errorCode+"  "+errorMessage);
     // ...
   });
+  
 
   console.log(req.body.u_email);
   if (firebase.auth.currentuser)
@@ -112,17 +114,26 @@ app.post('/signup', upload.array(), function (req, res) {
   // console.log(req.body.username);
 
 
-  firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password).catch(function (error) {
+  firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password)
+    
+  .then(function(user){
+    //Send verification email to user
+    if(user & user.emailVerified===false){
+      user.sendEmailVerification().then(function(){
+        console.log("Verification email sent");
+      })
+    }})
+    .catch(function (error) {
 
-    // Handle Errors here.
-
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    console.log(errorCode + "\n Messsage: " + errorMessage);
-    // ...
-    //req.flash('error', errorMessage);
-    res.redirect('pages/signup');
-    });
+      // Handle Errors 
+  
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log(errorCode + "\n Messsage: " + errorMessage);
+      // ...
+      //req.flash('error', errorMessage);
+      res.redirect('pages/signup');
+      });
 
 
   console.log(req.body.u_email);
