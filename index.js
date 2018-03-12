@@ -56,7 +56,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     var providerData = user.providerData;
     // ...
   }else{
-    app.redirect("/index");
+   
   }
 });
 
@@ -95,12 +95,13 @@ app.post('/login', upload.array(), function (req, res, next) {
     console.log(errorCode+"  "+errorMessage);
     // ...
   });
+
   firebase.auth().onAuthStateChanged(function(user)
    { (user.emailVerified) ? console.log('Email is verified') : res.redirect("/verifyEmail") }); 
 
   console.log(req.body.u_email);
-  if (firebase.auth.currentuser)
-  res.send("Logged in"+ req.body.u_email+"--"+req.body.password +"   ");
+  
+  res.send("Logged in \n"+ req.body.u_email+"--"+req.body.password +"   ");
   });
 
 // app.get('pages/signup', function(req,res){
@@ -123,7 +124,7 @@ app.post('/signup', upload.array(), function (req, res) {
     
   .then(function(user){
     //Send verification email to user
-    if(user & user.emailVerified===false){
+    if(user ){
       user.sendEmailVerification().then(function(){
         console.log("Verification email sent");
       })
@@ -137,7 +138,7 @@ app.post('/signup', upload.array(), function (req, res) {
       console.log(errorCode + "\n Messsage: " + errorMessage);
       // ...
       //req.flash('error', errorMessage);
-      res.redirect('pages/signup');
+      res.redirect('signup');
       });
 
 
@@ -147,7 +148,12 @@ app.post('/signup', upload.array(), function (req, res) {
 
 });
 
+app.post('/resendVerificationEmail', upload.array(), function (req, res) {
 
+  firebase.auth().onAuthStateChanged(function(user) 
+  { (user.emailVerified) ? console.log('Email is verified') : user.sendEmailVerification(); });
+  res.redirect('/verifyEmail');
+});
 
 
 
