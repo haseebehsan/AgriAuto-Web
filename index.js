@@ -292,6 +292,13 @@ app.post('/api/addSchedule', function (req, res) {
 });
 
 /////////////
+//remove schedule
+//inputs:
+// fieldid: 0000-9999
+//scheduletime: DateTimeStamp
+//
+//output: okay
+/////////////
 app.post('/api/removeSchedule', function (req, res) {
   console.log(req.body.status);
 
@@ -302,27 +309,27 @@ app.post('/api/removeSchedule', function (req, res) {
   res.status(200).json({ output: '1' });
 });
 
-app.post('/', function (req, res) {
+// app.post('/', function (req, res) {
 
-  console.log(req.body.time)
-  console.log(req.body.fieldid);
-  console.log(req.body.temperature);
-  console.log(req.body.humidity);
-  console.log(req.body.soilmoisture);
+//   console.log(req.body.time)
+//   console.log(req.body.fieldid);
+//   console.log(req.body.temperature);
+//   console.log(req.body.humidity);
+//   console.log(req.body.soilmoisture);
 
-  // Set Sample Data
-  firebase.database().ref('/fields/' + req.body.fieldid + '/sensor/' + req.body.time + '/').set({
-    humidity: req.body.humidity,
-    soilMoisture: req.body.soilmoisture, temperature: req.body.temperature
-  });
+//   // Set Sample Data
+//   firebase.database().ref('/fields/' + req.body.fieldid + '/sensor/' + req.body.time + '/').set({
+//     humidity: req.body.humidity,
+//     soilMoisture: req.body.soilmoisture, temperature: req.body.temperature
+//   });
 
-  res.send(
-    '<form action="/upload" method="post" enctype="multipart/form-data">' +
-    '<input type="file" name="source">' +
-    '<input type="submit" value="Upload">' +
-    '</form>'
-  );
-});
+//   res.send(
+//     '<form action="/upload" method="post" enctype="multipart/form-data">' +
+//     '<input type="file" name="source">' +
+//     '<input type="submit" value="Upload">' +
+//     '</form>'
+//   );
+// });
 
 //Start Appliation on the given PORT number
 app.listen(PORT, () => console.log(`Listening on ${PORT}`))
