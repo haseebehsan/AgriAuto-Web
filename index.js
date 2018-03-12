@@ -56,7 +56,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     var providerData = user.providerData;
     // ...
   }else{
-
+    app.redirect("/index");
   }
 });
 
@@ -95,7 +95,8 @@ app.post('/login', upload.array(), function (req, res, next) {
     console.log(errorCode+"  "+errorMessage);
     // ...
   });
-  
+  firebase.auth().onAuthStateChanged(function(user)
+   { (user.emailVerified) ? console.log('Email is verified') : res.redirect("/verifyEmail") }); 
 
   console.log(req.body.u_email);
   if (firebase.auth.currentuser)
