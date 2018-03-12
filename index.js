@@ -109,6 +109,10 @@ app.post('/login', upload.array(), function (req, res, next) {
 // });
 
 
+app.get('/verifyEmail', function(req, res){
+  // res.status(200).json({ status: 'working' });
+  res.render('verifyEmail');                           
+});
 
 app.post('/signup', upload.array(), function (req, res) {
   // res.status(200).json({ status: 'working' });
