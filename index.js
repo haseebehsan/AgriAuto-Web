@@ -293,8 +293,13 @@ app.post('/api/addSchedule', function (req, res) {
 
 /////////////
 app.post('/api/removeSchedule', function (req, res) {
-  res.status(200).json({ status: 'working' });
-  // res.render('index');
+  console.log(req.body.status);
+
+  firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/schedules/'+req.body.scheduletime).remove();
+
+
+
+  res.status(200).json({ output: '1' });
 });
 
 app.post('/', function (req, res) {
