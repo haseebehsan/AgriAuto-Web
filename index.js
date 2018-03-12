@@ -37,7 +37,7 @@ var database = firebase.database();
 app.set('view engine', 'ejs');
 
 
-app.get('/', (req, res) => res.render('pages/index'));
+app.get('/', (req, res) => res.render('index'));
 
 
 
@@ -70,16 +70,15 @@ function loggedIn() {
   }
 }
 
-
 ////// @hamza
-app.get('/api/test', function (req, res) {
+app.get('/api/test', function(req, res){
   // res.status(200).json({ status: 'working' });
   res.render('index');
 });
 
-app.get('/login', function (req, res) {
+app.get('/login', function(req, res){
   // res.status(200).json({ status: 'working' });
-  res.render('login');
+  res.render('login');                           
 });
 
 
@@ -92,14 +91,14 @@ app.post('/login', upload.array(), function (req, res, next) {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
-    console.log(errorCode + "  " + errorMessage);
+    console.log(errorCode+"  "+errorMessage);
     // ...
   });
 
   console.log(req.body.u_email);
   if (firebase.auth.currentuser)
-    res.send("Logged in" + req.body.u_email + "--" + req.body.password + "   ");
-});
+  res.send("Logged in"+ req.body.u_email+"--"+req.body.password +"   ");
+  });
 
 // app.get('pages/signup', function(req,res){
 
@@ -123,7 +122,7 @@ app.post('/signup', upload.array(), function (req, res) {
     // ...
     //req.flash('error', errorMessage);
     res.redirect('pages/signup');
-  });
+    });
 
 
   console.log(req.body.u_email);
