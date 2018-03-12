@@ -4,14 +4,14 @@ const bodyParser = require('body-parser');
 //const flash = require('connect-flash');
 const PORT = process.env.PORT || 5000;
 const app = express();
-const morgan = require('morgan'); 
+const morgan = require('morgan');
 var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
 app.use(morgan('dev'));
 
 app.use('/assets', express.static('assets'));
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
 
@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 
 //app.use(express.session({ cookie: { maxAge: 60000 }}));
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 //using connect-flash to flasj error messages to user
 //app.use(flash());
 
@@ -42,7 +42,7 @@ app.get('/', (req, res) => res.render('pages/index'));
 
 
 //Firebase user state observer
-firebase.auth().onAuthStateChanged(function(user) {
+firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     // User is signed in.
     var displayName = user.displayName;
@@ -60,75 +60,74 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 //Check if user is logged in
-function loggedIn()
-{
-    var user = firebase.auth().currentUser;
-    if (user){
-        return true;
+function loggedIn() {
+  var user = firebase.auth().currentUser;
+  if (user) {
+    return true;
 
-    }else{
-        return false;
-    }
+  } else {
+    return false;
+  }
 }
 
 
 ////// @hamza
-app.get('/api/test', function(req, res){
+app.get('/api/test', function (req, res) {
   // res.status(200).json({ status: 'working' });
   res.render('index');
 });
 
-app.get('/login', function(req, res){
+app.get('/login', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  res.render('login');                           
+  res.render('login');
 });
 
 
 //Asynchronously signs in using an email and password.
-app.post('/login', upload.array(), function(req, res,next){
+app.post('/login', upload.array(), function (req, res, next) {
   // res.status(200).json({ status: 'working' });
- // console.log(req.body.username);
+  // console.log(req.body.username);
 
-  firebase.auth().signInWithEmailAndPassword(req.body.u_email, req.body.password).catch(function(error) {
+  firebase.auth().signInWithEmailAndPassword(req.body.u_email, req.body.password).catch(function (error) {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
-    console.log(errorCode+"  "+errorMessage);
+    console.log(errorCode + "  " + errorMessage);
     // ...
   });
 
   console.log(req.body.u_email);
   if (firebase.auth.currentuser)
-  res.send("Logged in"+ req.body.u_email+"--"+req.body.password +"   ");
-  });
+    res.send("Logged in" + req.body.u_email + "--" + req.body.password + "   ");
+});
 
 // app.get('pages/signup', function(req,res){
 
-  
+
 // });
 
 
 
-app.post('/signup', upload.array(), function(req, res){
+app.post('/signup', upload.array(), function (req, res) {
   // res.status(200).json({ status: 'working' });
   // console.log(req.body.username);
-  
-  
-  firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password).catch(function(error) {
-  
+
+
+  firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password).catch(function (error) {
+
     // Handle Errors here.
-  
+
     var errorCode = error.code;
     var errorMessage = error.message;
-    console.log(errorCode+"\n Messsage: "+errorMessage);
+    console.log(errorCode + "\n Messsage: " + errorMessage);
     // ...
     //req.flash('error', errorMessage);
     res.redirect('pages/signup');
-    });
+  });
 
 
-    console.log(req.body.u_email);
-    res.send("Signed up"+ req.body.u_email+"--"+req.body.password +"   ");
+  console.log(req.body.u_email);
+  res.send("Signed up" + req.body.u_email + "--" + req.body.password + "   ");
 
 
 });
@@ -148,19 +147,19 @@ app.post('/signup', upload.array(), function(req, res){
 //output
 //  sensor data in JSON
 /////////////
-app.post('/api/getSensorData', function(req, res){
+app.post('/api/getSensorData', function (req, res) {
 
 
-  firebase.database().ref('/fields/'+req.body.fieldid+'/sensor/').once('value').then(function(snapshot) {
-      // snapshot.forEach(function(childSnapshot) {
-      //     console.log(JSON.stringify(childSnapshot.val()));
-      //   });
+  firebase.database().ref('/fields/' + req.body.fieldid + '/sensor/').once('value').then(function (snapshot) {
+    // snapshot.forEach(function(childSnapshot) {
+    //     console.log(JSON.stringify(childSnapshot.val()));
+    //   });
 
-      console.log(snapshot.val());
-      res.json(snapshot.val());
-      //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-      // ...
-    });
+    console.log(snapshot.val());
+    res.json(snapshot.val());
+    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+    // ...
+  });
 
 
   res.status(200);
@@ -178,7 +177,7 @@ app.post('/api/getSensorData', function(req, res){
 //output
 //  status
 /////////////
-app.post('/api/setSensorData', function(req, res){
+app.post('/api/setSensorData', function (req, res) {
   console.log(req.body.time)
   console.log(req.body.fieldid);
   console.log(req.body.temperature);
@@ -186,16 +185,16 @@ app.post('/api/setSensorData', function(req, res){
   console.log(req.body.soilmoisture);
 
   // Set Sample Data
-  firebase.database().ref('/fields/'+req.body.fieldid+'/sensor/'+req.body.time+'/').set({
-  humidity: req.body.humidity,
-  soilMoisture: req.body.soilmoisture, temperature: req.body.temperature
+  firebase.database().ref('/fields/' + req.body.fieldid + '/sensor/' + req.body.time + '/').set({
+    humidity: req.body.humidity,
+    soilMoisture: req.body.soilmoisture, temperature: req.body.temperature
   });
 
   res.send(
-      '<form action="/upload" method="post" enctype="multipart/form-data">'+
-      '<input type="file" name="source">'+
-      '<input type="submit" value="Upload">'+
-      '</form>'
+    '<form action="/upload" method="post" enctype="multipart/form-data">' +
+    '<input type="file" name="source">' +
+    '<input type="submit" value="Upload">' +
+    '</form>'
   );
   res.status(200);
   // res.render('index');
@@ -209,18 +208,18 @@ app.post('/api/setSensorData', function(req, res){
 //output
 //  status
 /////////////
-app.post('/api/setIrrigationStatus', function(req, res){
+app.post('/api/setIrrigationStatus', function (req, res) {
 
-  
+
   console.log(req.body.status);
-  if(req.body.status == '0' || req.body.status == '1'){
-      firebase.database().ref('/fields/'+req.body.fieldid+'/irrigation/manual/').set({
-          status: req.body.status
-          });
-          console.log("inside.");
+  if (req.body.status == '0' || req.body.status == '1') {
+    firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/manual/').set({
+      status: req.body.status
+    });
+    console.log("inside.");
   }
 
-  res.status(200).json({output:'1'});
+  res.status(200).json({ output: '1' });
   // res.render('index');
 });
 
@@ -231,24 +230,24 @@ app.post('/api/setIrrigationStatus', function(req, res){
 //output
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
-app.post('/api/getIrrigationStatus', function(req, res){
+app.post('/api/getIrrigationStatus', function (req, res) {
 
-  firebase.database().ref('/fields/'+req.body.fieldid+'/irrigation/manual').once('value').then(function(snapshot) {
-      // snapshot.forEach(function(childSnapshot) {
-      //     console.log(JSON.stringify(childSnapshot.val()));
-      //   });
+  firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/manual').once('value').then(function (snapshot) {
+    // snapshot.forEach(function(childSnapshot) {
+    //     console.log(JSON.stringify(childSnapshot.val()));
+    //   });
 
-      console.log(snapshot.val()); 
-      if(snapshot != null){
-          res.json(snapshot.val());
-          
-      }
-      else{
-          res.json({ status: -1 });
-      }
-      //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-      // ...
-    });
+    console.log(snapshot.val());
+    if (snapshot != null) {
+      res.json(snapshot.val());
+
+    }
+    else {
+      res.json({ status: -1 });
+    }
+    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+    // ...
+  });
 
 
   res.status(200)
@@ -257,32 +256,49 @@ app.post('/api/getIrrigationStatus', function(req, res){
 
 
 /////////////
-app.post('/api/setMin', function(req, res){
+app.post('/api/setMin', function (req, res) {
   res.status(200).json({ status: 'working' });
   // res.render('index');
 });
 
+
+// /////////////
+// app.post('/api/setIrrigationStatus', function(req, res){
+//   res.status(200).json({ status: 'working' });
+//   // res.render('index');
+// });
 
 /////////////
-app.post('/api/setIrrigationStatus', function(req, res){
-  res.status(200).json({ status: 'working' });
+//add schedule
+//inputs:
+// fieldid: 0000-9999
+//scheduletime: DateTimeStamp
+//addtime: DateTimeStamp
+//
+//output: okay
+/////////////
+app.post('/api/addSchedule', function (req, res) {
+  // res.status(200).json({ status: 'working' });
+  console.log(req.body.status);
+
+  firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/schedules/'+req.body.scheduletime).set({
+    addtime: req.body.addtime
+  });
+
+
+
+  res.status(200).json({ output: '1' });
   // res.render('index');
 });
 
 /////////////
-app.post('/api/addSchedule', function(req, res){
+app.post('/api/removeSchedule', function (req, res) {
   res.status(200).json({ status: 'working' });
   // res.render('index');
 });
 
-/////////////
-app.post('/api/removeSchedule', function(req, res){
-  res.status(200).json({ status: 'working' });
-  // res.render('index');
-});
+app.post('/', function (req, res) {
 
-app.post('/', function(req, res){
-  
   console.log(req.body.time)
   console.log(req.body.fieldid);
   console.log(req.body.temperature);
@@ -290,18 +306,18 @@ app.post('/', function(req, res){
   console.log(req.body.soilmoisture);
 
   // Set Sample Data
-  firebase.database().ref('/fields/'+req.body.fieldid+'/sensor/'+req.body.time+'/').set({
-  humidity: req.body.humidity,
-  soilMoisture: req.body.soilmoisture, temperature: req.body.temperature
+  firebase.database().ref('/fields/' + req.body.fieldid + '/sensor/' + req.body.time + '/').set({
+    humidity: req.body.humidity,
+    soilMoisture: req.body.soilmoisture, temperature: req.body.temperature
   });
 
   res.send(
-      '<form action="/upload" method="post" enctype="multipart/form-data">'+
-      '<input type="file" name="source">'+
-      '<input type="submit" value="Upload">'+
-      '</form>'
+    '<form action="/upload" method="post" enctype="multipart/form-data">' +
+    '<input type="file" name="source">' +
+    '<input type="submit" value="Upload">' +
+    '</form>'
   );
 });
 
 //Start Appliation on the given PORT number
-app.listen(PORT, () => console.log(`Listening on ${ PORT }`))
+app.listen(PORT, () => console.log(`Listening on ${PORT}`))
