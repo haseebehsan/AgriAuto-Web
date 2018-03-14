@@ -104,10 +104,7 @@ app.post('/login', upload.array(), function (req, res, next) {
   res.send("Logged in \n"+ req.body.u_email+"--"+req.body.password +"   ");
   });
 
-// app.get('pages/signup', function(req,res){
 
-
-// });
 
 
 app.get('/verifyEmail', function(req, res){
@@ -143,16 +140,41 @@ app.post('/signup', upload.array(), function (req, res) {
 
 
   console.log(req.body.u_email);
-  res.send("Signed up" + req.body.u_email + "--" + req.body.password + "   ");
+  res.send("Signed up \n" + req.body.u_email + "--" + req.body.password + "   ");
 
 
 });
 
+
+
+///////////
+// checks if the user's email address is verified or not, 
+//if it is not verified a new verififcation email is sent to the user
+///////
 app.post('/resendVerificationEmail', upload.array(), function (req, res) {
 
   firebase.auth().onAuthStateChanged(function(user) 
   { (user.emailVerified) ? console.log('Email is verified') : user.sendEmailVerification(); });
   res.redirect('/verifyEmail');
+});
+
+//redirects the user to the signup page
+app.get('/signup', function(req, res){
+  // res.status(200).json({ status: 'working' });
+  res.redirect('signup');                           
+});
+
+
+//redirects the user to the signup page
+app.get('/setFarm', function(req, res){
+  // res.status(200).json({ status: 'working' });
+  res.redirect('setFarm');                           
+});
+
+
+app.get('/changePassword', function(req, res){
+  // res.status(200).json({ status: 'working' });
+  res.redirect('changepassword');                           
 });
 
 
@@ -177,7 +199,7 @@ app.post('/api/getSensorData', function (req, res) {
     //   });
 
     console.log(snapshot.val());
-    res.json(snapshot.val());
+    res.json(snapshot.val()); 
     //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
     // ...
   });
