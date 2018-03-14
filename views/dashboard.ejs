@@ -8,11 +8,7 @@
 <style>
     @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
-.setFarmPage{
-  width: 360px;
-  padding: 8% 0 0;
-  margin: auto;
-}
+
 .form {
   position: relative;
   z-index: 1;
@@ -97,7 +93,6 @@
   color: #EF3B3A;
 }
 body {
-  padding-tops: 20px;
   background: #76b852; /* fallback for old browsers */
   background: -webkit-linear-gradient(right, #76b852, #8DC26F);
   background: -moz-linear-gradient(right, #76b852, #8DC26F);
@@ -114,23 +109,30 @@ body {
 <header>
     <% include ./partials/header %>
 </header>
-<div class="emailverifyPage">
-    <div class="form">
-      <form class="verifyEmailform" method="POST" action="/resendVerificationEmail">
-                <p>If you cant find the email or if teh email link is expired,
-                </br> click on the resend Emaiol button</p>
-        <button type="submit">Resend Email</button>
-       
-      </form>
+<div class="dashboard">
+    <div class="Chart">
+     
      
     </div>
+    <div class="tempMeter">
+     
+     
+    </div>
+    
+    <div class="humidityMeter">
+     
+     
+    </div>
+    <div class="Chart">
+     
+     
+    </div>
+    
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
   <script>
-    $('.message a').click(function(){
-   $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
-});
+  
 
 </script>
 <footer>

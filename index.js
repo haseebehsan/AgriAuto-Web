@@ -121,11 +121,9 @@ app.post('/signup', upload.array(), function (req, res) {
     
   .then(function(user){
     //Send verification email to user
-    if(user ){
-      user.sendEmailVerification().then(function(){
-        console.log("Verification email sent");
-      })
-    }})
+    firebase.auth().onAuthStateChanged(function(user) 
+  { (user.emailVerified) ? console.log('Email is verified') : user.sendEmailVerification(); });  
+  })
     .catch(function (error) {
 
       // Handle Errors 
