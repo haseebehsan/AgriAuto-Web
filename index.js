@@ -563,9 +563,9 @@ app.post('/api/addUser', function (req, res) {
 
 firebase.database().ref('/users/' + req.body.username).set({
 
-  firstname: req.body.firstname,
-  middlename: req.body.middlename,
-  lastname: req.body.lastname,
+  firstName: req.body.firstname,
+  middleName: req.body.middlename,
+  lastName: req.body.lastname,
   phone: req.body.phonenumber
 })
 
