@@ -420,7 +420,7 @@ app.post('/api/setMin', function (req, res) {
   console.log(req.body.fieldid);
   console.log(req.body.sensor);
   console.log(req.body.value);
-  
+
   firebase.database().ref('/fields/' + req.body.fieldid+"/irrigation/auto/"+req.body.sensor).update({
     min: req.body.value
   });
@@ -547,6 +547,32 @@ app.post('/api/addSchedule', function (req, res) {
   // res.render('index');
 });
 
+
+/////////////
+//
+//
+//
+//
+//
+//
+/////////////
+app.post('/api/addUser', function (req, res) {
+
+
+
+
+firebase.database().ref('/users/' + req.body.username).set({
+
+  firstname: req.body.firstname,
+  middlename: req.body.middlename,
+  lastname: req.body.lastname,
+  phone: req.body.phonenumber
+})
+});
+
+
+
+
 /////////////
 //remove schedule
 //inputs:
@@ -564,7 +590,8 @@ app.post('/api/removeSchedule', function (req, res) {
 
   res.status(200).json({
     output: '1'
-  });
+  })
+
 });
 
 // app.post('/', function (req, res) {
