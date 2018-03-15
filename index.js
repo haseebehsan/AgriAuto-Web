@@ -360,7 +360,7 @@ app.post('/api/getIrrigationStatus', function (req, res) {
 //output
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
-app.post('/api/getStatus', function (req, res) {
+app.post('/api/getIrrigationStatus', function (req, res) {
 
   firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/manual').once('value').then(function (snapshot) {
     // snapshot.forEach(function(childSnapshot) {
@@ -394,6 +394,38 @@ app.post('/api/getStatus', function (req, res) {
 //
 /////////////
 app.post('/api/setMin', function (req, res) {
+  console.log(req.body.fieldid);
+  console.log(req.body.sensor);
+  console.log(req.body.value);
+  
+  firebase.database().ref('/fields/' + req.body.fieldid+"/irrigation/auto/"+req.body.sensor).update({
+    min: req.body.value
+  });
+
+  res.status(200).json({
+    status: 'working'
+  });
+  // res.render('index');
+});
+
+
+/////////////
+//
+//
+//
+//
+//
+//
+/////////////
+app.post('/api/setMax', function (req, res) {
+  console.log(req.body.fieldid);
+  console.log(req.body.sensor);
+  console.log(req.body.value);
+
+  firebase.database().ref('/fields/' + req.body.fieldid+"/irrigation/auto/"+req.body.sensor).update({
+    max: req.body.value
+  });
+
   res.status(200).json({
     status: 'working'
   });
