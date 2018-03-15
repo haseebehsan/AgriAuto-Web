@@ -58,6 +58,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     var isAnonymous = user.isAnonymous;
     var uid = user.uid;
     var providerData = user.providerData;
+
     // ...
   } else {
 
@@ -211,22 +212,44 @@ app.get('/signup', function (req, res) {
   res.redirect('signup');
 });
 
+//redirects the user to the signup page
+app.get('/forgotPassword', function (req, res) {
+  // res.status(200).json({ status: 'working' });
+  res.render('forgotPassword');
+});
+
+
+
+app.post('/forgotpassword',function(req,res){
+
+firebase.auth().sendPasswordResetEmail(req.body.u_email.toString());
+
+res.send("Password reset email sent");
+});
 
 //redirects the user to the signup page
 app.get('/setFarm', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  res.redirect('setFarm');
+  res.render('setFarm');
 });
 
-app.post('/setFarm', function (req, res) {
-  // res.status(200).json({ status: 'working' });
+// app.post('/setFarm', function (req, res) {
+//   // res.status(200).json({ status: 'working' });
 
-});
+// });
 
 
 app.get('/changePassword', function (req, res) {
   // res.status(200).json({ status: 'working' });
   res.redirect('changePassword');
+});
+
+
+
+
+app.get('/irrigation', function (req, res) {
+  // res.status(200).json({ status: 'working' });
+  res.render('irrigation');
 });
 
 
