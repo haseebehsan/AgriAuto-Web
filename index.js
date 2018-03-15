@@ -361,7 +361,40 @@ app.post('/api/getStatus', function (req, res) {
 });
 
 /////////////
+//
+//
+//
+//
+//
+//
+/////////////
 app.post('/api/setMin', function (req, res) {
+
+
+
+
+  res.status(200).json({ status: 'working' });
+  // res.render('index');
+});
+
+/////////////
+//
+//
+//
+//
+//
+//
+/////////////
+app.post('/api/setFarm', function (req, res) {
+
+
+  
+  firebase.database().ref('/users/' + req.body.userid).set({
+    farm: req.body.farmid
+  });
+  
+
+
   res.status(200).json({ status: 'working' });
   // res.render('index');
 });
