@@ -568,6 +568,10 @@ firebase.database().ref('/users/' + req.body.username).set({
   lastname: req.body.lastname,
   phone: req.body.phonenumber
 })
+
+res.status(200).json({
+  output: '1'
+})
 });
 
 
