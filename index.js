@@ -412,7 +412,7 @@ app.post('/api/setFarm', function (req, res) {
 
 
   
-  firebase.database().ref('/users/' + req.body.userid).set({
+  firebase.database().ref('/users/' + req.body.userid).update({
     farm: req.body.farmid
   });
   
