@@ -11,17 +11,21 @@ app.use(morgan('dev'));
 
 app.use('/assets', express.static('assets'));
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 app.use(bodyParser.json());
 
-var emailSent=false;
+var emailSent = false;
 
 //app.use(express.cookieParser('keyboard cat'));
 
 //app.use(express.session({ cookie: { maxAge: 60000 }}));
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 //using connect-flash to flasj error messages to user
 //app.use(flash());
 
@@ -55,8 +59,8 @@ firebase.auth().onAuthStateChanged(function (user) {
     var uid = user.uid;
     var providerData = user.providerData;
     // ...
-  }else{
-   
+  } else {
+
   }
 });
 
@@ -71,15 +75,19 @@ function loggedIn() {
   }
 }
 
+function isFarmSet() {
+  //Use API
+}
+
 ////// @hamza
-app.get('/api/test', function(req, res){
+app.get('/api/test', function (req, res) {
   // res.status(200).json({ status: 'working' });
   res.render('index');
 });
 
-app.get('/login', function(req, res){
+app.get('/login', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  res.render('login');                           
+  res.render('login');
 });
 
 
@@ -92,28 +100,29 @@ app.post('/login', upload.array(), function (req, res, next) {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
-    console.log(errorCode+"  "+errorMessage);
+    console.log(errorCode + "  " + errorMessage);
     // ...
   });
 
-  firebase.auth().onAuthStateChanged(function(user)
-   { (user.emailVerified) ? console.log('Email is verified') : res.redirect("/verifyEmail") }); 
-
-    console.log(req.body.u_email);
-  
-    res.redirect('index');
+  firebase.auth().onAuthStateChanged(function (user) {
+    (user.emailVerified) ? console.log('Email is verified'): res.redirect("/verifyEmail")
   });
 
+  console.log(req.body.u_email);
+
+  res.redirect('index');
+});
 
 
-app.get('/verifyEmail', function(req, res){
+
+app.get('/verifyEmail', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  res.render('verifyEmail');                           
+  res.render('verifyEmail');
 });
 
 
 ///////////////
-//Inputs: firstname,lastname, farm, middlename, phoneNumber
+//Inputs: firstname,lastname, middlename, phoneNumber,email,password
 //Creates new user acccount, tehn send verification email, then updates the user information 
 //output: A new user account is created and redirected to the dashboad, 
 //       in case of error the signup page is loaded
@@ -124,51 +133,56 @@ app.post('/signup', upload.array(), function (req, res) {
 
 
   firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password)
-    
-  .then(function(user){
-    //Send verification email to user
-    firebase.auth().onAuthStateChanged(function(user) 
-          {(user.emailVerified) ? 
-            
-            console.log('Email is verified')  :
-            
-            user.sendEmailVerification(); });  
-    
-          }).then(function(usera){
-            //Add rest of the information in the users profile
-            var user=firebase.auth().currentUser; 
-          //   user.updateProfile({
-          //     user.email:  
-          //     {firstname: req.body.firstName,
-          //       middlename: req.body.middleName,
-          //       lastname: req.body.lastName,
-          //       phone: req.body.phoneNumber}
-          // })
-          var uemail = escape(user.email.toString());
-          uemail=uemail.replace(".","");
-          uemail1=uemail.split("@");
-          key=uemail1[0];
-            firebase.database().ref('/users/' + key).set({
-           
-              firstname: req.body.firstName,
-                middlename: req.body.middleName,
-                lastname: req.body.lastName,
-                phone: req.body.phoneNumber
-              }
-               
-     
-)})
+
+    .then(function (user) {
+      //Send verification email to user
+      firebase.auth().onAuthStateChanged(function (user) {
+        (user.emailVerified) ?
+
+        console.log('Email is verified'):
+
+          user.sendEmailVerification();
+      });
+
+    }).then(function () {
+      //Add rest of the information in the users profile
+      var user = firebase.auth().currentUser;
+      //   user.updateProfile({
+      //     user.email:  
+      //     {firstname: req.body.firstName,
+      //       middlename: req.body.middleName,
+      //       lastname: req.body.lastName,
+      //       phone: req.body.phoneNumber}
+      // })
+      var uemail = escape(user.email.toString());
+
+      uemail = uemail.replace(".", "");
+
+      uemail_array = uemail.split("@");
+
+      key = uemail_array[0];
+      firebase.database().ref('/users/' + key).set({
+
+          firstname: req.body.firstName,
+          middlename: req.body.middleName,
+          lastname: req.body.lastName,
+          phone: req.body.phoneNumber
+        }
+
+
+      )
+    })
     .catch(function (error) {
 
       // Handle Errors 
-  
+
       var errorCode = error.code;
       var errorMessage = error.message;
       console.log(errorCode + "\n Messsage: " + errorMessage);
       // ...
       //req.flash('error', errorMessage);
       res.redirect('signup');
-      });
+    });
 
 
   console.log(req.body.u_email);
@@ -185,28 +199,34 @@ app.post('/signup', upload.array(), function (req, res) {
 ///////
 app.post('/resendVerificationEmail', upload.array(), function (req, res) {
 
-  firebase.auth().onAuthStateChanged(function(user) 
-  { (user.emailVerified) ? console.log('Email is verified') : user.sendEmailVerification(); });
+  firebase.auth().onAuthStateChanged(function (user) {
+    (user.emailVerified) ? console.log('Email is verified'): user.sendEmailVerification();
+  });
   res.redirect('/verifyEmail');
 });
 
 //redirects the user to the signup page
-app.get('/signup', function(req, res){
+app.get('/signup', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  res.redirect('signup');                           
+  res.redirect('signup');
 });
 
 
 //redirects the user to the signup page
-app.get('/setFarm', function(req, res){
+app.get('/setFarm', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  res.redirect('setFarm');                           
+  res.redirect('setFarm');
+});
+
+app.post('/setFarm', function (req, res) {
+  // res.status(200).json({ status: 'working' });
+
 });
 
 
-app.get('/changePassword', function(req, res){
+app.get('/changePassword', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  res.redirect('changepassword');                           
+  res.redirect('changePassword');
 });
 
 
@@ -231,7 +251,7 @@ app.post('/api/getSensorData', function (req, res) {
     //   });
 
     console.log(snapshot.val());
-    res.json(snapshot.val()); 
+    res.json(snapshot.val());
     //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
     // ...
   });
@@ -262,7 +282,8 @@ app.post('/api/setSensorData', function (req, res) {
   // Set Sample Data
   firebase.database().ref('/fields/' + req.body.fieldid + '/sensor/' + req.body.time + '/').set({
     humidity: req.body.humidity,
-    soilMoisture: req.body.soilmoisture, temperature: req.body.temperature
+    soilMoisture: req.body.soilmoisture,
+    temperature: req.body.temperature
   });
 
   res.send(
@@ -294,7 +315,9 @@ app.post('/api/setIrrigationStatus', function (req, res) {
     console.log("inside.");
   }
 
-  res.status(200).json({ output: '1' });
+  res.status(200).json({
+    output: '1'
+  });
   // res.render('index');
 });
 
@@ -316,9 +339,10 @@ app.post('/api/getIrrigationStatus', function (req, res) {
     if (snapshot != null) {
       res.json(snapshot.val());
 
-    }
-    else {
-      res.json({ status: -1 });
+    } else {
+      res.json({
+        status: -1
+      });
     }
     //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
     // ...
@@ -347,9 +371,10 @@ app.post('/api/getStatus', function (req, res) {
     if (snapshot != null) {
       res.json(snapshot.val());
 
-    }
-    else {
-      res.json({ status: -1 });
+    } else {
+      res.json({
+        status: -1
+      });
     }
     //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
     // ...
@@ -362,7 +387,9 @@ app.post('/api/getStatus', function (req, res) {
 
 /////////////
 app.post('/api/setMin', function (req, res) {
-  res.status(200).json({ status: 'working' });
+  res.status(200).json({
+    status: 'working'
+  });
   // res.render('index');
 });
 
@@ -386,13 +413,15 @@ app.post('/api/addSchedule', function (req, res) {
   // res.status(200).json({ status: 'working' });
   console.log(req.body.status);
 
-  firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/schedules/'+req.body.scheduletime).set({
+  firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/schedules/' + req.body.scheduletime).set({
     addtime: req.body.addtime
   });
 
 
 
-  res.status(200).json({ output: '1' });
+  res.status(200).json({
+    output: '1'
+  });
   // res.render('index');
 });
 
@@ -407,11 +436,13 @@ app.post('/api/addSchedule', function (req, res) {
 app.post('/api/removeSchedule', function (req, res) {
   console.log(req.body.status);
 
-  firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/schedules/'+req.body.scheduletime).remove();
+  firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/schedules/' + req.body.scheduletime).remove();
 
 
 
-  res.status(200).json({ output: '1' });
+  res.status(200).json({
+    output: '1'
+  });
 });
 
 // app.post('/', function (req, res) {
