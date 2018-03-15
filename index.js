@@ -5,8 +5,8 @@ const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 5000;
 const app = express();
 const morgan = require('morgan');
-var multer = require('multer'); // v1.0.5
-var upload = multer(); // for parsing multipart/form-data
+const multer = require('multer'); // v1.0.5
+const upload = multer(); // for parsing multipart/form-data
 app.use(morgan('dev'));
 
 app.use('/assets', express.static('assets'));
@@ -99,11 +99,10 @@ app.post('/login', upload.array(), function (req, res, next) {
   firebase.auth().onAuthStateChanged(function(user)
    { (user.emailVerified) ? console.log('Email is verified') : res.redirect("/verifyEmail") }); 
 
-  console.log(req.body.u_email);
+    console.log(req.body.u_email);
   
-  res.send("Logged in \n"+ req.body.u_email+"--"+req.body.password +"   ");
+    res.redirect('index');
   });
-
 
 
 
@@ -112,6 +111,13 @@ app.get('/verifyEmail', function(req, res){
   res.render('verifyEmail');                           
 });
 
+
+///////////////
+//Inputs: firstname,lastname, farm, middlename, phoneNumber
+//Creates new user acccount, tehn send verification email, then updates the user information 
+//output: A new user account is created and redirected to the dashboad, 
+//       in case of error the signup page is loaded
+/////////////
 app.post('/signup', upload.array(), function (req, res) {
   // res.status(200).json({ status: 'working' });
   // console.log(req.body.username);
@@ -122,8 +128,36 @@ app.post('/signup', upload.array(), function (req, res) {
   .then(function(user){
     //Send verification email to user
     firebase.auth().onAuthStateChanged(function(user) 
-  { (user.emailVerified) ? console.log('Email is verified') : user.sendEmailVerification(); });  
-  })
+          {(user.emailVerified) ? 
+            
+            console.log('Email is verified')  :
+            
+            user.sendEmailVerification(); });  
+    
+          }).then(function(usera){
+            //Add rest of the information in the users profile
+            var user=firebase.auth().currentUser; 
+          //   user.updateProfile({
+          //     user.email:  
+          //     {firstname: req.body.firstName,
+          //       middlename: req.body.middleName,
+          //       lastname: req.body.lastName,
+          //       phone: req.body.phoneNumber}
+          // })
+          var uemail = escape(user.email.toString());
+          uemail=uemail.replace(".","");
+          uemail1=uemail.split("@");
+          key=uemail1[0];
+            firebase.database().ref('/users/' + key).set({
+           
+              firstname: req.body.firstName,
+                middlename: req.body.middleName,
+                lastname: req.body.lastName,
+                phone: req.body.phoneNumber
+              }
+               
+     
+)})
     .catch(function (error) {
 
       // Handle Errors 
