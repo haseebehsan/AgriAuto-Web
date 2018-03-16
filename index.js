@@ -284,7 +284,7 @@ app.post('/api/getSensorData', function (req, res) {
         if(childSnapshot.key >= startDate && childSnapshot.key <= endDate){
           console.log("key: "+childSnapshot.key);
           console.log(JSON.stringify(childSnapshot.val()));
-          returnData += childSnapshot.val();
+          returnData += JSON.stringify(childSnapshot.val());
         }
         
       });
