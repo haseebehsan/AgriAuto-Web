@@ -296,8 +296,9 @@ app.post('/api/getSensorData', function (req, res) {
           else{
             childstring = ","+childstring;
           }
-          console.log(returnData);
+          
           returnData += childstring;
+          console.log(returnData);
           
         }
         
