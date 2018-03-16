@@ -314,7 +314,9 @@ app.post('/api/setSensorData', function (req, res) {
   });
 
   
-  res.status(200);
+  res.status(200).json({
+    status: "1"
+  });
   // res.render('index');
 });
 
