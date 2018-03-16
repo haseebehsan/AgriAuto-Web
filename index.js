@@ -288,7 +288,8 @@ app.post('/api/getSensorData', function (req, res) {
           // console.log("key: "+childSnapshot.key);
           childstring = JSON.stringify(childSnapshot.val());
           // console.log(childstring);
-          childstring = childstring.substring(1, childstring.length -1);
+          // childstring = childstring.substring(1, childstring.length -1);
+          childstring = "\""+childSnapshot.key+"\":"+childstring;
           if(count == 0){
             
             count = 1
@@ -307,7 +308,7 @@ app.post('/api/getSensorData', function (req, res) {
       returnData += " }";
 
     console.log(snapshot.val());
-    res.json(snapshot.val);
+    res.json(JSON.parse(returnData));
     //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
     // ...
   });
