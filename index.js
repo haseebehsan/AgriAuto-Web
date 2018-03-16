@@ -320,6 +320,71 @@ app.post('/api/getSensorData', function (req, res) {
 });
 
 
+
+
+
+/////////////
+//inputs:
+//  farmid
+//output
+//  sites data in JSON
+/////////////
+app.post('/api/getFarmSites ', function (req, res) {
+
+  console.log(req.body.farmid);
+
+  var startDate = req.body.startdate;
+  var endDate = req.body.enddate;
+  var returnData = "{ ";
+  var count = 0;
+
+  firebase.database().ref('/farms/' + req.body.farmid + '/'+req.body.siteid+'/sensor/').once('value').then(function (snapshot) {
+    var childstring;
+    snapshot.forEach(function(childSnapshot) {
+        // console.log("key: "+childSnapshot.key);
+        
+        if(childSnapshot.key >= startDate && childSnapshot.key <= endDate){
+          // console.log("key: "+childSnapshot.key);
+          childstring = JSON.stringify(childSnapshot.val());
+          // console.log(childstring);
+          // childstring = childstring.substring(1, childstring.length -1);
+          childstring = "\""+childSnapshot.key+"\":"+childstring;
+          if(count == 0){
+            
+            count = 1
+          }
+          else{
+            childstring = ","+childstring;
+          }
+          
+          returnData += childstring;
+          console.log(returnData);
+          
+        }
+        
+      });
+
+      returnData += " }";
+
+    console.log(snapshot.val());
+    res.json(JSON.parse(returnData));
+    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+    // ...
+  });
+
+
+  res.status(200);
+  // res.render('index');
+});
+
+
+
+
+
+
+
+
+
 /////////////
 //inputs:
 //  farmid
@@ -377,7 +442,7 @@ app.post('/api/setIrrigationStatus', function (req, res) {
   }
 
   res.status(200).json({
-    output: '1'
+    status: '1'
   });
   // res.render('index');
 });
@@ -465,7 +530,7 @@ app.post('/api/setMin', function (req, res) {
   });
 
   res.status(200).json({
-    status: 'working'
+    status: '1'
   });
   // res.render('index');
 });
@@ -489,7 +554,7 @@ app.post('/api/setMax', function (req, res) {
   });
 
   res.status(200).json({
-    status: 'working'
+    status: '1'
   });
   // res.render('index');
 });
@@ -550,7 +615,9 @@ app.post('/api/setFarm', function (req, res) {
   
 
 
-  res.status(200).json({ status: 'working' });
+  res.status(200).json({
+    status: '1'
+  });
   // res.render('index');
 });
 
@@ -610,8 +677,8 @@ firebase.database().ref('/users/' + req.body.username).set({
 })
 
 res.status(200).json({
-  output: '1'
-})
+  status: '1'
+});
 });
 
 
@@ -634,8 +701,8 @@ app.post('/api/removeSchedule', function (req, res) {
 
 
   res.status(200).json({
-    output: '1'
-  })
+    status: '1'
+  });
 
 });
 
