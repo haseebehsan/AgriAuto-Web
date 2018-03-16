@@ -261,19 +261,26 @@ app.get('/irrigation', function (req, res) {
 
 /////////////
 //inputs:
-//  fieldid: 0000-9999 
+//  farmid: 0000-9999 
+//  startdate: yyyy-mm-dd
+//  enddate: yyyy-mm-dd
 //output
 //  sensor data in JSON
 /////////////
 app.post('/api/getSensorData', function (req, res) {
 
+  console.log(req.body.farmid);
+  console.log(req.body.siteid);
+  console.log(req.body.startdate);
+  console.log(req.body.enddate);
 
-  firebase.database().ref('/fields/' + req.body.fieldid + '/sensor/').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
+  firebase.database().ref('/farms/' + req.body.farmid + '/'+req.body.siteid+'/sensor/').once('value').then(function (snapshot) {
+    snapshot.forEach(function(childSnapshot) {
+        console.log("key: "+snapshot.key);
+        console.log(JSON.stringify(childSnapshot.val()));
+      });
 
-    console.log(snapshot.val());
+    // console.log(snapshot.val());
     res.json(snapshot.val());
     //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
     // ...
@@ -290,7 +297,7 @@ app.post('/api/getSensorData', function (req, res) {
 //  farmid
 //  siteid: 0000-9999 
 //  time: hour:minutes
-//  date: year/month/day
+//  date: year-month-day
 //  temperature
 //  humidity
 //  soilmoisture
