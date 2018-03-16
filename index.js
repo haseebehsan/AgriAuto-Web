@@ -582,7 +582,7 @@ app.post('/api/addSchedule', function (req, res) {
 
 
   res.status(200).json({
-    output: '1'
+    status: '1'
   });
   // res.render('index');
 });
