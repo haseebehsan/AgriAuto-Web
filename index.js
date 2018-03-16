@@ -333,20 +333,20 @@ app.post('/api/getFarmSites ', function (req, res) {
 
   console.log(req.body.farmid);
 
-  var startDate = req.body.startdate;
-  var endDate = req.body.enddate;
+  
   var returnData = "{ ";
   var count = 0;
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/'+req.body.siteid+'/sensor/').once('value').then(function (snapshot) {
+  firebase.database().ref('/farms/' + req.body.farmid + '/').once('value').then(function (snapshot) {
     var childstring;
     snapshot.forEach(function(childSnapshot) {
         // console.log("key: "+childSnapshot.key);
         
-        if(childSnapshot.key >= startDate && childSnapshot.key <= endDate){
+        
+          
           // console.log("key: "+childSnapshot.key);
-          childstring = JSON.stringify(childSnapshot.val());
-          // console.log(childstring);
+          childstring = JSON.stringify(childSnapshot.child('info').val());
+          console.log("childstring: "+childstring);
           // childstring = childstring.substring(1, childstring.length -1);
           childstring = "\""+childSnapshot.key+"\":"+childstring;
           if(count == 0){
@@ -360,7 +360,7 @@ app.post('/api/getFarmSites ', function (req, res) {
           returnData += childstring;
           console.log(returnData);
           
-        }
+        
         
       });
 
