@@ -308,9 +308,9 @@ app.post('/api/setSensorData', function (req, res) {
 
   // Set Sample Data
   firebase.database().ref('/farms/' + req.body.farmid +'/'+req.body.siteid+ '/sensor/' + req.body.date + '/'+req.body.time).set({
-    humidity: req.body.humidity,
-    soilMoisture: req.body.soilmoisture,
-    temperature: req.body.temperature
+    hum: req.body.hum,
+    sm: req.body.sm,
+    temp: req.body.temp
   });
 
   
