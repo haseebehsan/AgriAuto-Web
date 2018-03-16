@@ -377,9 +377,9 @@ app.post('/api/getLatestSensorData', function (req, res) {
 
     // returnData += " }";
 
-    console.log(snapshot.val());
+    console.log(snapshot.key+" - "+snapshot.val());
     // res.json(JSON.parse(returnData));
-    res.json(JSON.parse(snapshot));
+    res.json(snapshot);
     //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
     // ...
   });
