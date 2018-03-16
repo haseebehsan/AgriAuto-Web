@@ -262,6 +262,7 @@ app.get('/irrigation', function (req, res) {
 /////////////
 //inputs:
 //  farmid: 0000-9999 
+//  siteid
 //  startdate: yyyy-mm-dd
 //  enddate: yyyy-mm-dd
 //output
@@ -357,6 +358,8 @@ app.post('/api/setSensorData', function (req, res) {
 
 /////////////
 //inputs:
+//  farmid
+//  siteid
 //  irrigation status: 0,1 
 //  fieldid: 0000-9999
 //output
@@ -367,7 +370,7 @@ app.post('/api/setIrrigationStatus', function (req, res) {
 
   console.log(req.body.status);
   if (req.body.status == '0' || req.body.status == '1') {
-    firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/manual/').set({
+    firebase.database().ref('/farms/'+req.body.farmid+'/' + req.body.siteid + '/irrigation/manual/').set({
       status: req.body.status
     });
     console.log("inside.");
@@ -386,41 +389,42 @@ app.post('/api/setIrrigationStatus', function (req, res) {
 //output
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
-app.post('/api/getIrrigationStatus', function (req, res) {
+// app.post('/api/getIrrigationStatus', function (req, res) {
 
-  firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/manual').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
+//   firebase.database().ref('/farms/'+req.body.farmid+'/'+ req.body.fieldid + '/irrigation/manual').once('value').then(function (snapshot) {
+//     // snapshot.forEach(function(childSnapshot) {
+//     //     console.log(JSON.stringify(childSnapshot.val()));
+//     //   });
 
-    console.log(snapshot.val());
-    if (snapshot != null) {
-      res.json(snapshot.val());
+//     console.log(snapshot.val());
+//     if (snapshot != null) {
+//       res.json(snapshot.val());
 
-    } else {
-      res.json({
-        status: -1
-      });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
+//     } else {
+//       res.json({
+//         status: -1
+//       });
+//     }
+//     //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+//     // ...
+//   });
 
 
-  res.status(200)
-  // res.render('index');
-});
+//   res.status(200)
+//   // res.render('index');
+// });
 
 /////////////
 //inputs
-//  fieldid: 0000-9999
+// farmid
+//  siteid: 0000-9999
 //
 //output
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
 app.post('/api/getIrrigationStatus', function (req, res) {
 
-  firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/manual').once('value').then(function (snapshot) {
+  firebase.database().ref('/farms/'+req.body.farmid+'/'+ req.body.siteid + '/irrigation/manual').once('value').then(function (snapshot) {
     // snapshot.forEach(function(childSnapshot) {
     //     console.log(JSON.stringify(childSnapshot.val()));
     //   });
@@ -452,11 +456,11 @@ app.post('/api/getIrrigationStatus', function (req, res) {
 //
 /////////////
 app.post('/api/setMin', function (req, res) {
-  console.log(req.body.fieldid);
+  console.log(req.body.siteid);
   console.log(req.body.sensor);
   console.log(req.body.value);
 
-  firebase.database().ref('/fields/' + req.body.fieldid+"/irrigation/auto/"+req.body.sensor).update({
+  firebase.database().ref('/farms/'+req.body.farmid+'/'+ req.body.siteid+"/irrigation/auto/"+req.body.sensor).update({
     min: req.body.value
   });
 
@@ -476,11 +480,11 @@ app.post('/api/setMin', function (req, res) {
 //
 /////////////
 app.post('/api/setMax', function (req, res) {
-  console.log(req.body.fieldid);
+  console.log(req.body.siteid);
   console.log(req.body.sensor);
   console.log(req.body.value);
 
-  firebase.database().ref('/fields/' + req.body.fieldid+"/irrigation/auto/"+req.body.sensor).update({
+  firebase.database().ref('/farms/'+req.body.farmid+'/' + req.body.siteid+"/irrigation/auto/"+req.body.sensor).update({
     max: req.body.value
   });
 
@@ -501,10 +505,10 @@ app.post('/api/setMax', function (req, res) {
 app.post('/api/getMinMax', function (req, res) {
 
   console.log(req.body.farmid);
-  console.log(req.body.fieldid);
+  console.log(req.body.siteid);
   
 
-  firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/auto').once('value').then(function (snapshot) {
+  firebase.database().ref('/farms/'+req.body.farmid+'/' + req.body.siteid + '/irrigation/auto').once('value').then(function (snapshot) {
     // snapshot.forEach(function(childSnapshot) {
     //     console.log(JSON.stringify(childSnapshot.val()));
     //   });
@@ -560,7 +564,8 @@ app.post('/api/setFarm', function (req, res) {
 /////////////
 //add schedule
 //inputs:
-// fieldid: 0000-9999
+// farmid
+// siteid: 0000-9999
 //scheduletime: DateTimeStamp
 //addtime: DateTimeStamp
 //
@@ -570,7 +575,7 @@ app.post('/api/addSchedule', function (req, res) {
   // res.status(200).json({ status: 'working' });
   console.log(req.body.status);
 
-  firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/schedules/' + req.body.scheduletime).set({
+  firebase.database().ref('/farms/'+req.body.farmid+'/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).set({
     addtime: req.body.addtime
   });
 
@@ -615,7 +620,8 @@ res.status(200).json({
 /////////////
 //remove schedule
 //inputs:
-// fieldid: 0000-9999
+// farmid
+// siteid: 0000-9999
 //scheduletime: DateTimeStamp
 //
 //output: okay
@@ -623,7 +629,7 @@ res.status(200).json({
 app.post('/api/removeSchedule', function (req, res) {
   console.log(req.body.status);
 
-  firebase.database().ref('/fields/' + req.body.fieldid + '/irrigation/schedules/' + req.body.scheduletime).remove();
+  firebase.database().ref('/farms/'+req.body.farmid+'/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).remove();
 
 
 
