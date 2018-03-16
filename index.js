@@ -287,34 +287,33 @@ app.post('/api/getSensorData', function (req, res) {
 
 /////////////
 //inputs:
-//  fieldid: 0000-9999 
-//  time
+//  farmid
+//  siteid: 0000-9999 
+//  time: hour:minutes
+//  date: year/month/day
 //  temperature
 //  humidity
 //  soilmoisture
-//output
+//  output
 //  status
 /////////////
 app.post('/api/setSensorData', function (req, res) {
-  console.log(req.body.time)
-  console.log(req.body.fieldid);
-  console.log(req.body.temperature);
-  console.log(req.body.humidity);
-  console.log(req.body.soilmoisture);
+  console.log(req.body.farmid);
+  console.log(req.body.date);
+  console.log(req.body.time);
+  console.log(req.body.siteid);
+  console.log(req.body.temp);
+  console.log(req.body.hum);
+  console.log(req.body.sm);
 
   // Set Sample Data
-  firebase.database().ref('/fields/' + req.body.fieldid + '/sensor/' + req.body.time + '/').set({
+  firebase.database().ref('/farms/' + req.body.farmid +'/'+req.body.siteid+ '/sensor/' + req.body.date + '/'+req.body.time).set({
     humidity: req.body.humidity,
     soilMoisture: req.body.soilmoisture,
     temperature: req.body.temperature
   });
 
-  res.send(
-    '<form action="/upload" method="post" enctype="multipart/form-data">' +
-    '<input type="file" name="source">' +
-    '<input type="submit" value="Upload">' +
-    '</form>'
-  );
+  
   res.status(200);
   // res.render('index');
 });
