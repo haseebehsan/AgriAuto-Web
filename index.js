@@ -306,8 +306,8 @@ app.post('/api/getSensorData', function (req, res) {
 
       returnData += " }";
 
-    // console.log(snapshot.val());
-    res.json(JSON.parse(returnData));
+    console.log(snapshot.val());
+    res.json(snapshot.val);
     //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
     // ...
   });
