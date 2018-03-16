@@ -321,10 +321,6 @@ app.post('/api/getSensorData', function (req, res) {
 
 
 
-////////////////---------------------------------------------------------------
-// All API POST requests
-////////////////---------------------------------------------------------------  
-
 
 /////////////
 //inputs:
@@ -337,51 +333,17 @@ app.post('/api/getLatestSensorData', function (req, res) {
 
   console.log(req.body.farmid);
   console.log(req.body.siteid);
-  console.log(req.body.startdate);
-  console.log(req.body.enddate);
 
  
-  var returnData = "{ ";
-  var count = 0;
+ 
+ 
 
   firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').orderByKey().limitToLast(1).on("child_added",function (snapshot) {
     var childstring;
     var highest = '';
-    console.log(JSON.stringify(snapshot));
-    // snapshot.forEach(function (childSnapshot) {
-    //   // console.log("key: "+childSnapshot.key);
-
-    //   ///checks which is latest date
-    //   if (childSnapshot.key >= highest){
-        
-    //   } 
-    //     // console.log("key: "+childSnapshot.key);
-    //     childstring = JSON.stringify(childSnapshot.val());
-    //     // console.log(childstring);
-    //     // childstring = childstring.substring(1, childstring.length -1);
-    //     childstring = "\"" + childSnapshot.key + "\":" + childstring;
-    //     if (count == 0) {
-
-    //       count = 1
-    //     }
-    //     else {
-    //       childstring = "," + childstring;
-    //     }
-
-    //     returnData += childstring;
-    //     console.log(returnData);
-
-      
-
-    // });
-
-    // returnData += " }";
-
-    console.log(snapshot.key+" - "+snapshot.val());
-    // res.json(JSON.parse(returnData));
+    console.log(JSON.stringify(snapshot));  
+    console.log(snapshot.key+" - "+JSON.stringify(snapshot));
     res.json(snapshot);
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
   });
 
 
