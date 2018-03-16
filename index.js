@@ -620,6 +620,29 @@ app.post('/api/setFarm', function (req, res) {
   });
   // res.render('index');
 });
+/////////////
+//
+//username
+//siteid
+//
+//
+//
+/////////////
+app.post('/api/setSiteId', function (req, res) {
+
+
+
+  firebase.database().ref('/users/' + req.body.userid).update({
+    site: req.body.siteid
+  });
+
+
+
+  res.status(200).json({
+    status: '1'
+  });
+  // res.render('index');
+});
 
 
 // /////////////
