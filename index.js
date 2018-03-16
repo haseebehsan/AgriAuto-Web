@@ -672,6 +672,42 @@ app.post('/api/setCropType', function (req, res) {
   // res.render('index');
 });
 
+/////////////
+//
+//farmid
+//siteid
+//
+//
+//
+/////////////
+app.post('/api/getCropType', function (req, res) {
+
+
+
+  firebase.database().ref('/farms/' + req.body.farmid+'/'+req.body.siteid+'/info/').once('value').then(function (snapshot) {
+    // snapshot.forEach(function(childSnapshot) {
+    //     console.log(JSON.stringify(childSnapshot.val()));
+    //   });
+
+    console.log(snapshot.child("croptype").val());
+    if (snapshot != null && snapshot.child("croptype" != null)) {
+      res.json({ croptype : snapshot.child("croptype").val()});
+
+    } else {
+      res.json({
+        croptype: -1
+      });
+    }
+    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+    // ...
+  });
+
+
+
+  res.status(200)
+  // res.render('index');
+});
+
 
 // /////////////
 // app.post('/api/setIrrigationStatus', function(req, res){
