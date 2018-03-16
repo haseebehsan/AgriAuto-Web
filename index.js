@@ -620,6 +620,8 @@ app.post('/api/setFarm', function (req, res) {
   });
   // res.render('index');
 });
+
+
 /////////////
 //
 //username
@@ -634,6 +636,32 @@ app.post('/api/setSiteId', function (req, res) {
 
   firebase.database().ref('/users/' + req.body.userid).update({
     site: req.body.siteid
+  });
+
+
+
+  res.status(200).json({
+    status: '1'
+  });
+  // res.render('index');
+});
+
+
+
+/////////////
+//
+//farmid
+//siteid
+//croptype
+//
+//
+/////////////
+app.post('/api/setCropType', function (req, res) {
+
+
+
+  firebase.database().ref('/farms/' + req.body.farmid+'/'+req.body.siteid+'/info/').update({
+    croptype: req.body.croptype
   });
 
 
