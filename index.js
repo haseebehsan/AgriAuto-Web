@@ -276,7 +276,7 @@ app.post('/api/getSensorData', function (req, res) {
 
   firebase.database().ref('/farms/' + req.body.farmid + '/'+req.body.siteid+'/sensor/').once('value').then(function (snapshot) {
     snapshot.forEach(function(childSnapshot) {
-        console.log("key: "+snapshot.key);
+        console.log("key: "+childSnapshot.key);
         console.log(JSON.stringify(childSnapshot.val()));
       });
 
