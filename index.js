@@ -293,7 +293,7 @@ app.post('/api/getSensorData', function (req, res) {
       returnData += " }";
 
     // console.log(snapshot.val());
-    res.json(returnData);
+    res.json(JSON.parse(returnData));
     //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
     // ...
   });
