@@ -373,7 +373,7 @@ app.post('/api/getLatestSensorData', function (req, res) {
 
       
 
-    });
+    // });
 
     // returnData += " }";
 
