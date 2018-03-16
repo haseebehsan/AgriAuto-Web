@@ -274,10 +274,17 @@ app.post('/api/getSensorData', function (req, res) {
   console.log(req.body.startdate);
   console.log(req.body.enddate);
 
+  var startDate = req.body.startdate;
+  var endDate = req.body.enddate;
+
   firebase.database().ref('/farms/' + req.body.farmid + '/'+req.body.siteid+'/sensor/').once('value').then(function (snapshot) {
     snapshot.forEach(function(childSnapshot) {
-        console.log("key: "+childSnapshot.key);
-        console.log(JSON.stringify(childSnapshot.val()));
+        // console.log("key: "+childSnapshot.key);
+        if(childSnapshot.key >= startDate && childSnapshot.key <= endDate){
+          console.log("key: "+childSnapshot.key);
+          console.log(JSON.stringify(childSnapshot.val()));
+        }
+        
       });
 
     // console.log(snapshot.val());
