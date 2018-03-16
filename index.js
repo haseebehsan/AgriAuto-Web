@@ -344,7 +344,7 @@ app.post('/api/getLatestSensorData', function (req, res) {
   var returnData = "{ ";
   var count = 0;
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').orderByKey().limitToLast(1).then(function (snapshot) {
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').orderByKey().limitToLast(1).on("child_added",function (snapshot) {
     var childstring;
     var highest = '';
     console.log(JSON.stringify(snapshot));
