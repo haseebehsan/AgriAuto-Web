@@ -286,12 +286,16 @@ app.post('/api/getSensorData', function (req, res) {
           console.log("key: "+childSnapshot.key);
           var childstring = JSON.stringify(childSnapshot.val());
           console.log(childstring);
-          childstring = childstring.substring(1, str.length -1);
-          if(count > 0){
+          childstring = childstring.substring(1, childstring.length -1);
+          if(count == 0){
+            
+            count = 1
+          }
+          else{
             childstring = ","+childstring;
           }
           returnData += childstring;
-          count++;
+          
         }
         
       });
