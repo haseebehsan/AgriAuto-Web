@@ -881,6 +881,62 @@ app.post('/api/getAllSchedules', function (req, res) {
   // res.render('index');
 });
 
+/////////////
+//inputs
+//  farmid
+//  siteid: 0000-9999
+//
+//output
+// 
+/////////////
+app.post('/api/getIrrigationMode', function (req, res) {
+
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode').once('value').then(function (snapshot) {
+    // snapshot.forEach(function(childSnapshot) {
+    //     console.log(JSON.stringify(childSnapshot.val()));
+    //   });
+
+    console.log(JSON.stringify(snapshot.val()));
+    if (snapshot.val() != null) {
+      res.json(snapshot.val());
+
+    } else {
+      res.json({
+        status: -1
+      });
+    }
+    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+    // ...
+  });
+
+
+  res.status(200)
+  // res.render('index');
+});
+
+/////////////
+//inputs: 
+//  farmid
+//  siteid
+//  mode
+//
+//
+///////////// 
+app.post('/api/setIrrigationMode', function (req, res) {
+  // res.status(200).json({ status: 'working' });
+  console.log(req.body.status);
+
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode/' + req.body.scheduletime).set({
+    type: req.body.mode
+  });
+
+
+
+  res.status(200).json({
+    status: '1'
+  });
+  // res.render('index');
+});
 
 //Start Appliation on the given PORT number
 app.listen(PORT, () => console.log(`Listening on ${PORT}`))
