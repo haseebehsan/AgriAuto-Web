@@ -847,5 +847,40 @@ app.post('/api/removeSchedule', function (req, res) {
 //   );
 // });
 
+
+/////////////
+//inputs
+//  farmid
+//  siteid: 0000-9999
+//
+//output
+// 
+/////////////
+app.post('/api/getAllSchedules', function (req, res) {
+
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/schedules').once('value').then(function (snapshot) {
+    // snapshot.forEach(function(childSnapshot) {
+    //     console.log(JSON.stringify(childSnapshot.val()));
+    //   });
+
+    console.log(snapshot.val());
+    if (snapshot != null) {
+      res.json(snapshot.val());
+
+    } else {
+      res.json({
+        status: -1
+      });
+    }
+    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+    // ...
+  });
+
+
+  res.status(200)
+  // res.render('index');
+});
+
+
 //Start Appliation on the given PORT number
 app.listen(PORT, () => console.log(`Listening on ${PORT}`))
