@@ -858,13 +858,13 @@ app.post('/api/removeSchedule', function (req, res) {
 /////////////
 app.post('/api/getAllSchedules', function (req, res) {
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/schedules').once('value').then(function (snapshot) {
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules').once('value').then(function (snapshot) {
     // snapshot.forEach(function(childSnapshot) {
     //     console.log(JSON.stringify(childSnapshot.val()));
     //   });
 
-    console.log(snapshot.val());
-    if (snapshot != null) {
+    console.log(JSON.stringify(snapshot.val()));
+    if (snapshot.val() != null) {
       res.json(snapshot.val());
 
     } else {
