@@ -926,7 +926,7 @@ app.post('/api/setIrrigationMode', function (req, res) {
   // res.status(200).json({ status: 'working' });
   console.log(req.body.status);
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode/' + req.body.scheduletime).set({
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode/').set({
     mode: req.body.mode
   });
 
