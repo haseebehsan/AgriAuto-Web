@@ -927,7 +927,7 @@ app.post('/api/setIrrigationMode', function (req, res) {
   console.log(req.body.status);
 
   firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode/' + req.body.scheduletime).set({
-    type: req.body.mode
+    mode: req.body.mode
   });
 
 
