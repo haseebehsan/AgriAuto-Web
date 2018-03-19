@@ -544,6 +544,41 @@ app.post('/api/getIrrigationStatus', function (req, res) {
   // res.render('index');
 });
 
+
+
+/////////////
+//inputs
+// farmid
+//  siteid: 0000-9999
+//
+//output
+// status: 0,1, -1 (-1 shows there is no data on server)
+/////////////
+app.post('/api/getStatus', function (req, res) {
+
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/manual').once('value').then(function (snapshot) {
+    // snapshot.forEach(function(childSnapshot) {
+    //     console.log(JSON.stringify(childSnapshot.val()));
+    //   });
+
+    console.log(snapshot.val());
+    if (snapshot != null) {
+      res.json(snapshot.val());
+
+    } else {
+      res.json({
+        status: -1
+      });
+    }
+    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+    // ...
+  });
+
+
+  res.status(200)
+  // res.render('index');
+});
+
 /////////////
 //
 //
