@@ -152,15 +152,6 @@ app.post('/signup', upload.array(), function (req, res) {
 
     }).then(function () {
       //Add rest of the information in the users profile
-      var user = firebase.auth().currentUser;
-     
-      var uemail = escape(user.email.toString());
-
-      uemail = uemail.replace(".", "");
-
-      uemail_array = uemail.split("@");
-
-      key = uemail_array[0];
       firebase.database().ref('/users/' + firebase.auth().currentUser.uid).set({
 
         firstname: req.body.firstName,
