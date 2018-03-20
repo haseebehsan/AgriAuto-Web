@@ -95,13 +95,13 @@ function isFarmSet() {
 
 app.get('/',function(req,res){
 
-  res.render('index', { chartdata :childstring });
+  res.render('index',);
 });
 
 
 app.get('/chart',function(req,res){
 
-  res.render('index-hamza', { chartdata :childstring });
+  res.render('index-hamza');
 });
 
 
