@@ -78,6 +78,31 @@
             .datum(data)
             .call(xy_chart);
 
+        var data2 = [
+            {
+                label: "Humidty",
+                x: [0, 1, 2, 3, 4, 5],
+                y: [0, 2, 3, 4, 5, 6, 7]
+            }
+            // ,
+            // {
+            //     label: "Temperature",
+            //     x: [0, 1, 2, 3, 4, 44],
+            //     y: [0, 1, 4, 9, 16, 20]
+            // }
+            // ,
+            // {
+            //     label: "Soil Moisture ",
+            //     x: [0, 10, 15, 40, 55, 70],
+            //     y: [0, 1, 4, 9, 16, 60]
+            // }
+        ];
+
+        var svg = d3.select("body").select("svg")
+            .datum(data2)
+            .call(xy_chart);
+
+
         function d3_xy_chart() {
             var width = 640,
                 height = 480,
