@@ -98,6 +98,12 @@
             // }
         ];
         d3.select("svg>*").remove();
+        var xy_chart = d3_xy_chart()
+            .width(790)
+            .height(400)
+            .xlabel("X Axis")
+            .ylabel("Y Axis");
+            
         svg = d3.select("body").select("svg")
             .datum(data2)
             .call(xy_chart);
