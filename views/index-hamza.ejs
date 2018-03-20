@@ -103,8 +103,8 @@
             .height(400)
             .xlabel("X Axis")
             .ylabel("Y Axis");
-            
-        svg = d3.select("body").select("svg")
+
+        svg = d3.select("body").append("svg")
             .datum(data2)
             .call(xy_chart);
 
