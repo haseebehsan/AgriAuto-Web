@@ -75,6 +75,18 @@ function loggedIn() {
 
 function isFarmSet() {
   //Use API
+  firebase.database().ref('/users/' + firebase.auth().currentUser.uid).once('value').then(function (snapshot) {
+   
+
+   // console.log(snapshot.val());
+    if (snapshot != null) {
+   return true;
+
+    } else {
+      return false;
+    }
+    
+  });
 }
 
 //////////////////////////////
