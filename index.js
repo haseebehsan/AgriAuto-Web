@@ -43,8 +43,13 @@ var database = firebase.database();
 app.set('view engine', 'ejs');
 
 
-app.get('/', (req, res) => res.render('index-hamza'));
+app.get('/',function(req,res){
 
+  var childstring;
+  
+console.log(childstring);
+res.render('index-hamza', { chartdata :childstring});
+});
 
 
 //Firebase user state observer
@@ -60,12 +65,14 @@ firebase.auth().onAuthStateChanged(function (user) {
     var providerData = user.providerData;
 
     // ...
-  } else {
+  } else if(!user) {
+
 
   }
 });
 
-//Check if user is logged in
+//Checks if user is logged in
+//
 function loggedIn() {
   var user = firebase.auth().currentUser;
   if (user) {
@@ -81,11 +88,7 @@ function isFarmSet() {
 }
 
 ////// @hamza
-app.get('/api/test', function (req, res) {
-  // res.status(200).json({ status: 'working' });
-  res.render('index');
-});
-
+//Renders the login page
 app.get('/login', function (req, res) {
   // res.status(200).json({ status: 'working' });
   res.render('login');
@@ -124,8 +127,10 @@ app.get('/verifyEmail', function (req, res) {
 
 ///////////////
 //Inputs: firstname,lastname, middlename, phoneNumber,email,password
+//
 //Creates new user acccount, tehn send verification email, then updates the user information 
-//output: A new user account is created and redirected to the dashboad, 
+//
+//Output: A new user account is created and redirected to the dashboad, 
 //       in case of error the signup page is loaded
 /////////////
 app.post('/signup', upload.array(), function (req, res) {
@@ -148,13 +153,7 @@ app.post('/signup', upload.array(), function (req, res) {
     }).then(function () {
       //Add rest of the information in the users profile
       var user = firebase.auth().currentUser;
-      //   user.updateProfile({
-      //     user.email:  
-      //     {firstname: req.body.firstName,
-      //       middlename: req.body.middleName,
-      //       lastname: req.body.lastName,
-      //       phone: req.body.phoneNumber}
-      // })
+     
       var uemail = escape(user.email.toString());
 
       uemail = uemail.replace(".", "");
@@ -162,7 +161,7 @@ app.post('/signup', upload.array(), function (req, res) {
       uemail_array = uemail.split("@");
 
       key = uemail_array[0];
-      firebase.database().ref('/users/' + key).set({
+      firebase.database().ref('/users/' + firebase.auth().currentUser.uid).set({
 
         firstname: req.body.firstName,
         middlename: req.body.middleName,
@@ -182,7 +181,7 @@ app.post('/signup', upload.array(), function (req, res) {
       console.log(errorCode + "\n Messsage: " + errorMessage);
       // ...
       //req.flash('error', errorMessage);
-      res.redirect('signup');
+      res.render('login',{err:errorMessage});
     });
 
 
@@ -192,9 +191,7 @@ app.post('/signup', upload.array(), function (req, res) {
 
 });
 
-
-
-///////////
+////////
 // checks if the user's email address is verified or not, 
 //if it is not verified a new verififcation email is sent to the user
 ///////
@@ -218,8 +215,6 @@ app.get('/forgotPassword', function (req, res) {
   res.render('forgotPassword');
 });
 
-
-
 app.post('/forgotpassword', function (req, res) {
 
   firebase.auth().sendPasswordResetEmail(req.body.u_email.toString());
@@ -233,25 +228,20 @@ app.get('/setFarm', function (req, res) {
   res.render('setFarm');
 });
 
-// app.post('/setFarm', function (req, res) {
-//   // res.status(200).json({ status: 'working' });
-
-// });
-
-
 app.get('/changePassword', function (req, res) {
   // res.status(200).json({ status: 'working' });
   res.redirect('changePassword');
 });
-
-
-
 
 app.get('/irrigation', function (req, res) {
   // res.status(200).json({ status: 'working' });
   res.render('irrigation');
 });
 
+app.get('/settings', function (req, res) {
+  // res.status(200).json({ status: 'working' });
+  res.render('settings');
+});
 
 
 ////////////////---------------------------------------------------------------
@@ -974,4 +964,4 @@ app.post('/api/setIrrigationMode', function (req, res) {
 });
 
 //Start Appliation on the given PORT number
-app.listen(PORT, () => console.log(`Listening on ${PORT}`))
+app.listen(PORT, () => console.log(`Listening on ${PORT}`));

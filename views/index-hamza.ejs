@@ -38,9 +38,14 @@
 </head>
 
 <body>
+
+
     <header>
         <% include ./partials/header %>
     </header>
+
+   <p> Hi <% chartdata%> </p>
+   
     <script src="http://d3js.org/d3.v3.js"></script>
 
     <script>
@@ -50,25 +55,26 @@
                 x: [0, 1, 2, 3, 4, 34],
                 y: [0, 7, 2, 3, 4, 5, 6]
             }
-            ,
-            {
-                label: "Temperature",
-                x: [0, 1, 2, 3, 4, 44],
-                y: [0, 1, 4, 9, 16, 20]
-            }
-            ,
-            {
-                label: "Soil Moisture ",
-                x: [0, 10, 15, 40, 55, 70],
-                y: [0, 1, 4, 9, 16, 60]
-            }
+            // ,
+            // {
+            //     label: "Temperature",
+            //     x: [0, 1, 2, 3, 4, 44],
+            //     y: [0, 1, 4, 9, 16, 20]
+            // }
+            // ,
+            // {
+            //     label: "Soil Moisture ",
+            //     x: [0, 10, 15, 40, 55, 70],
+            //     y: [0, 1, 4, 9, 16, 60]
+            // }
         ];
         var xy_chart = d3_xy_chart()
             .width(790)
             .height(400)
             .xlabel("X Axis")
             .ylabel("Y Axis");
-        var svg = d3.select("body").append("svg")
+        
+            var svg = d3.select("body").append("svg")
             .datum(data)
             .call(xy_chart);
 
