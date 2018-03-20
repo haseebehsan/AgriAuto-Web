@@ -42,16 +42,6 @@ var database = firebase.database();
 
 app.set('view engine', 'ejs');
 
-
-app.get('/',function(req,res){
-
-  var childstring;
-  
-console.log(childstring);
-res.render('index-hamza', { chartdata :childstring});
-});
-
-
 //Firebase user state observer
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
@@ -86,6 +76,22 @@ function loggedIn() {
 function isFarmSet() {
   //Use API
 }
+
+//////////////////////////////
+// ROUTES
+/////////////////////////////
+
+app.get('/',function(req,res){
+
+  res.render('index', { chartdata :childstring });
+});
+
+
+app.get('/chart',function(req,res){
+
+  res.render('index-hamza', { chartdata :childstring });
+});
+
 
 ////// @hamza
 //Renders the login page
