@@ -235,16 +235,23 @@ app.get('/forgotPassword', function (req, res) {
 });
 
 app.post('/forgotpassword', function (req, res) {
-
+  if(loggedIn){
   firebase.auth().sendPasswordResetEmail(req.body.u_email.toString());
 
   res.send("Password reset email sent");
+}
+else{
+  res.redirect('login');
+}
 });
 
 //redirects the user to the signup page
 app.get('/setFarm', function (req, res) {
   // res.status(200).json({ status: 'working' });
+  if(loggedIn)
   res.render('setFarm');
+  else
+  res.redirect('login');
 });
 
 app.get('/changePassword', function (req, res) {
