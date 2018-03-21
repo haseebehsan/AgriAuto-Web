@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ./partials/head.ejs %>
+    
+</head>
+
+<body>
+<link rel="stylesheet" type="text/css" href="../assets/settingsPage.css">
+<header>
+    <% include ./partials/header %>
+</header>
+
+<div class="login-page" id="login-page">
+    <div class="form">
+      <form class="register-form" method="POST" action="/signup"> 
+    
+<h2 style="text-align:center; ">Settings</h2>
+<table style="text-align:center; " >
+ <tr  style="text-align:center; " align="center"><td align="center" style="text-align:center; "><h4 style="text-align:center "><strong style="text-align:center ">Soil Mositure  &nbsp;</strong> </h4></td></tr>
+<tr>
+    <td style="padding: 0px 10px 15px 5px; "><label for="MinSoilMoisture">Min</label></td>
+     
+      <td style="padding: 0px 10px 5px 5px;"> <input name="MinSoilMoisture" type="text" placeholder="0-100" required="true"/></td>
+     
+      <td  style="padding: 0px 10px 15px 100px;"><label for="MaxSoilMoisture">Max</label></td>
+     
+      <td style="padding: 0px 10px 5px 5px;"> <input name="MaxSoilMoisture" type="text" placeholder="0-100" required="true"/></td>
+    </tr>
+    
+ <tr > <td> <h4><strong >Temperature</strong> </h4></td></tr>   
+<tr>
+    <td style="padding: 5px 10px 15px 5px;"><label for="MinSoilMoisture">Min</label></td>
+     
+      <td style="padding: 5px 10px 5px 5px;"> <input name="MinSoilMoisture" type="text" placeholder="Celcius" required="true"/></td>
+     
+      <td  style="padding: 5px 10px 15px 100px;"><label for="MaxSoilMoisture">Max</label></td>
+     
+      <td style="padding: 5px 10px 5px 5px;"> <input name="MaxSoilMoisture" type="text" placeholder="Celcius" required="true"/></td>
+    </tr>
+      
+<tr>
+<tr style="padding: 5px 10px 5px 5px;" > 
+<td > <h4   ><strong >Humidity</strong> </h4></td>
+</tr> 
+    <td style="padding: 5px 10px 15px 5px;"><label for="MinSoilMoisture">Min</label></td>
+     
+      <td style="padding: 5px 10px 5px 5px;"> <input name="MinSoilMoisture" type="text" placeholder="0-100" required="true"/></td>
+     
+      <td  style="padding: 5px 10px 15px 100px;"><label for="MaxSoilMoisture">Max</label></td>
+     
+      <td style="padding: 5px 10px 5px 5px;"> <input name="MaxSoilMoisture" type="text" placeholder="0-100" required="true" /></td>
+    </tr>
+    </table>
+   
+      
+        <button type="submit" id="saveBtn" width="100px">Save</button>
+    
+      </form>
+      </div>
+    </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <script>
+    $('.message a').click(function(){
+   $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+});
+
+$(  )
+
+
+</script>
+<footer>
+    <% include ./partials/footer %>
+</footer>
+</body>
+
+</html>
