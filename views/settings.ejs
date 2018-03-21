@@ -166,7 +166,7 @@
 
             xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&value="+valueminTemp);
 
-        });
+       
 
 //////////////////////// ////////////MAX Value set
 //Sets the SM's max value
@@ -214,6 +214,7 @@ xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&value="+valuemaxTemp);
 
 });
+
         $('.message a').click(function () {
             $('form').animate({
                 height: "toggle",
