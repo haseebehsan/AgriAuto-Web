@@ -69,7 +69,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     // ...
   } else if(!user) {
 
-    
+    console.log('Logged Out');
   }
 });
 
@@ -150,7 +150,7 @@ app.post('/login', upload.array(), function (req, res, next) {
 
   console.log(req.body.u_email);
 
-  res.redirect('index');
+  res.redirect('/');
 });
 
 
