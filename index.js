@@ -273,7 +273,52 @@ app.get('/changePassword', function (req, res) {
 
 app.get('/irrigation', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  res.render('irrigation');
+  var user = firebase.auth().currentUser;
+  var irrigationMode
+  var siteid
+
+  firebase.database().ref('/users/' + user.uid+'/site').once('value').then(function (snapshot) {
+    // snapshot.forEach(function(childSnapshot) {
+    //     console.log(JSON.stringify(childSnapshot.val()));
+    //   });
+
+    console.log("siteid: "+JSON.stringify(snapshot.val()));
+    if (snapshot.val() != null) {
+      siteid = JSON.stringify(snapshot.val());
+
+    } else {
+      res.json({
+        status: -1
+      });
+      irrigationMode = {
+        status: -1
+      };
+    }
+
+  });
+  console.log("farmid: "+user.farmid);
+
+  firebase.database().ref('/farms/' + user.farmid + '/' + siteid + '/irrigation/mode').once('value').then(function (snapshot) {
+    // snapshot.forEach(function(childSnapshot) {
+    //     console.log(JSON.stringify(childSnapshot.val()));
+    //   });
+
+    console.log("mode output: "+JSON.stringify(snapshot.val()));
+    if (snapshot.val() != null) {
+      res.json(snapshot.val());
+      irrigationMode = snapshot.val()
+
+    } else {
+      res.json({
+        status: -1
+      });
+      irrigationMode = {
+        status: -1
+      };
+    }
+  });
+
+  res.render('irrigation', {irrigationmode: irrigationMode});
 });
 
 app.get('/settings', function (req, res) {
@@ -557,6 +602,7 @@ app.post('/api/setIrrigationStatus', function (req, res) {
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
 app.post('/api/getIrrigationStatus', function (req, res) {
+  
 
   firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/manual').once('value').then(function (snapshot) {
     // snapshot.forEach(function(childSnapshot) {
