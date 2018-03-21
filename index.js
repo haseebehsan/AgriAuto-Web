@@ -141,16 +141,22 @@ app.post('/login', upload.array(), function (req, res, next) {
     var errorCode = error.code;
     var errorMessage = error.message;
     console.log(errorCode + "  " + errorMessage);
+    res.redirect('/login');
     // ...
+  }).then(function(){
+ 
+    firebase.auth().onAuthStateChanged(function (user) {
+      (user.emailVerified) ? console.log('Email is verified') : res.redirect("/verifyEmail")
+    });
+
+    res.redirect('/');
+
+  }, function (){
+    res.redirect('/login');
+
   });
 
-  firebase.auth().onAuthStateChanged(function (user) {
-    (user.emailVerified) ? console.log('Email is verified') : res.redirect("/verifyEmail")
-  });
 
-  console.log(req.body.u_email);
-
-  res.redirect('/');
 });
 
 
