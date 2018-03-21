@@ -303,10 +303,10 @@
                 jQuery.each(val, function(time, sensorsdata) {
                     var datetime = date+" "+time;
                     
-                    listx.append(datetime);
-                    listsm.append(sensorsdata.sm);
-                    listhum.append(sensorsdata.hum);
-                    listtemp.append(sensorsdata.temp);
+                    listx.push(datetime);
+                    listsm.push(sensorsdata.sm);
+                    listhum.push(sensorsdata.hum);
+                    listtemp.push(sensorsdata.temp);
 
                 });
             });
