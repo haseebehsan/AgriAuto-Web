@@ -49,20 +49,32 @@ firebase.auth().onAuthStateChanged(function (user) {
     var displayName = user.displayName;
     var email = user.email;
     var emailVerified = user.emailVerified;
-    var photoURL = user.photoURL;
+    
     var isAnonymous = user.isAnonymous;
     var uid = user.uid;
-    var providerData = user.providerData;
+    var farmid;
+    firebase.database().ref('/users/' + uid+'/farm').once('value').then(function (snapshot) {
+      fid=JSON.stringify(snapshot.val());
+      
+      console.log(fid);
+      console.log(fid[1]);
+      
+      farmid=fid[1];
+        // console.log("key: "+childSnapshot.key);
+  //userfarmid=fid[1];
+        
+  
+      });
 
     // ...
   } else if(!user) {
 
-
+    
   }
 });
 
 //Checks if user is logged in
-//
+//c
 function loggedIn() {
   var user = firebase.auth().currentUser;
   if (user) {
