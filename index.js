@@ -819,6 +819,31 @@ app.post('/api/setMax', function (req, res) {
 //
 //
 /////////////
+app.post('/api/setMinMax', function (req, res) {
+
+  console.log(req.body.farmid);
+  console.log(req.body.siteid);
+
+
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/auto/'+req.body.sensor).update({
+    min: req.body.min,
+    max: req.body.max
+  });
+
+  res.status(200).json({
+    status: '1'
+  });
+});
+
+
+/////////////
+//
+//
+//
+//
+//
+//
+/////////////
 app.post('/api/getMinMax', function (req, res) {
 
   console.log(req.body.farmid);
@@ -847,6 +872,8 @@ app.post('/api/getMinMax', function (req, res) {
 
   // res.render('index');
 });
+
+
 
 
 /////////////
