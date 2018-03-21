@@ -296,7 +296,7 @@
             var jsonobj = JSON.parse(http.responseText);
             jQuery.each(jsonobj, function(date, val) {
                 jQuery.each(val, function(time, sensorsdata) {
-                    console.log("date: "+date+" time: "+time+" data: "+sensorsdata);
+                    console.log("date: "+date+" time: "+time+" data: "+sensorsdata.sm);
                 });
             });
             //alert(http.responseText);
