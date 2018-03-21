@@ -8,8 +8,22 @@
 <body>
 <link rel="stylesheet" type="text/css" href="../assets/login.css">
 <header>
-    <% include ./partials/header %>
-</header>
+  
+</header><nav class="navbar   navbar-default navbar-fixed-top" role="navigation">
+<div class="container-fluid ">
+
+    <div class="navbar-header ">
+    <div class>    
+
+        <ul class="nav navbar-nav card" style="background-color:white;">
+        
+            <li><a href="/"><strong>AgriAuto</strong></a></li>
+            
+        </ul>
+    </div>
+
+</div>
+</nav>
 
 <div class="login-page" id="login-page">
     <div class="form">
@@ -33,7 +47,7 @@
       <form class="login-form" method="POST" action="/login" >
         <input name="u_email" type="email" placeholder="Email"/>
         <input type="password"name="password" placeholder="password"/>
-       <a href="/forgotPassword">Forgot Password</a>
+       <a href="/forgotPassword" align="left" >Forgot Password?</a>
         <button type="submit">login</button>
         <p class="message">Not registered? <a href="#">Create an account</a></p>
       </form>
@@ -51,8 +65,7 @@ function checkPasswordMatch() {
 
     if (password != confirmPassword){
         console.log("check fail");
-    
-      
+        alert('Passwords do not match');
       }
     else{
         
@@ -60,6 +73,7 @@ function checkPasswordMatch() {
         console.log("check pass");}
 
 }
+
 $("#txtpassword, #txtconfirmpassword").keyup(checkPasswordMatch);
 $(document).ready(function () {
    $("#txtpassword, #txtconfirmpassword").keyup(checkPasswordMatch);

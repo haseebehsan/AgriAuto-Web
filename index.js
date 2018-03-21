@@ -126,7 +126,11 @@ function isFarmSet() {
 app.get('/', function (req, res) {
   console.log("farm id in index route  -- " + farmid);
   console.log("Site id in index route  -- " + siteid);
-  res.render('index');
+  if (firebase.auth().currentUser) {
+    res.render('index');
+  } else {
+    res.render('login');
+  }
 });
 
 
@@ -260,7 +264,7 @@ app.post('/resendVerificationEmail', upload.array(), function (req, res) {
 //redirects the user to the signup page
 app.get('/signup', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  res.redirect('signup');
+  res.render('signup');
 });
 
 //redirects the user to the signup page
@@ -327,8 +331,30 @@ app.get('/irrigation', function (req, res) {
 
     console.log("mode output: " + JSON.stringify(snapshot.val()));
     if (snapshot.val() != null) {
-      //res.json(snapshot.val());
-      irrigationMode = JSON.stringify(snapshot.val());
+      siteid = JSON.stringify(snapshot.child('site'));
+      farmid = JSON.stringify(snapshot.child('farm'))
+      // siteid = siteid[1];
+      console.log("farmid: " + farmid + " - siteod: " + siteid);
+      firebase.database().ref('/farms/' + farmid + '/' + siteid + '/irrigation/mode/mode').once('value').then(function (snapshot) {
+        // snapshot.forEach(function(childSnapshot) {
+        //     console.log(JSON.stringify(childSnapshot.val()));
+        //   });
+
+        console.log("mode output: " + JSON.stringify(snapshot.val()));
+        if (snapshot.val() != null) {
+          res.json(snapshot.val());
+          irrigationMode = snapshot.val()
+
+        } else {
+          res.json({
+            status: -1
+          });
+          irrigationMode = {
+            status: -1
+          };
+        }
+      });
+
     } else {
       irrigationMode = "none";
     }
@@ -340,11 +366,13 @@ app.get('/irrigation', function (req, res) {
   }, function () {
     res.send('none');
   });
-  console.log("irrigation mode in irrigation page  -- " + irrigationMode)
 
 
 
 
+  res.render('irrigation', {
+    irrigationmode: irrigationMode
+  });
 });
 
 app.get('/settings', function (req, res) {
