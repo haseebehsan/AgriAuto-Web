@@ -41,7 +41,7 @@
                         </td>
 
                         <td style="padding: 0px 10px 5px 5px;">
-                            <input name="MaxSoilMoisture" type="text" placeholder="0-100" required="true" value="<%=smmax%>" />
+                            <input name="MaxSoilMoisture" type="text" placeholder="0-100" required="true"  id="MaxSoilMoistures" value="<%=smmax%>" />
                         </td>
                     </tr>
 
@@ -58,7 +58,7 @@
                         </td>
 
                         <td style="padding: 5px 10px 5px 5px;">
-                            <input name="Mintemp" type="text" placeholder="Celcius" required="true" value="<%=tempmin%>" />
+                            <input name="Mintemp" id="MinTemps" type="text" placeholder="Celcius" required="true" value="<%=tempmin%>" />
                         </td>
 
                         <td style="padding: 5px 10px 15px 100px;">
@@ -66,7 +66,7 @@
                         </td>
 
                         <td style="padding: 5px 10px 5px 5px;">
-                            <input name="Maxtemp" type="text" placeholder="Celcius" required="true" / value="<%=tempmax%>">
+                            <input name="Maxtemp" id="MMaxtemps" type="text" placeholder="Celcius" required="true" / value="<%=tempmax%>">
                         </td>
                     </tr>
 
@@ -83,7 +83,7 @@
                         </td>
 
                         <td style="padding: 5px 10px 5px 5px;">
-                            <input name="Minhum" id="Minhum" type="text" placeholder="0-100" required="true" value="<%=hummin%>" />
+                            <input name="Minhum" id="Minhums" type="text" placeholder="0-100" required="true" value="<%=hummin%>" />
                         </td>
 
                         <td style="padding: 5px 10px 15px 100px;">
@@ -91,7 +91,7 @@
                         </td>
 
                         <td style="padding: 5px 10px 5px 5px;">
-                            <input name="Maxhum" type="text" placeholder="0-100" required="true" value="<%=hummax%>" />
+                            <input name="Maxhum" id="Maxhums" type="text" placeholder="0-100" required="true" value="<%=hummax%>" />
                         </td>
                     </tr>
                 </table>
@@ -108,12 +108,21 @@
     <script>
         $("#saveBtn").click(function () {
 
-            var valueSm = $("#MinSoilMoistures").val();
-            console.log("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&value="+valueSm );
+            var valueminSM = $("#MinSoilMoistures").val();
+            var valuemaxSM = $("#MaxSoilMoistures").val();
+
+            var valueminTemp = $("#MinTemps").val();
+            var valuemaxTemp = $("#MaxTemps").val();
+
+            var valueminHum = $("#MinHums").val();
+            var valuemaxHum = $("#MaxHums").val();
+
+           // console.log("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor="+sensor+"&value="+valueminSM );
             console.log(valueSm);
             console.log(valueSm);
             var xhttp = new XMLHttpRequest();
-
+///////////////////////////////////////////MIN value set            
+//Sets the SM's min value
             xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMin", true);
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
@@ -125,40 +134,86 @@
             };
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-            xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&value="+valueSm);
+            xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&value="+valueminSM);
 
-            // $.post("https://agripronode.herokuapp.com/api/setMin",
+           //sets the Hums min value
+           
+            xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMin", true);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                }
+                else{
+                    console.log("error in output: "+this.responseText);
+                }
+            };
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-            // {
+            xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=hum&value="+valueminHum);           
 
-            //         sensor:"sm",
-            //         value:$("#MinSoilMoisture").val(),
-            //         farmid: 1,
-            //         siteid:1
-            //     },
-            //     function(data, status){
-            //         alert("Data: " + data + "\nStatus: " + status);
-            //     });
 
-            //     var datas={
-            //         'sensor':'sm',
-            //             'value':$("#MinSoilMoisture").val(),
-            //             'farmid': 1,
-            //             'siteid':1
-            //    };
-            //    $.ajax({
-            //     url: "https://agripronode.herokuapp.com/api/setMin",
-            //     type: "POST",
-            //     data: datas,
+            //Sets the Temps min value
+            xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMin", true);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                }
+                else{
+                    console.log("error in output: "+this.responseText);
+                }
+            };
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-            //     contentType: "application/x-www-form-urlencoded",
-            //     success: function (data) {
-            //         console.log("return : "+data);
-            // //     }
-            // });
+            xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&value="+valueminTemp);
+
         });
 
+//////////////////////// ////////////MAX Value set
+//Sets the SM's max value
+xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMax", true);
+xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+        console.log(this.responseText);
+    }
+    else{
+        console.log("error in output: "+this.responseText);
+    }
+};
+xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
+xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&value="+valuemaxSM);
+
+//sets the Hums max value
+
+xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMax", true);
+xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+        console.log(this.responseText);
+    }
+    else{
+        console.log("error in output: "+this.responseText);
+    }
+};
+xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=hum&value="+valuemaxHum);           
+
+
+//Sets the Temps max value
+xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMax", true);
+xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+        console.log(this.responseText);
+    }
+    else{
+        console.log("error in output: "+this.responseText);
+    }
+};
+xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&value="+valuemaxTemp);
+
+});
         $('.message a').click(function () {
             $('form').animate({
                 height: "toggle",
