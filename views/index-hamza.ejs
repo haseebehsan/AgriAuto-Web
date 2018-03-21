@@ -294,7 +294,7 @@
     http.onreadystatechange = function() {//Call a function when the state changes.
         if(http.readyState == 4 && http.status == 200) {
             var jsonobj = JSON.parse(http.responseText);
-            jQuery.each(obj, function(date, val) {
+            jQuery.each(jsonobj, function(date, val) {
                 jQuery.each(val, function(time, sensorsdata) {
                     console.log("date: "+date+" time: "+time+" data: "+sensorsdata);
                 });
