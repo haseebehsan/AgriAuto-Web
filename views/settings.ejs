@@ -75,7 +75,7 @@
     var valueSm=  $("#MinSoilMoisture").val();
     console.log(valueSm);
     console.log(valueSm);
-    $.post("/api/setMin",
+    $.post("https://agripronode.herokuapp.com/api/setMin",
        
     {
 
@@ -89,7 +89,24 @@
         });
     });
 
-
+    $.ajax({
+        url: 'https://agripronode.herokuapp.com/api/setMin',
+        type: 'post',
+        data: {
+            sensor:"sm",
+            value:$("#MinSoilMoisture").val(),
+            farmid: 1,
+            siteid:1
+        },
+        headers: {
+            Header_Name_One: 'Header Value One',   //If your header name has spaces or any other char not appropriate
+            "Header Name Two": 'Header Value Two'  //for object property name, use quoted notation shown in second
+        },
+        dataType: 'json',
+        success: function (data) {
+            console.info(data);
+        }
+    });
     $('.message a').click(function(){
    $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
 });
