@@ -315,7 +315,8 @@
         }
     }
     http.send(params);
-
+    console.log(listx);
+    console.log(listsm);
     var data3 = [
         {
             label: "soil Moisture",
@@ -336,6 +337,7 @@
         // }
     ];
     d3.select("svg>*").remove();
+    
     
 
     svg = d3.select("body").select("svg")
