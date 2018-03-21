@@ -316,6 +316,32 @@
     }
     http.send(params);
 
+    var data3 = [
+        {
+            label: "soil Moisture",
+            x: listx,
+            y: listsm
+        }
+        // ,
+        // {
+        //     label: "Temperature",
+        //     x: [0, 1, 2, 3, 4, 44],
+        //     y: [0, 1, 4, 9, 16, 20]
+        // }
+        // ,
+        // {
+        //     label: "Soil Moisture ",
+        //     x: [0, 10, 15, 40, 55, 70],
+        //     y: [0, 1, 4, 9, 16, 60]
+        // }
+    ];
+    d3.select("svg>*").remove();
+    
+
+    svg = d3.select("body").select("svg")
+        .datum(data3)
+        .call(xy_chart);
+
     </script>
     <footer>
         <% include ./partials/footer %>
