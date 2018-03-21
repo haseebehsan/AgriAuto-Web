@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <% include ./partials/head.ejs %>
-
+    <link rel="stylesheet" type="text/css" href="../assets/signup.css">
 </head>
 
 <body>
@@ -19,13 +19,15 @@
         <input name="u_email" type="email" placeholder="Email address"/>
         <input name="password" type="password" placeholder="Password"/>
         <input name="confirmPassword" type="password" placeholder="Confirm password"/>
-        <button type="submit">create Account</button>
+        <button type="submit">create Account</button> 
+        <p class="message">Already registered? <a href="#">Sign In</a></p>
        
       </form>
       <form class="login-form" method="POST" action="/login"  style="display: none;">
       <input name="u_email" type="email" placeholder="Email"/>
       <input type="password"name="password" placeholder="password"/>
-      <button type="submit">login</button>
+      <p class="message"> <a href="/forgotPassword">Forgot Password</a></p>
+      <button type="submit">Login</button>
       <p class="message">Not registered? <a href="#">Create an account</a></p>
     </form>
      

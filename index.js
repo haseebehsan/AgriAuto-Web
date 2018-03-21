@@ -160,11 +160,22 @@ app.get('/verifyEmail', function (req, res) {
 app.post('/signup', upload.array(), function (req, res) {
   // res.status(200).json({ status: 'working' });
   // console.log(req.body.username);
-
+if(req.body.password== req.body.confirmPassword){
 
   firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password)
 
-    .then(function (user) {
+  .catch(function (error) {
+
+    // Handle Errors 
+
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    console.log(errorCode + "\n Messsage: " + errorMessage);
+    // ...
+    //req.flash('error', errorMessage);
+    res.render('login');
+  })  
+  .then(function (user) {
       //Send verification email to user
       firebase.auth().onAuthStateChanged(function (user) {
         (user.emailVerified) ?
@@ -187,23 +198,16 @@ app.post('/signup', upload.array(), function (req, res) {
 
       )
     })
-    .catch(function (error) {
-
-      // Handle Errors 
-
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log(errorCode + "\n Messsage: " + errorMessage);
-      // ...
-      //req.flash('error', errorMessage);
-      res.render('login',{err:errorMessage});
-    });
+    ;
 
 
   console.log(req.body.u_email);
-  res.send("Signed up \n" + req.body.u_email + "--" + req.body.password + "   ");
+  res.send("Signed up \n" + req.body.u_email + " -- " + req.body.password + "   ");
 
-
+}
+else{
+  res.render('signup');
+}
 });
 
 ////////
