@@ -418,7 +418,7 @@ app.get('/settings', function (req, res) {
 
     
     
-    res.render('settings', {smmin: minsm, smmax: maxsm, hummin: minhum, hummax: maxhum, tempmin: mintemp, tempmax: maxtemp});
+    res.render('settings', {smmin: minsm, smmax: maxsm, hummin: minhum, hummax: maxhum, tempmin: mintemp, tempmax: maxtemp,fid:farmid, sid:siteid});
   }, function () {
     res.send('none');
   });

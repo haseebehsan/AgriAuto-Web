@@ -109,6 +109,7 @@
         $("#saveBtn").click(function () {
 
             var valueSm = $("#MinSoilMoistures").val();
+            console.log("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&value="+valueSm );
             console.log(valueSm);
             console.log(valueSm);
             var xhttp = new XMLHttpRequest();
@@ -123,7 +124,8 @@
                 }
             };
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("farmid=1&siteid=1&sensor=sm&value=400");
+
+            xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&value="+valueSm);
 
             // $.post("https://agripronode.herokuapp.com/api/setMin",
 
