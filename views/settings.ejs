@@ -123,7 +123,7 @@
             var xhttp = new XMLHttpRequest();
 ///////////////////////////////////////////MIN value set            
 //Sets the SM's min value
-            xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMin", true);
+            xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMin", false);
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
@@ -137,9 +137,9 @@
             xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&value="+valueminSM);
 
            //sets the Hums min value
-           
-            xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMin", true);
-            xhttp.onreadystatechange = function () {
+           var xhttp1 = new XMLHttpRequest();
+            xhttp1.open("POST", "https://agripronode.herokuapp.com/api/setMin",false);
+            xhttp1.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
                 }
@@ -147,14 +147,14 @@
                     console.log("error in output: "+this.responseText);
                 }
             };
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-            xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=hum&value="+valueminHum);           
-
+            xhttp1.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=hum&value="+valueminHum);           
+            var xhttp2 = new XMLHttpRequest();
 
             //Sets the Temps min value
-            xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMin", true);
-            xhttp.onreadystatechange = function () {
+            xhttp2.open("POST", "https://agripronode.herokuapp.com/api/setMin", true);
+            xhttp2.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
                 }
@@ -162,16 +162,17 @@
                     console.log("error in output: "+this.responseText);
                 }
             };
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-            xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&value="+valueminTemp);
+            xhttp2.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&value="+valueminTemp);
 
        
 
 //////////////////////// ////////////MAX Value set
 //Sets the SM's max value
-xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMax", true);
-xhttp.onreadystatechange = function () {
+var xhttp3 = new XMLHttpRequest();
+xhttp3.open("POST", "https://agripronode.herokuapp.com/api/setMax", true);
+xhttp3.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
         console.log(this.responseText);
     }
@@ -179,14 +180,14 @@ xhttp.onreadystatechange = function () {
         console.log("error in output: "+this.responseText);
     }
 };
-xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xhttp3.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&value="+valuemaxSM);
+xhttp3.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&value="+valuemaxSM);
 
 //sets the Hums max value
-
-xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMax", true);
-xhttp.onreadystatechange = function () {
+var xhttp4 = new XMLHttpRequest();
+xhttp4.open("POST", "https://agripronode.herokuapp.com/api/setMax", true);
+xhttp4.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
         console.log(this.responseText);
     }
@@ -194,14 +195,14 @@ xhttp.onreadystatechange = function () {
         console.log("error in output: "+this.responseText);
     }
 };
-xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xhttp4.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=hum&value="+valuemaxHum);           
+xhttp4.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=hum&value="+valuemaxHum);           
 
-
+var xhttp5 = new XMLHttpRequest();
 //Sets the Temps max value
-xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMax", true);
-xhttp.onreadystatechange = function () {
+xhttp5.open("POST", "https://agripronode.herokuapp.com/api/setMax", true);
+xhttp5.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
         console.log(this.responseText);
     }
@@ -209,9 +210,9 @@ xhttp.onreadystatechange = function () {
         console.log("error in output: "+this.responseText);
     }
 };
-xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xhttp5.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&value="+valuemaxTemp);
+xhttp5.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&value="+valuemaxTemp);
 
 });
 
