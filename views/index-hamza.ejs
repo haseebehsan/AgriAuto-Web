@@ -128,15 +128,8 @@
                     innerwidth = width - margin.left - margin.right,
                     innerheight = height - margin.top - margin.bottom;
 
-                var x_scale = d3.scale.linear()
-                    .range([0, innerwidth])
-                    .domain([d3.min(datasets, function (d) {
-                            return d3.min(d.x);
-                        }),
-                        d3.max(datasets, function (d) {
-                            return d3.max(d.x);
-                        })
-                    ]);
+                var x_scale = d3.scale.ordinal().range([0, innerwidth])
+                    .domain(data.map(function(d) {return d.x}));
 
                 var y_scale = d3.scale.linear()
                     .range([innerheight, 0])
@@ -285,7 +278,7 @@
 
     var http = new XMLHttpRequest();
     var url = "http://agripronode.herokuapp.com/api/getSensorData";
-    var params = "farmid=1&siteid=1&startdate=2018-01-01&enddate=2018-02-02";
+    var params = "farmid=1&siteid=1&startdate=2018-01-01&enddate=2018-03-21";
     http.open("POST", url, true);
 
     //Send the proper header information along with the request
@@ -311,11 +304,7 @@
                 });
             });
             console.log("listx: "+listx+" listsm: "+listsm+" listhum: "+listhum);
-            //alert(http.responseText);
-        }
-    }
-    http.send(params);
-    console.log(listx);
+            console.log(listx);
     console.log(listsm);
     var data3 = [
         {
@@ -343,6 +332,13 @@
     svg = d3.select("body").select("svg")
         .datum(data3)
         .call(xy_chart);
+        }
+    
+
+        }
+            //alert(http.responseText);
+            http.send(params);
+    
 
     </script>
     <footer>
