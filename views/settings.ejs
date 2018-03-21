@@ -13,7 +13,7 @@
 
 <div class="login-page" id="login-page">
     <div class="form">
-      <form class="register-form" type="post"> 
+      <form class="register-form"> 
     
 <h2 style="text-align:center; ">Settings</h2>
 <table style="text-align:center; " >
@@ -23,7 +23,7 @@
      
       <td style="padding: 0px 10px 5px 5px;">
     
-      <input name="MinSoilMoisture" type="text" placeholder="0-100" required="true"  value = "<%=smmin%>" />
+      <input name="MinSoilMoisture" type="text" placeholder="0-100" required="true" id="MinSoilMoistures"  value = "<%=smmin%>" />
     
    
      </td>
@@ -72,41 +72,40 @@
     
     $("#saveBtn").click(function(){
       
-    var valueSm=  $("#MinSoilMoisture").val();
+    var valueSm=  $("#MinSoilMoistures").val();
     console.log(valueSm);
     console.log(valueSm);
-    $.post("https://agripronode.herokuapp.com/api/setMin",
+    // $.post("https://agripronode.herokuapp.com/api/setMin",
        
-    {
+    // {
 
-            sensor:"sm",
-            value:$("#MinSoilMoisture").val(),
-            farmid: 1,
-            siteid:1
-        },
-        function(data, status){
-            alert("Data: " + data + "\nStatus: " + status);
-        });
+    //         sensor:"sm",
+    //         value:$("#MinSoilMoisture").val(),
+    //         farmid: 1,
+    //         siteid:1
+    //     },
+    //     function(data, status){
+    //         alert("Data: " + data + "\nStatus: " + status);
+    //     });
+
+    var datas={
+        'sensor':'sm',
+            'value':$("#MinSoilMoisture").val(),
+            'farmid': 1,
+            'siteid':1
+   };
+   $.ajax({
+    url: "https://agripronode.herokuapp.com/api/setMin",
+    type: "POST",
+    data: datas,
+    contentType: "application/json",
+    success: function (data) {
+        console.log("return : "+data);
+    }
+});
     });
 
-    $.ajax({
-        url: 'https://agripronode.herokuapp.com/api/setMin',
-        type: 'post',
-        data: {
-            sensor:"sm",
-            value:$("#MinSoilMoisture").val(),
-            farmid: 1,
-            siteid:1
-        },
-        headers: {
-            Header_Name_One: 'Header Value One',   //If your header name has spaces or any other char not appropriate
-            "Header Name Two": 'Header Value Two'  //for object property name, use quoted notation shown in second
-        },
-        dataType: 'json',
-        success: function (data) {
-            console.info(data);
-        }
-    });
+
     $('.message a').click(function(){
    $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
 });
