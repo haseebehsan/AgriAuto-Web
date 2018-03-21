@@ -99,6 +99,12 @@ app.get('/',function(req,res){
 });
 
 
+app.get('/dashboard',function(req,res){
+
+  res.render('dashboard');
+});
+
+
 app.get('/chart',function(req,res){
 
   res.render('index-hamza');
@@ -252,6 +258,15 @@ app.get('/settings', function (req, res) {
   res.render('settings');
 });
 
+app.get('/about', function (req, res) {
+  // res.status(200).json({ status: 'working' });
+  res.render('about');
+});
+
+app.get('/report', function (req, res) {
+  // res.status(200).json({ status: 'working' });
+  res.render('report');
+});
 
 ////////////////---------------------------------------------------------------
 // All API POST requests

@@ -11,16 +11,22 @@
     <% include ./partials/header %>
 </header>
 
-<div class="login-page">
+<div class="login-page" id="login-page">
     <div class="form">
+    
       <form class="register-form" method="POST" action="/signup">
-        <input name="firstName" type="text" placeholder="First Name" required="true"/>
+     <p>   <div class="Error" id="Error">
+ 
+
+</div></p>
+      <input name="firstName" type="text" placeholder="First Name" required="true"/>
         <input name="middleName" type="text" placeholder="Middle Name"/>
-        <input name="lastName" type="text" placeholder="Last Name"/>
-        <input name="phoneNumber" type="text" placeholder="Phone Number"/>
-        <input name="u_email" type="email" placeholder="Email address"/>
-        <input name="password" type="password" placeholder="Password"/>
-        <input name="confirmPassword" type="password" placeholder="Confirm password"/>
+        <input name="lastName" type="text" placeholder="Last Name"  required="true"/>
+        <input name="phoneNumber" type="text" placeholder="Phone Number"  required="true"/>
+        <input name="u_email" type="email" placeholder="Email address" required="true" />
+        <input class="txtpassword" id="txtpassword" name="password" type="password" placeholder="Password" required="true"/>
+        <input class="txtconfirmpassword" id="txtconfirmpassword" name="confirmPassword" type="password" placeholder="Confirm password" required="true" onChange="checkPasswordMatch();"/>
+    
         <button type="submit">create</button>
         <p class="message">Already registered? <a href="#">Sign In</a></p>
       </form>
@@ -37,6 +43,25 @@
   <script>
     $('.message a').click(function(){
    $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+});
+function checkPasswordMatch() {
+    var password = $("#txtpassword").val();
+    var confirmPassword = $("#txtconfirmpassword").val();
+
+    if (password != confirmPassword){
+        console.log("check fail");
+    
+      
+      }
+    else{
+        
+     
+        console.log("check pass");}
+
+}
+$("#txtpassword, #txtconfirmpassword").keyup(checkPasswordMatch);
+$(document).ready(function () {
+   $("#txtpassword, #txtconfirmpassword").keyup(checkPasswordMatch);
 });
 
 </script>
