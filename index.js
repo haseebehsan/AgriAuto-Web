@@ -351,6 +351,8 @@ app.get('/settings', function (req, res) {
 });
 
 app.get('/about', function (req, res) {
+  var user = firebase.auth().currentUser;
+  console.log(user.farmid);
   // res.status(200).json({ status: 'working' });
   res.render('about');
 });
