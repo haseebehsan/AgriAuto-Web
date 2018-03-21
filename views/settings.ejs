@@ -21,8 +21,12 @@
 <tr>
     <td style="padding: 0px 10px 15px 5px; "><label for="MinSoilMoisture">Min</label></td>
      
-      <td style="padding: 0px 10px 5px 5px;"> <input name="MinSoilMoisture" type="text" placeholder="0-100" required="true"/></td>
-     
+      <td style="padding: 0px 10px 5px 5px;">
+    
+      <input name="MinSoilMoisture" type="text" placeholder="0-100" required="true"  value = "<%=smmin%>" />
+    
+   
+     </td>
       <td  style="padding: 0px 10px 15px 100px;"><label for="MaxSoilMoisture">Max</label></td>
      
       <td style="padding: 0px 10px 5px 5px;"> <input name="MaxSoilMoisture" type="text" placeholder="0-100" required="true"/></td>
@@ -45,7 +49,7 @@
 </tr> 
     <td style="padding: 5px 10px 15px 5px;"><label for="MinSoilMoisture">Min</label></td>
      
-      <td style="padding: 5px 10px 5px 5px;"> <input name="MinSoilMoisture" type="text" placeholder="0-100" required="true"/></td>
+      <td style="padding: 5px 10px 5px 5px;"> <input name="MinSoilMoisture"  id="MinSoilMoisture" type="text" placeholder="0-100" required="true"/></td>
      
       <td  style="padding: 5px 10px 15px 100px;"><label for="MaxSoilMoisture">Max</label></td>
      
@@ -72,7 +76,7 @@
    $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
 });
 
-$(  )
+$(.MinSoilMoisture).val(<%=smmin%>);
 
 
 

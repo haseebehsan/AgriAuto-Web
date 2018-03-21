@@ -408,7 +408,10 @@ app.get('/settings', function (req, res) {
       irrigationMode = "none";
     }
   }).then(function () {
-    res.render('settings', {smmin: minsm, smmax: maxsm, hummin: minhum, hummax: maxhum, tempmin: mintemp, temmax: maxtemp});
+
+// minsm.sub
+
+    res.render('settings', {smmin: parseFloat(minsm), smmax: maxsm, hummin: minhum, hummax: maxhum, tempmin: mintemp, temmax: maxtemp});
   }, function () {
     res.send('none');
   });
@@ -731,7 +734,7 @@ app.post('/api/getIrrigationStatus', function (req, res) {
 /////////////
 app.post('/api/getStatus', function (req, res) {
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/manual').once('value').then(function (snapshot) {
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation').once('value').then(function (snapshot) {
     // snapshot.forEach(function(childSnapshot) {
     //     console.log(JSON.stringify(childSnapshot.val()));
     //   });
