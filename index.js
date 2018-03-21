@@ -295,7 +295,7 @@ app.get('/irrigation', function (req, res) {
       };
     }
 
-
+  });
 
   firebase.database().ref('/farms/' + user.farmid + '/' + siteid + '/irrigation/mode').once('value').then(function (snapshot) {
     // snapshot.forEach(function(childSnapshot) {
@@ -315,6 +315,7 @@ app.get('/irrigation', function (req, res) {
         status: -1
       };
     }
+  });
 
   res.render('irrigation', {irrigationmode: irrigationMode});
 });
