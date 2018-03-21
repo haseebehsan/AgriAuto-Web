@@ -117,104 +117,27 @@
             var valueminHum = $("#MinHums").val();
             var valuemaxHum = $("#MaxHums").val();
 
-           // console.log("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor="+sensor+"&value="+valueminSM );
-            console.log(valueSm);
-            console.log(valueSm);
+//            console.log("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor="+sensor+"&value="+valueminSM );
+            console.log(valueminHum);
+            console.log(valuemaxHum);
             var xhttp = new XMLHttpRequest();
 ///////////////////////////////////////////MIN value set            
 //Sets the SM's min value
-            xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMin", false);
+            xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMin", true);
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
                 }
                 else{
-                    console.log("error in output: "+this.responseText);
+                    console.log("error in output: " + this.responseText);
                 }
             };
+    
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
             xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&value="+valueminSM);
 
-           //sets the Hums min value
-           var xhttp1 = new XMLHttpRequest();
-            xhttp1.open("POST", "https://agripronode.herokuapp.com/api/setMin",false);
-            xhttp1.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    console.log(this.responseText);
-                }
-                else{
-                    console.log("error in output: "+this.responseText);
-                }
-            };
-            xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-            xhttp1.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=hum&value="+valueminHum);           
-            var xhttp2 = new XMLHttpRequest();
-
-            //Sets the Temps min value
-            xhttp2.open("POST", "https://agripronode.herokuapp.com/api/setMin", true);
-            xhttp2.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    console.log(this.responseText);
-                }
-                else{
-                    console.log("error in output: "+this.responseText);
-                }
-            };
-            xhttp2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-            xhttp2.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&value="+valueminTemp);
-
-       
-
-//////////////////////// ////////////MAX Value set
-//Sets the SM's max value
-var xhttp3 = new XMLHttpRequest();
-xhttp3.open("POST", "https://agripronode.herokuapp.com/api/setMax", true);
-xhttp3.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        console.log(this.responseText);
-    }
-    else{
-        console.log("error in output: "+this.responseText);
-    }
-};
-xhttp3.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-xhttp3.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&value="+valuemaxSM);
-
-//sets the Hums max value
-var xhttp4 = new XMLHttpRequest();
-xhttp4.open("POST", "https://agripronode.herokuapp.com/api/setMax", true);
-xhttp4.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        console.log(this.responseText);
-    }
-    else{
-        console.log("error in output: "+this.responseText);
-    }
-};
-xhttp4.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-xhttp4.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=hum&value="+valuemaxHum);           
-
-var xhttp5 = new XMLHttpRequest();
-//Sets the Temps max value
-xhttp5.open("POST", "https://agripronode.herokuapp.com/api/setMax", true);
-xhttp5.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        console.log(this.responseText);
-    }
-    else{
-        console.log("error in output: "+this.responseText);
-    }
-};
-xhttp5.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-xhttp5.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&value="+valuemaxTemp);
-
-});
+         
 
         $('.message a').click(function () {
             $('form').animate({
