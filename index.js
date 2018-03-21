@@ -26,8 +26,13 @@ var emailSent = false;
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-//using connect-flash to flasj error messages to user
-//app.use(flash());
+
+
+
+
+var farmid;
+var siteid;
+
 
 var config = {
   apiKey: "AIzaSyACMgec6EghmqZ5eRZGKablbh5LXvGz4Cw",
@@ -52,7 +57,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
     var isAnonymous = user.isAnonymous;
     var uid = user.uid;
-    var farmid;
+  
     firebase.database().ref('/users/' + uid + '/farm').once('value').then(function (snapshot) {
       fid = JSON.stringify(snapshot.val());
 
@@ -60,7 +65,20 @@ firebase.auth().onAuthStateChanged(function (user) {
       console.log(fid[1]);
 
       farmid = fid[1];
-      // console.log("key: "+childSnapshot.key);
+       console.log("Farm id in AuthState"+farmid);
+      //userfarmid=fid[1];
+
+
+    });
+
+    firebase.database().ref('/users/' + uid + '/site').once('value').then(function (snapshot) {
+      sid = JSON.stringify(snapshot.val());
+
+      console.log(sid);
+      console.log(sid[1]);
+
+      siteid = sid[1];
+       console.log("Site Id in AuthState"+siteid);
       //userfarmid=fid[1];
 
 
@@ -106,7 +124,8 @@ function isFarmSet() {
 /////////////////////////////
 
 app.get('/', function (req, res) {
-
+console.log("farm id in index route  -- "+farmid);
+console.log("Site id in index route  -- "+siteid);
   res.render('index');
 });
 
