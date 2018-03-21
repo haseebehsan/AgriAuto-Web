@@ -409,9 +409,16 @@ app.get('/settings', function (req, res) {
     }
   }).then(function () {
 
-// minsm.sub
+    minsm=minsm.substring(1,minsm.length-1);
+    maxsm=maxsm.substring(1,maxsm.length-1);
+    minhum=minhum.substring(1,minhum.length-1);
+    maxhum=maxhum.substring(1,maxhum.length-1);
+    mintemp=mintemp.substring(1,mintemp.length-1);
+    maxtemp=maxtemp.substring(1,maxtemp.length-1);
 
-    res.render('settings', {smmin: parseFloat(minsm), smmax: maxsm, hummin: minhum, hummax: maxhum, tempmin: mintemp, temmax: maxtemp});
+    
+    
+    res.render('settings', {smmin: minsm, smmax: maxsm, hummin: minhum, hummax: maxhum, tempmin: mintemp, tempmax: maxtemp});
   }, function () {
     res.send('none');
   });

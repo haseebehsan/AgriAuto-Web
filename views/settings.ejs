@@ -13,7 +13,7 @@
 
 <div class="login-page" id="login-page">
     <div class="form">
-      <form class="register-form" method="POST" action="/signup"> 
+      <form class="register-form"> 
     
 <h2 style="text-align:center; ">Settings</h2>
 <table style="text-align:center; " >
@@ -29,36 +29,36 @@
      </td>
       <td  style="padding: 0px 10px 15px 100px;"><label for="MaxSoilMoisture">Max</label></td>
      
-      <td style="padding: 0px 10px 5px 5px;"> <input name="MaxSoilMoisture" type="text" placeholder="0-100" required="true"/></td>
+      <td style="padding: 0px 10px 5px 5px;"> <input name="MaxSoilMoisture" type="text" placeholder="0-100" required="true"  value = "<%=smmax%>"/></td>
     </tr>
     
  <tr > <td> <h4><strong >Temperature</strong> </h4></td></tr>   
 <tr>
-    <td style="padding: 5px 10px 15px 5px;"><label for="MinSoilMoisture">Min</label></td>
+    <td style="padding: 5px 10px 15px 5px;"><label for="Mintemp">Min</label></td>
      
-      <td style="padding: 5px 10px 5px 5px;"> <input name="MinSoilMoisture" type="text" placeholder="Celcius" required="true"/></td>
+      <td style="padding: 5px 10px 5px 5px;"> <input name="Mintemp" type="text" placeholder="Celcius" required="true"  value = "<%=tempmin%>"/></td>
      
-      <td  style="padding: 5px 10px 15px 100px;"><label for="MaxSoilMoisture">Max</label></td>
+      <td  style="padding: 5px 10px 15px 100px;"><label for="Maxtemp">Max</label></td>
      
-      <td style="padding: 5px 10px 5px 5px;"> <input name="MaxSoilMoisture" type="text" placeholder="Celcius" required="true"/></td>
+      <td style="padding: 5px 10px 5px 5px;"> <input name="Maxtemp" type="text" placeholder="Celcius" required="true"/ value = "<%=tempmax%>"></td>
     </tr>
       
 <tr>
 <tr style="padding: 5px 10px 5px 5px;" > 
 <td > <h4   ><strong >Humidity</strong> </h4></td>
 </tr> 
-    <td style="padding: 5px 10px 15px 5px;"><label for="MinSoilMoisture">Min</label></td>
+    <td style="padding: 5px 10px 15px 5px;"><label for="Minhum">Min</label></td>
      
-      <td style="padding: 5px 10px 5px 5px;"> <input name="MinSoilMoisture"  id="MinSoilMoisture" type="text" placeholder="0-100" required="true"/></td>
+      <td style="padding: 5px 10px 5px 5px;"> <input name="Minhum"  id="Minhum" type="text" placeholder="0-100" required="true" value = "<%=hummin%>" /></td>
      
-      <td  style="padding: 5px 10px 15px 100px;"><label for="MaxSoilMoisture">Max</label></td>
+      <td  style="padding: 5px 10px 15px 100px;"><label for="Maxhum">Max</label></td>
      
-      <td style="padding: 5px 10px 5px 5px;"> <input name="MaxSoilMoisture" type="text" placeholder="0-100" required="true" /></td>
+      <td style="padding: 5px 10px 5px 5px;"> <input name="Maxhum" type="text" placeholder="0-100" required="true"  value = "<%=hummax%>"/></td>
     </tr>
     </table>
    
       
-        <button type="submit" id="saveBtn" width="100px">Save</button>
+        <button  id="saveBtn" width="100px" >Save</button>
     
       </form>
       </div>
@@ -70,13 +70,31 @@
 
 
     
+    $("#saveBtn").click(function(){
+      
+    var valueSm=  $("#MinSoilMoisture").val();
+    console.log(valueSm);
+    console.log(valueSm);
+    $.post("https://agripronode.herokuapp.com/api/setMin",
+       
+    {
+
+            sensor:"sm",
+            value:$("#MinSoilMoisture").val(),
+            farmid: 1,
+            siteid:1
+        },
+        function(data, status){
+            alert("Data: " + data + "\nStatus: " + status);
+        });
+    });
 
 
     $('.message a').click(function(){
    $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
 });
 
-$(.MinSoilMoisture).val(<%=smmin%>);
+
 
 
 
