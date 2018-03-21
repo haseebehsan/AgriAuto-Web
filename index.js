@@ -49,25 +49,25 @@ firebase.auth().onAuthStateChanged(function (user) {
     var displayName = user.displayName;
     var email = user.email;
     var emailVerified = user.emailVerified;
-    
+
     var isAnonymous = user.isAnonymous;
     var uid = user.uid;
     var farmid;
-    firebase.database().ref('/users/' + uid+'/farm').once('value').then(function (snapshot) {
-      fid=JSON.stringify(snapshot.val());
-      
+    firebase.database().ref('/users/' + uid + '/farm').once('value').then(function (snapshot) {
+      fid = JSON.stringify(snapshot.val());
+
       console.log(fid);
       console.log(fid[1]);
-      
-      farmid=fid[1];
-        // console.log("key: "+childSnapshot.key);
-  //userfarmid=fid[1];
-        
-  
-      });
+
+      farmid = fid[1];
+      // console.log("key: "+childSnapshot.key);
+      //userfarmid=fid[1];
+
+
+    });
 
     // ...
-  } else if(!user) {
+  } else if (!user) {
 
     console.log('Logged Out');
   }
@@ -88,16 +88,16 @@ function loggedIn() {
 function isFarmSet() {
   //Use API
   firebase.database().ref('/users/' + firebase.auth().currentUser.uid).once('value').then(function (snapshot) {
-   
 
-   // console.log(snapshot.val());
+
+    // console.log(snapshot.val());
     if (snapshot != null) {
-   return true;
-asd
+      return true;
+      asd
     } else {
       return false;
     }
-    
+
   });
 }
 
@@ -105,19 +105,19 @@ asd
 // ROUTES
 /////////////////////////////
 
-app.get('/',function(req,res){
+app.get('/', function (req, res) {
 
   res.render('index');
 });
 
 
-app.get('/dashboard',function(req,res){
+app.get('/dashboard', function (req, res) {
 
   res.render('dashboard');
 });
 
 
-app.get('/chart',function(req,res){
+app.get('/chart', function (req, res) {
 
   res.render('index-hamza');
 });
@@ -178,54 +178,52 @@ app.get('/verifyEmail', function (req, res) {
 app.post('/signup', upload.array(), function (req, res) {
   // res.status(200).json({ status: 'working' });
   // console.log(req.body.username);
-if(req.body.password== req.body.confirmPassword){
+  if (req.body.password == req.body.confirmPassword) {
 
-  firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password)
+    firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password)
 
-  .catch(function (error) {
+      .catch(function (error) {
 
-    // Handle Errors 
+        // Handle Errors 
 
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    console.log(errorCode + "\n Messsage: " + errorMessage);
-    // ...
-    //req.flash('error', errorMessage);
-    res.render('login');
-  })  
-  .then(function (user) {
-      //Send verification email to user
-      firebase.auth().onAuthStateChanged(function (user) {
-        (user.emailVerified) ?
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode + "\n Messsage: " + errorMessage);
+        // ...
+        //req.flash('error', errorMessage);
+        res.render('login');
+      })
+      .then(function (user) {
+        //Send verification email to user
+        firebase.auth().onAuthStateChanged(function (user) {
+          (user.emailVerified) ?
 
-          console.log('Email is verified') :
+          console.log('Email is verified'):
 
-          user.sendEmailVerification();
+            user.sendEmailVerification();
+        });
+
+      }).then(function () {
+        //Add rest of the information in the users profile
+        firebase.database().ref('/users/' + firebase.auth().currentUser.uid).set({
+
+            firstname: req.body.firstName,
+            middlename: req.body.middleName,
+            lastname: req.body.lastName,
+            phone: req.body.phoneNumber
+          }
+
+
+        )
       });
 
-    }).then(function () {
-      //Add rest of the information in the users profile
-      firebase.database().ref('/users/' + firebase.auth().currentUser.uid).set({
 
-        firstname: req.body.firstName,
-        middlename: req.body.middleName,
-        lastname: req.body.lastName,
-        phone: req.body.phoneNumber
-      }
+    console.log(req.body.u_email);
+    res.send("Signed up \n" + req.body.u_email + " -- " + req.body.password + "   ");
 
-
-      )
-    })
-    ;
-
-
-  console.log(req.body.u_email);
-  res.send("Signed up \n" + req.body.u_email + " -- " + req.body.password + "   ");
-
-}
-else{
-  res.render('signup');
-}
+  } else {
+    res.render('signup');
+  }
 });
 
 ////////
@@ -235,7 +233,7 @@ else{
 app.post('/resendVerificationEmail', upload.array(), function (req, res) {
 
   firebase.auth().onAuthStateChanged(function (user) {
-    (user.emailVerified) ? console.log('Email is verified') : user.sendEmailVerification();
+    (user.emailVerified) ? console.log('Email is verified'): user.sendEmailVerification();
   });
   res.redirect('/verifyEmail');
 });
@@ -253,23 +251,22 @@ app.get('/forgotPassword', function (req, res) {
 });
 
 app.post('/forgotpassword', function (req, res) {
-  if(loggedIn){
-  firebase.auth().sendPasswordResetEmail(req.body.u_email.toString());
+  if (loggedIn) {
+    firebase.auth().sendPasswordResetEmail(req.body.u_email.toString());
 
-  res.send("Password reset email sent");
-}
-else{
-  res.redirect('login');
-}
+    res.send("Password reset email sent");
+  } else {
+    res.redirect('login');
+  }
 });
 
 //redirects the user to the signup page
 app.get('/setFarm', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  if(loggedIn)
-  res.render('setFarm');
+  if (loggedIn)
+    res.render('setFarm');
   else
-  res.redirect('login');
+    res.redirect('login');
 });
 
 app.get('/changePassword', function (req, res) {
@@ -277,20 +274,63 @@ app.get('/changePassword', function (req, res) {
   res.redirect('changePassword');
 });
 
+function getFarmid() {
+  var user = firebase.auth().currentUser;
+  console.log("userid: " + user.uid);
+  farmid = 0;
+  firebase.database().ref('/users/' + user.uid + '/farm').once('value').then(function (snapshot) {
+    // snapshot.forEach(function(childSnapshot) {
+    //     console.log(JSON.stringify(childSnapshot.val()));
+    //   });
+
+    console.log("farmid: " + snapshot.val());
+    if (snapshot.val() != null) {
+      farmid = snapshot.val();
+
+    } else {
+      farmid = 0;
+    }
+
+  });
+  return farmid;
+}
+
 app.get('/irrigation', function (req, res) {
   // res.status(200).json({ status: 'working' });
   var user = firebase.auth().currentUser;
   var irrigationMode
-  var siteid
+  var siteid = 0
 
-  firebase.database().ref('/users/' + user.uid+'/site').once('value').then(function (snapshot) {
+  firebase.database().ref('/users/' + user.uid + '/').once('value').then(function (snapshot) {
     // snapshot.forEach(function(childSnapshot) {
     //     console.log(JSON.stringify(childSnapshot.val()));
     //   });
 
-    console.log("siteid: "+JSON.stringify(snapshot.val()));
+    console.log("siteid: " + JSON.stringify(snapshot.val()));
     if (snapshot.val() != null) {
-      siteid = JSON.stringify(snapshot.val());
+      siteid = JSON.stringify(snapshot.child('site'));
+      farmid = JSON.stringify(snapshot.child('farm'))
+      // siteid = siteid[1];
+      console.log("farmid: "+farmid+" - siteod: "+siteid);
+      firebase.database().ref('/farms/' + farmid+ '/' + siteid + '/irrigation/mode/mode').once('value').then(function (snapshot) {
+        // snapshot.forEach(function(childSnapshot) {
+        //     console.log(JSON.stringify(childSnapshot.val()));
+        //   });
+
+        console.log("mode output: " + JSON.stringify(snapshot.val()));
+        if (snapshot.val() != null) {
+          res.json(snapshot.val());
+          irrigationMode = snapshot.val()
+
+        } else {
+          res.json({
+            status: -1
+          });
+          irrigationMode = {
+            status: -1
+          };
+        }
+      });
 
     } else {
       res.json({
@@ -302,29 +342,13 @@ app.get('/irrigation', function (req, res) {
     }
 
   });
-  console.log("farmid: "+user.farmid);
+  
 
-  firebase.database().ref('/farms/' + user.farmid + '/' + siteid + '/irrigation/mode').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
 
-    console.log("mode output: "+JSON.stringify(snapshot.val()));
-    if (snapshot.val() != null) {
-      res.json(snapshot.val());
-      irrigationMode = snapshot.val()
 
-    } else {
-      res.json({
-        status: -1
-      });
-      irrigationMode = {
-        status: -1
-      };
-    }
+  res.render('irrigation', {
+    irrigationmode: irrigationMode
   });
-
-  res.render('irrigation', {irrigationmode: irrigationMode});
 });
 
 app.get('/settings', function (req, res) {
@@ -382,8 +406,7 @@ app.post('/api/getSensorData', function (req, res) {
         if (count == 0) {
 
           count = 1
-        }
-        else {
+        } else {
           childstring = "," + childstring;
         }
 
@@ -422,15 +445,15 @@ app.post('/api/getLatestSensorData', function (req, res) {
   console.log(req.body.farmid);
   console.log(req.body.siteid);
 
- 
- 
- 
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').orderByKey().limitToLast(1).on("child_added",function (snapshot) {
+
+
+
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').orderByKey().limitToLast(1).on("child_added", function (snapshot) {
     var childstring;
     var highest = '';
-    console.log(JSON.stringify(snapshot));  
-    console.log(snapshot.key+" - "+JSON.stringify(snapshot));
+    console.log(JSON.stringify(snapshot));
+    console.log(snapshot.key + " - " + JSON.stringify(snapshot));
     res.json(snapshot);
   });
 
@@ -473,8 +496,7 @@ app.post('/api/getFarmSites', function (req, res) {
       if (count == 0) {
 
         count = 1
-      }
-      else {
+      } else {
         childstring = "," + childstring;
       }
 
@@ -608,7 +630,7 @@ app.post('/api/setIrrigationStatus', function (req, res) {
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
 app.post('/api/getIrrigationStatus', function (req, res) {
-  
+
 
   firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/manual').once('value').then(function (snapshot) {
     // snapshot.forEach(function(childSnapshot) {
@@ -816,7 +838,7 @@ app.post('/api/setCropType', function (req, res) {
 
 
 
-  firebase.database().ref('/farms/' + req.body.farmid+'/'+req.body.siteid+'/info/').update({
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').update({
     croptype: req.body.croptype
   });
 
@@ -840,14 +862,16 @@ app.post('/api/getCropType', function (req, res) {
 
 
 
-  firebase.database().ref('/farms/' + req.body.farmid+'/'+req.body.siteid+'/info/').once('value').then(function (snapshot) {
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').once('value').then(function (snapshot) {
     // snapshot.forEach(function(childSnapshot) {
     //     console.log(JSON.stringify(childSnapshot.val()));
     //   });
 
     console.log(snapshot.child("croptype").val());
     if (snapshot != null && snapshot.child("croptype" != null)) {
-      res.json({ croptype : snapshot.child("croptype").val()});
+      res.json({
+        croptype: snapshot.child("croptype").val()
+      });
 
     } else {
       res.json({
