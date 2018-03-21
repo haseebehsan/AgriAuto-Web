@@ -81,7 +81,7 @@ function isFarmSet() {
    // console.log(snapshot.val());
     if (snapshot != null) {
    return true;
-
+asd
     } else {
       return false;
     }
