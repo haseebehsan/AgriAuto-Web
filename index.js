@@ -282,7 +282,7 @@ app.get('/irrigation', function (req, res) {
     //     console.log(JSON.stringify(childSnapshot.val()));
     //   });
 
-    console.log(JSON.stringify(snapshot.val()));
+    console.log("siteid: "+JSON.stringify(snapshot.val()));
     if (snapshot.val() != null) {
       siteid = JSON.stringify(snapshot.val());
 
@@ -296,13 +296,14 @@ app.get('/irrigation', function (req, res) {
     }
 
   });
+  console.log("farmid: "+user.farmid);
 
   firebase.database().ref('/farms/' + user.farmid + '/' + siteid + '/irrigation/mode').once('value').then(function (snapshot) {
     // snapshot.forEach(function(childSnapshot) {
     //     console.log(JSON.stringify(childSnapshot.val()));
     //   });
 
-    console.log(JSON.stringify(snapshot.val()));
+    console.log("mode output: "+JSON.stringify(snapshot.val()));
     if (snapshot.val() != null) {
       res.json(snapshot.val());
       irrigationMode = snapshot.val()
