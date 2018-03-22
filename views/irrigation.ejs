@@ -11,37 +11,64 @@
     <% include ./partials/header.ejs %>
   </header>
 
-  <div class="dropdown">
-    <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-    <div id="myDropdown" class="dropdown-content">
-      <a href="#">Link 1</a>
-      <a href="#">Link 2</a>
-      <a href="#">Link 3</a>
-    </div>
-  </div>
+ 
   <p><%=  irrigationmode  %></p>
-
+<div class="layout">
   <div class="SelectedMode">
   <h3><%irrigationmode%></h3>
+  <div class="dropdown">
+  <label for="myDropdown">Irrigation Mode</label> 
+
+<select id="myDropdown">
+<option value="1">Auto</option>
+<option value="2">Scheduled</option>
+<option value="3">Manual</option>
+</select>
   </div>
+</div>
   
-<div class="AutoMode">
   
-<form>
+<div class="AutoMode clearfix" style="padding-top:10px; padding-bottom:10px;">
+  <div class="col-lg-3 col-md-5 col-sm-5">
+    
+  </div>
+<div class="col-lg-6 col-md-2 col-sm-2 ">
   
-</form>
+<strong> Auto Mode</strong></br>
+ The system takes the decision whether to turn on or off
+ the irrigation based on the sensor's data
+
+</div class="col-lg-3 col-md-5 col-sm-5">
+<div>
+  
+</div>
+
+
 
 </div>
 <div class="ScheduledMode">
   
 </div>
 
-<div class="ManualMode">
+<div class="ManualMode clearfix" style="display:none;">
+  
+<div class="col-lg-5 col-md-5 col-sm-5">
+    
+  </div>
+<div class="col-lg-2 col-md-2 col-sm-2 ">
+  
+
+<label class="switch "><input type="checkbox" id="ManualtogBtn" value="Off"><div class="slider round"></div></label>
+
+</div class="col-lg-5 col-md-5 col-sm-5">
+<div>
   
 </div>
 
+</div>
 
 
+</div>
 
 
 
@@ -50,6 +77,118 @@
   <script>
     /* When the user clicks on the button, 
     toggle between hiding and showing the dropdown content */
+   $("#myDropdown").change(function(){
+     
+ if(   $(this).val()==1){
+console.log("Auto mode selected");
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationMode", true);
+  xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+      }
+      else{
+          console.log("error in output: " + this.responseText);
+      }
+  };
+
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+  xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&mode=auto");
+ }
+ else if( $(this).val()==2){
+  var xhttp = new XMLHttpRequest();
+ xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationMode", true);
+  xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+      }
+      else{
+          console.log("error in output: " + this.responseText);
+      }
+  };
+
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+  xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&mode=scheduled");
+
+
+ }
+
+ else if ( $(this).val()==3){
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationMode", true);
+   xhttp.onreadystatechange = function () {
+       if (this.readyState == 4 && this.status == 200) {
+           console.log(this.responseText);
+       }
+       else{
+           console.log("error in output: " + this.responseText);
+       }
+   };
+ 
+   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+ 
+   xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&mode=manual");
+ 
+
+ }
+ 
+  })
+   
+    $("#ManualtogBtn").click(function () {
+
+           if($("#ManualtogBtn").val()=="Off"){
+            $("#ManualtogBtn").val("On");
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationStatus", true);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                }
+                else{
+                    console.log("error in output: " + this.responseText);
+                }
+            };
+    
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&status=1");
+
+
+} else {
+  
+  xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationStatus", true);
+  xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+      }
+      else{
+          console.log("error in output: " + this.responseText);
+      }
+  };
+
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+  xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&status=0");
+
+
+              $("#AutotogBtn").val("Off");
+
+              
+            }
+           
+
+//       
+  
+console.log($("#AutotogBtn").val());
+            // var xhttp = new XMLHttpRequest();
+///////////////////////////////////////////MIN value set            
+//Sets the SM's min value
+           
+        });
+   
     function myFunction() {
       document.getElementById("myDropdown").classList.toggle("show");
     }

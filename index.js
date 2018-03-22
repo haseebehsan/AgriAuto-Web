@@ -331,8 +331,7 @@ app.get('/irrigation', function (req, res) {
 
     console.log("mode output: " + JSON.stringify(snapshot.val()));
     if (snapshot.val() != null) {
-      siteid = JSON.stringify(snapshot.child('site'));
-      farmid = JSON.stringify(snapshot.child('farm'))
+     
       // siteid = siteid[1];
       console.log("farmid: " + farmid + " - siteod: " + siteid);
       firebase.database().ref('/farms/' + farmid + '/' + siteid + '/irrigation/mode/mode').once('value').then(function (snapshot) {
@@ -342,13 +341,11 @@ app.get('/irrigation', function (req, res) {
 
         console.log("mode output: " + JSON.stringify(snapshot.val()));
         if (snapshot.val() != null) {
-          res.json(snapshot.val());
+         
           irrigationMode = snapshot.val()
 
         } else {
-          res.json({
-            status: -1
-          });
+         
           irrigationMode = {
             status: -1
           };
@@ -359,9 +356,9 @@ app.get('/irrigation', function (req, res) {
       irrigationMode = "none";
     }
   }).then(function () {
-
+console.log("success gettting irrigation mode");
     res.render('irrigation', {
-      irrigationmode: irrigationMode
+      irrigationmode: irrigationMode, fid:farmid,sid:siteid
     });
   }, function () {
     res.send('none');
@@ -371,7 +368,7 @@ app.get('/irrigation', function (req, res) {
 
 
   res.render('irrigation', {
-    irrigationmode: irrigationMode
+    irrigationmode: irrigationMode, fid:farmid,sid:siteid
   });
 });
 
