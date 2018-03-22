@@ -78,7 +78,7 @@
     /* When the user clicks on the button, 
     toggle between hiding and showing the dropdown content */
    $("#myDropdown").change(function(){
-     
+    console.log("dopdown val :  "+$(this).val())
  if(   $(this).val()==1){
 console.log("Auto mode selected");
   var xhttp = new XMLHttpRequest();
@@ -97,6 +97,7 @@ console.log("Auto mode selected");
   xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&mode=auto");
  }
  else if( $(this).val()==2){
+ 
   var xhttp = new XMLHttpRequest();
  xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationMode", true);
   xhttp.onreadystatechange = function () {
