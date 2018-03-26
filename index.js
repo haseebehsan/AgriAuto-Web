@@ -1,6 +1,7 @@
 const express = require('express');
 const firebase = require("firebase");
 const bodyParser = require('body-parser');
+const sms = require('twilio')('ACb0ef32d95a760c7eeb3b21213a515f00','31d20f11a68d320a6ca4a2085c411493');
 //const flash = require('connect-flash');
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -691,6 +692,40 @@ app.post('/api/setIrrigationStatus', function (req, res) {
 //   res.status(200)
 //   // res.render('index');
 // });
+
+
+
+/////////////
+//inputs
+// farmid
+//  siteid: 0000-9999
+//
+//output
+// status: 0,1, -1 (-1 shows there is no data on server)
+/////////////
+app.post('/api/senAlert', function (req, res) {
+  console.log(req.body.phonenumber);
+  console.log(req.body.msgbody);
+
+  sms.sendMessage({
+    to: phonenumber,
+    from: '+13022488465',
+    body: msgbody
+
+  }, function(err, data){
+    if(err){
+      console.log(err);
+    }
+    console.log(data);
+  });
+
+  res.status(200)
+  // res.render('index');
+});
+
+
+
+
 
 /////////////
 //inputs
