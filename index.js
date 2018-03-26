@@ -1,7 +1,7 @@
 const express = require('express');
 const firebase = require("firebase");
 const bodyParser = require('body-parser');
-const sms = require('twilio')('ACb0ef32d95a760c7eeb3b21213a515f00','31d20f11a68d320a6ca4a2085c411493');
+const client = require('twilio')('ACb0ef32d95a760c7eeb3b21213a515f00','31d20f11a68d320a6ca4a2085c411493');
 //const flash = require('connect-flash');
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -707,7 +707,7 @@ app.post('/api/sendAlert', function (req, res) {
   console.log(req.body.phonenumber);
   console.log(req.body.msgbody);
 
-  sms.sendMessage({
+  client.sendMessage({
     to: req.body.phonenumber,
     from: '+13022488465',
     body: req.body.msgbody
