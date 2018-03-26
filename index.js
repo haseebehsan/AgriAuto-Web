@@ -707,7 +707,7 @@ app.post('/api/sendAlert', function (req, res) {
   console.log(req.body.phonenumber);
   console.log(req.body.msgbody);
 
-  client.sendMessage({
+  client.messages.create({
     to: req.body.phonenumber,
     from: '+13022488465',
     body: req.body.msgbody
