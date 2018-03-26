@@ -703,14 +703,14 @@ app.post('/api/setIrrigationStatus', function (req, res) {
 //output
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
-app.post('/api/senAlert', function (req, res) {
+app.post('/api/sendAlert', function (req, res) {
   console.log(req.body.phonenumber);
   console.log(req.body.msgbody);
 
   sms.sendMessage({
-    to: phonenumber,
+    to: req.body.phonenumber,
     from: '+13022488465',
-    body: msgbody
+    body: req.body.msgbody
 
   }, function(err, data){
     if(err){
