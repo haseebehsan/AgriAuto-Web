@@ -7,6 +7,8 @@ const app = express();
 const morgan = require('morgan');
 const multer = require('multer'); // v1.0.5
 const upload = multer(); // for parsing multipart/form-data
+var location = require('location-href');
+
 app.use(morgan('dev'));
 
 app.use('/assets', express.static('assets'));
@@ -17,7 +19,8 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
-var emailSent = false;
+
+
 
 //app.use(express.cookieParser('keyboard cat'));
 
@@ -87,6 +90,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     // ...
   } else if (!user) {
 
+
     console.log('Logged Out');
   }
 });
@@ -96,10 +100,13 @@ firebase.auth().onAuthStateChanged(function (user) {
 function loggedIn() {
   var user = firebase.auth().currentUser;
   if (user) {
+
     return true;
 
   } else {
+
     return false;
+
   }
 }
 
@@ -124,9 +131,11 @@ function isFarmSet() {
 /////////////////////////////
 
 app.get('/', function (req, res) {
+
   console.log("farm id in index route  -- " + farmid);
   console.log("Site id in index route  -- " + siteid);
-  if (firebase.auth().currentUser) {
+
+  if (loggedIn()) {
     res.render('index');
   } else {
     res.render('login');
@@ -135,14 +144,19 @@ app.get('/', function (req, res) {
 
 
 app.get('/dashboard', function (req, res) {
-
-  res.render('dashboard');
+  if (loggedIn()) {
+    res.render('dashboard');
+  } else
+    res.redirect('login');
 });
 
 
 app.get('/chart', function (req, res) {
-
-  res.render('index-hamza');
+  if (loggedIn()) {
+    res.render('index-hamza');
+  } else {
+    res.redirect('login');
+  }
 });
 
 
@@ -150,7 +164,13 @@ app.get('/chart', function (req, res) {
 //Renders the login page
 app.get('/login', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  res.render('login');
+  if (!loggedIn) {
+    res.render('login');
+
+  } else {
+    res.render('login');
+  }
+
 });
 
 
@@ -158,11 +178,12 @@ app.get('/login', function (req, res) {
 app.post('/login', upload.array(), function (req, res, next) {
   // res.status(200).json({ status: 'working' });
   // console.log(req.body.username);
-
+  var errorMessage;
+  var errorCode;
   firebase.auth().signInWithEmailAndPassword(req.body.u_email, req.body.password).catch(function (error) {
     // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
+    errorCode = error.code;
+    errorMessage = error.message;
     console.log(errorCode + "  " + errorMessage);
     res.redirect('/login');
     // ...
@@ -175,7 +196,10 @@ app.post('/login', upload.array(), function (req, res, next) {
     res.redirect('/');
 
   }, function () {
-    res.redirect('/login');
+
+    res.render('/login', {
+      errorMsg: errorMessage
+    });
 
   });
 
@@ -242,7 +266,7 @@ app.post('/signup', upload.array(), function (req, res) {
 
 
     console.log(req.body.u_email);
-    res.send("Signed up \n" + req.body.u_email + " -- " + req.body.password + "   ");
+    res.render('login');
 
   } else {
     res.render('signup');
@@ -256,7 +280,11 @@ app.post('/signup', upload.array(), function (req, res) {
 app.post('/resendVerificationEmail', upload.array(), function (req, res) {
 
   firebase.auth().onAuthStateChanged(function (user) {
-    (user.emailVerified) ? console.log('Email is verified'): user.sendEmailVerification();
+    (user.emailVerified) ?
+    console.log('Email is verified')
+
+      :
+      user.sendEmailVerification();
   });
   res.redirect('/verifyEmail');
 });
@@ -320,24 +348,18 @@ function getFarmid() {
 
 app.get('/irrigation', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  var user = firebase.auth().currentUser;
-  var irrigationMode;
+  if (loggedIn) {
+    var user = firebase.auth().currentUser;
+    var irrigationMode;
 
 
-  firebase.database().ref('/farms/' + farmid + '/' + siteid + '/irrigation/mode/mode').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
+    firebase.database().ref('/farms/' + farmid + '/' + siteid + '/irrigation/mode/mode').once('value').then(function (snapshot) {
+      // snapshot.forEach(function(childSnapshot) {
+      //     console.log(JSON.stringify(childSnapshot.val()));
+      //   });
 
-    console.log("mode output: " + JSON.stringify(snapshot.val()));
-    if (snapshot.val() != null) {
-     
-      // siteid = siteid[1];
-      console.log("farmid: " + farmid + " - siteod: " + siteid);
-      firebase.database().ref('/farms/' + farmid + '/' + siteid + '/irrigation/mode/mode').once('value').then(function (snapshot) {
-        // snapshot.forEach(function(childSnapshot) {
-        //     console.log(JSON.stringify(childSnapshot.val()));
-        //   });
+      console.log("mode output: " + JSON.stringify(snapshot.val()));
+      if (snapshot.val() != null) {
 
         // siteid = siteid[1];
         console.log("farmid: " + farmid + " - siteod: " + siteid);
@@ -347,82 +369,90 @@ app.get('/irrigation', function (req, res) {
           //     console.log(JSON.stringify(childSnapshot.val()));
           //   });
 
-        } else {
-         
-          irrigationMode = {
-            status: -1
-          };
-        }
+          console.log("mode output: " + JSON.stringify(snapshot.val()));
+          if (snapshot.val() != null) {
+
+            irrigationMode = snapshot.val()
+
+          } else {
+
+            irrigationMode = {
+              status: -1
+            };
+          }
+        });
+
+      } else {
+        irrigationMode = "none";
+      }
+    }).then(function () {
+  //Function called when promise OnAccept
+      console.log("success gettting irrigation mode");
+      res.render('irrigation', {
+        irrigationmode: irrigationMode,
+        fid: farmid,
+        sid: siteid
       });
+  
+    }, function () {
+//Function called when promise OnReject
+        res.send('none');
 
-    } else {
-      irrigationMode = "none";
-    }
-  }).then(function () {
-console.log("success gettting irrigation mode");
-    res.render('irrigation', {
-      irrigationmode: irrigationMode, fid:farmid,sid:siteid
     });
-  }, function () {
-    res.send('none');
-  });
 
+    res.render('irrigation', {
+      irrigationmode: irrigationMode,
+      fid: farmid,
+      sid: siteid
+    });
+  } else {
+    res.render('login');
+  }
 
-
-
-  res.render('irrigation', {
-    irrigationmode: irrigationMode, fid:farmid,sid:siteid
-  });
 });
 
 app.get('/settings', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  var user = firebase.auth().currentUser;
-  var irrigationMode;
-  var minsm, minhum, mintemp
-  var maxsm, maxtemp, maxtemp
+  if (loggedIn) {
+    var user = firebase.auth().currentUser;
+    var irrigationMode;
+    var minsm, minhum, mintemp;
+    var maxsm, maxtemp, maxtemp;
 
-  firebase.database().ref('/farms/' + farmid + '/' + siteid + '/irrigation/auto').once('value').then(function (snapshot) {
-    snapshot.forEach(function(childSnapshot) {
+    firebase.database().ref('/farms/' + farmid + '/' + siteid + '/irrigation/auto').once('value').then(function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
         console.log(JSON.stringify(childSnapshot.val()));
-        if(childSnapshot.key == "temp"){
+        if (childSnapshot.key == "temp") {
           mintemp = JSON.stringify(childSnapshot.child('min').val());
           maxtemp = JSON.stringify(childSnapshot.child('max').val());
         }
-        if(childSnapshot.key == "hum"){
+        if (childSnapshot.key == "hum") {
           minhum = JSON.stringify(childSnapshot.child('min').val());
           maxhum = JSON.stringify(childSnapshot.child('max').val());
         }
-        if(childSnapshot.key == "sm"){
+        if (childSnapshot.key == "sm") {
           minsm = JSON.stringify(childSnapshot.child('min').val());
           maxsm = JSON.stringify(childSnapshot.child('max').val());
         }
-        
+
       });
 
-    console.log("mode output: " + JSON.stringify(snapshot.val()));
-    if (snapshot.val() != null) {
-      //res.json(snapshot.val());
-      irrigationMode = JSON.stringify(snapshot.val());
-    } else {
-      irrigationMode = "none";
-    }
-  }).then(function () {
+      console.log("mode output: " + JSON.stringify(snapshot.val()));
+      if (snapshot.val() != null) {
+        //res.json(snapshot.val());
+        irrigationMode = JSON.stringify(snapshot.val());
+      } else {
+        irrigationMode = "none";
+      }
+    }).then(function () {
 
-    minsm=minsm.substring(1,minsm.length-1);
-    maxsm=maxsm.substring(1,maxsm.length-1);
-    minhum=minhum.substring(1,minhum.length-1);
-    maxhum=maxhum.substring(1,maxhum.length-1);
-    mintemp=mintemp.substring(1,mintemp.length-1);
-    maxtemp=maxtemp.substring(1,maxtemp.length-1);
+      minsm = minsm.substring(1, minsm.length - 1);
+      maxsm = maxsm.substring(1, maxsm.length - 1);
+      minhum = minhum.substring(1, minhum.length - 1);
+      maxhum = maxhum.substring(1, maxhum.length - 1);
+      mintemp = mintemp.substring(1, mintemp.length - 1);
+      maxtemp = maxtemp.substring(1, maxtemp.length - 1);
 
-    
-    
-    res.render('settings', {smmin: minsm, smmax: maxsm, hummin: minhum, hummax: maxhum, tempmin: mintemp, tempmax: maxtemp,fid:farmid, sid:siteid});
-  }, function () {
-    res.send('none');
-  });
-  console.log("irrigation mode in irrigation page  -- " + irrigationMode)
 
 
       res.render('settings', {
@@ -446,10 +476,10 @@ app.get('/settings', function (req, res) {
 });
 
 app.get('/about', function (req, res) {
-  var user = firebase.auth().currentUser;
-  console.log(user.farmid);
-  // res.status(200).json({ status: 'working' });
-  res.render('about');
+  if (loggedIn)
+    res.render('about');
+  else
+    res.render('login');
 });
 
 app.get('/report', function (req, res) {
@@ -842,7 +872,7 @@ app.post('/api/setMinMax', function (req, res) {
   console.log(req.body.siteid);
 
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/auto/'+req.body.sensor).update({
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/auto/' + req.body.sensor).update({
     min: req.body.min,
     max: req.body.max
   });
