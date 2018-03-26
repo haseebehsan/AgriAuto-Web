@@ -715,12 +715,18 @@ app.post('/api/sendAlert', function (req, res) {
   }, function(err, data){
     if(err){
       console.log(err);
+      res.json({
+        status: -1
+      });
+    }
+    else{
+      res.json({
+        status: 1
+      });
     }
     console.log(data);
   });
-  res.json({
-    status: 1
-  });
+  
   res.status(200)
   // res.render('index');
 });
