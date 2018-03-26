@@ -718,7 +718,9 @@ app.post('/api/sendAlert', function (req, res) {
     }
     console.log(data);
   });
-
+  res.json({
+    status: 1
+  });
   res.status(200)
   // res.render('index');
 });
