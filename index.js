@@ -339,10 +339,13 @@ app.get('/irrigation', function (req, res) {
         //     console.log(JSON.stringify(childSnapshot.val()));
         //   });
 
-        console.log("mode output: " + JSON.stringify(snapshot.val()));
-        if (snapshot.val() != null) {
-         
-          irrigationMode = snapshot.val()
+        // siteid = siteid[1];
+        console.log("farmid: " + farmid + " - siteod: " + siteid);
+        
+        firebase.database().ref('/farms/' + farmid + '/' + siteid + '/irrigation/mode/mode').once('value').then(function (snapshot) {
+          // snapshot.forEach(function(childSnapshot) {
+          //     console.log(JSON.stringify(childSnapshot.val()));
+          //   });
 
         } else {
          
@@ -422,7 +425,24 @@ app.get('/settings', function (req, res) {
   console.log("irrigation mode in irrigation page  -- " + irrigationMode)
 
 
-  
+      res.render('settings', {
+        smmin: minsm,
+        smmax: maxsm,
+        hummin: minhum,
+        hummax: maxhum,
+        tempmin: mintemp,
+        tempmax: maxtemp,
+        fid: farmid,
+        sid: siteid
+      });
+    }, function () {
+      res.send('none');
+    });
+  }
+  //console.log("irrigation mode in irrigation page  -- " + irrigationMode)
+
+
+
 });
 
 app.get('/about', function (req, res) {
@@ -620,7 +640,7 @@ app.post('/api/setSensorData', function (req, res) {
   console.log(req.body.hum);
   console.log(req.body.sm);
 
-  // Set Sample Data
+  // Set Sensor Data
   firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/' + req.body.date + '/' + req.body.time).set({
     hum: req.body.hum,
     sm: req.body.sm,
@@ -1167,7 +1187,7 @@ app.post('/api/getIrrigationMode', function (req, res) {
 //  siteid
 //  mode
 //
-//
+//Sets the irrigation mode
 ///////////// 
 app.post('/api/setIrrigationMode', function (req, res) {
   // res.status(200).json({ status: 'working' });
