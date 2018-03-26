@@ -92,8 +92,7 @@ function isFarmSet() {
 /////////////////////////////
 
 app.get('/', function (req, res) {
-  console.log("farm id in index route  -- " + farmid);
-  console.log("Site id in index route  -- " + siteid);
+ 
   if (firebase.auth().currentUser) {
     res.render('index');
   } else {
