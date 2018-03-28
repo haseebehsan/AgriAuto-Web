@@ -743,25 +743,49 @@ app.post('/api/setIrrigationStatus', function (req, res) {
 app.post('/api/sendAlert', function (req, res) {
   console.log(req.body.phonenumber);
   console.log(req.body.msgbody);
+  console.log(req.body.siteid);
 
-  client.messages.create({
-    to: req.body.phonenumber,
-    from: '+13022488465',
-    body: req.body.msgbody
+  //getting data of all the users
+  firebase.database().ref('/users/').once('value').then(function (snapshot) {
+    
+    
+    
+    snapshot.forEach(function(childSnapshot) {
+        console.log(JSON.stringify(childSnapshot.val()));
+      });
 
-  }, function (err, data) {
-    if (err) {
-      console.log(err);
+    console.log(snapshot.val());
+    if (snapshot != null) {
+      res.json(snapshot.val());
+
+    } else {
       res.json({
         status: -1
       });
-    } else {
-      res.json({
-        status: 1
-      });
     }
-    console.log(data);
+    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+    // ...
   });
+  
+  
+  // client.messages.create({
+  //   to: req.body.phonenumber,
+  //   from: '+13022488465',
+  //   body: req.body.msgbody
+
+  // }, function (err, data) {
+  //   if (err) {
+  //     console.log(err);
+  //     res.json({
+  //       status: -1
+  //     });
+  //   } else {
+  //     res.json({
+  //       status: 1
+  //     });
+  //   }
+  //   console.log(data);
+  // });
 
   res.status(200)
   // res.render('index');
