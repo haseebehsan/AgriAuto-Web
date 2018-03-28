@@ -748,10 +748,14 @@ app.post('/api/sendAlert', function (req, res) {
   //getting data of all the users
   firebase.database().ref('/users/').once('value').then(function (snapshot) {
     
-    
+    var selectedUser;
     
     snapshot.forEach(function(childSnapshot) {
-        console.log(JSON.stringify(childSnapshot.val()));
+        
+        selectedUser = childSnapshot.child('site')
+        if(req.body.siteid == selectedUser.val()){
+          console.log(JSON.stringify(childSnapshot.val()));
+        }
       });
 
     console.log(snapshot.val());
