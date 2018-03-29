@@ -800,11 +800,7 @@ app.post('/api/sendAlert', function (req, res) {
       res.json({
         status: -1
       });
-    } else {
-      res.json({
-        status: 1
-      });
-    }
+    } 
     console.log(data);
   });
 
