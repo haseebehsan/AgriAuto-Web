@@ -757,6 +757,7 @@ app.post('/api/sendAlert', function (req, res) {
         if(req.body.siteid == selectedUser.val()){
           console.log("matched users: "+JSON.stringify(childSnapshot.val()));
           phone = selectedUser.child('phone');
+          phone = JSON.stringify(phone);
           console.log("type of: "+ typeof phone);
           // phone = phone.split()
           phone = phone.slice(1);
