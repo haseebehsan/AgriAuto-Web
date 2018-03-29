@@ -749,7 +749,7 @@ app.post('/api/sendAlert', function (req, res) {
   firebase.database().ref('/users/').once('value').then(function (snapshot) {
     
     var selectedUser;
-    var phone;
+    var phone, phonefull;
     
     snapshot.forEach(function(childSnapshot) {
         
@@ -757,18 +757,18 @@ app.post('/api/sendAlert', function (req, res) {
         if(req.body.siteid == selectedUser.val()){
           console.log("matched users: "+JSON.stringify(childSnapshot.val()));
           phone = selectedUser.child('phone');
-          phone = JSON.stringify(phone);
-          console.log("type of: "+ typeof phone);
-          console.log("phone extracted:"+ phone);
+          phonefull = String(phone);
+          console.log("type of: "+ typeof phonefull);
+          console.log("phone extracted:"+ phonefull);
           // phone = phone.split()
-          phone = phone.slice(1);
-          phone = "+92"+phone;
-          console.log("phone: "+phone);
+          phonefull = phonefull.slice(1);
+          phonefull = "+92"+phonefull;
+          console.log("phone: "+phonefull);
 
         }
       });
 
-    console.log(snapshot.val());
+    //console.log(snapshot.val());
     if (snapshot != null) {
       res.json(snapshot.val());
 
