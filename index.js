@@ -767,18 +767,18 @@ app.post('/api/sendAlert', function (req, res) {
 
           message = "Dear: "+childSnapshot.child('firstName').val()+" "+childSnapshot.child('lastName').val()+":  " +req.body.msgbody+" "+req.body.siteid;
           console.log("message: "+message);
-          // client.messages.create({
-          //   to: phonefull,
-          //   from: '+13022488465',
-          //   body: message
+          client.messages.create({
+            to: phonefull,
+            from: '+13022488465',
+            body: message
         
-          // }, function (err, data) {
-          //   if (err) {
-          //     console.log(err);
+          }, function (err, data) {
+            if (err) {
+              console.log(err);
               
-          //   }
-          //   console.log(data);
-          // });
+            }
+            console.log(data);
+          });
 
         }
       });
