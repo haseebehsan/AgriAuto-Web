@@ -749,12 +749,19 @@ app.post('/api/sendAlert', function (req, res) {
   firebase.database().ref('/users/').once('value').then(function (snapshot) {
     
     var selectedUser;
+    var phone;
     
     snapshot.forEach(function(childSnapshot) {
         
         selectedUser = childSnapshot.child('site')
         if(req.body.siteid == selectedUser.val()){
           console.log("matched users: "+JSON.stringify(childSnapshot.val()));
+          phone = selectedUser.child('phone');
+          // phone = phone.split()
+          phone = phone.slice(1);
+          phone = "+92"+phone;
+          console.log("phone: "+phone);
+
         }
       });
 
