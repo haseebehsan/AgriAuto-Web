@@ -759,6 +759,7 @@ app.post('/api/sendAlert', function (req, res) {
           phone = selectedUser.child('phone');
           phone = JSON.stringify(phone);
           console.log("type of: "+ typeof phone);
+          console.log("phone extracted:"+ phone);
           // phone = phone.split()
           phone = phone.slice(1);
           phone = "+92"+phone;
