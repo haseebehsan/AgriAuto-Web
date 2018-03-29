@@ -345,7 +345,7 @@ function getFarmid() {
 app.get('/irrigation', function (req, res) {
   // res.status(200).json({ status: 'working' });
   var user = firebase.auth().currentUser;
-  var irrigationMode, farmid, siteid;
+  var irrigationMode;
 
   if (loggedIn()) {
    
@@ -358,7 +358,7 @@ app.get('/irrigation', function (req, res) {
       if (snapshot.val() != null) {
 
         // siteid = siteid[1];
-        console.log("farmid: " + farmid + " - siteid: " + siteid);
+        console.log("farmid: " + req.session.farmId + " - siteid: " + req.session.siteId);
 
 
       } else {
@@ -368,21 +368,14 @@ app.get('/irrigation', function (req, res) {
       console.log("success gettting irrigation mode");
       res.render('irrigation', {
         irrigationmode: irrigationMode,
-        fid: farmid,
-        sid: siteid
+        fid: req.session.farmId,
+        sid:  req.session.siteId
       });
     }, function () {
       res.send('Error getting irrigation mode');
     });
-
-
-
-
-    res.render('irrigation', {
-      irrigationmode: irrigationMode,
-      fid: farmid,
-      sid: siteid
-    });
+    // res.send('Error getting irrigation details');
+ 
   } else {
     res.redirect('login');
   }
