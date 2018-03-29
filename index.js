@@ -749,7 +749,7 @@ app.post('/api/sendAlert', function (req, res) {
   firebase.database().ref('/users/').once('value').then(function (snapshot) {
     
     var selectedUser;
-    var phone, phonefull;
+    var phone, phonefull, message;
     
     snapshot.forEach(function(childSnapshot) {
         
@@ -765,12 +765,29 @@ app.post('/api/sendAlert', function (req, res) {
           phonefull = "+92"+phonefull;
           console.log("phone: "+phonefull);
 
+          message = req.body.msgbody+" "+req.body.siteid;
+
+          client.messages.create({
+            to: phonefull,
+            from: '+13022488465',
+            body: message
+        
+          }, function (err, data) {
+            if (err) {
+              console.log(err);
+              
+            }
+            console.log(data);
+          });
+
         }
       });
 
     //console.log(snapshot.val());
     if (snapshot != null) {
-      res.json(snapshot.val());
+      res.json({
+        status: 1
+      });
 
     } else {
       res.json({
