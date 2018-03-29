@@ -761,7 +761,7 @@ app.post('/api/sendAlert', function (req, res) {
           console.log("type of: "+ typeof phonefull);
           console.log("phone extracted:"+ phonefull);
           // phone = phone.split()
-          phonefull = phonefull.slice(1);
+          phonefull = phonefull.slice(2);
           phonefull = "+92"+phonefull;
           console.log("phone: "+phonefull);
 
