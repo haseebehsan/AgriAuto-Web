@@ -14,23 +14,19 @@
 
   
     <div class="layout">
-        <div class="SelectedMode">
-            <h3>
-                <%=irrigationmode%>
-            </h3>
+        <div class="SelectedMode" style="padding-top:20px">
+          
             <div class="dropdown">
-                <label for="myDropdown">Irrigation Mode  <p>
-                <% irrigationmode  %>
-            </p>&nbsp; &nbsp;</label>
+                <label for="myDropdown"><strong> Irrigation Mode </strong> &nbsp; &nbsp;</label>
 
                 <select id="myDropdown">
-					<option value="1" <% if (irrigationmode == 'auto') { %>selected<% } %>  >Auto</option>
-                    <option value="2" <% if (irrigationmode == 'scheduled') { %>selected<% } %>>Scheduled</option>
-                    <option value="3" <% if (irrigationmode == 'manual') { %>selected<% } %>>Manual</option>
+					<option value="1" <% if (irrigationmode == 'auto') { %>selected<% } %>  ><strong>Auto</strong></option>
+                    <option value="2" <% if (irrigationmode == 'scheduled') { %>selected<% } %>><strong>Scheduled</strong></option>
+                    <option value="3" <% if (irrigationmode == 'manual') { %>selected<% } %>><strong>Manual</strong></option>
         </select>
 
         </div>
-
+<hr>
 
         <div class="AutoMode clearfix" style="padding-top:10px; padding-bottom:10px;" id="auto">
             <div class="col-lg-3 col-md-5 col-sm-5">
@@ -50,23 +46,29 @@
 
         </div>
         <div class="ScheduledMode" style="display:none;" id="schedule">
-            <h3>Scheduled</h3>
-
-
+            <h3>Schedule</h3>
+<table class="table" border="2px">
+  <th text-align="center">Date</th>  <th>Time</th>  <th></th> 
+  <tr>
+    <td>asfsd</td>
+    <td>asdfa</td>
+    <td><span class="glyphicon glyphicon-trash"></span></td>
+  </tr>
+</table>
 
         </div>
 
-        <div class="ManualMode clearfix" style="display:none;" id="manual">
+        <div class="ManualMode clearfix " style="display:none; padding-top:35px; padding-bottom:25px;" id="manual" >
 
-            <div class="col-lg-5 col-md-5 col-sm-5">
+            <div class="col-lg-4 col-md-5 col-sm-5">
 
             </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 ">
+            <div class="col-lg-4 col-md-2 col-sm-2 ">
 
 
-                <label class="switch "><input type="checkbox" id="ManualtogBtn" value="Off"><div class="slider round"></div></label>
+            <label for="switch" >Irrigation status</label><label class="switch " ><input type="checkbox" id="ManualtogBtn" value="Off"><div class="slider round"></div></label>
 
-            </div class="col-lg-5 col-md-5 col-sm-5">
+            </div class="col-lg-4 col-md-5 col-sm-5">
             <div>
 
             </div>
@@ -83,8 +85,32 @@
     <script>
         /* When the user clicks on the button, 
             toggle between hiding and showing the dropdown content */
-        <% irrigationmode  %>
-       
+    var x= '<%=irrigationmode%>' ;
+       $(function(){
+
+
+         var   modeOnload =x;
+
+       if(modeOnload=='auto'){
+            $('#auto').show();
+            $('#manual').hide();
+            $('#schedule').hide();
+       }
+       else if (modeOnload=='scheduled'){
+            $('#auto').hide();
+            $('#manual').hide();
+            $('#schedule').show();
+
+
+
+       }else if (modeOnload=='manual'){
+            $('#schedule').hide();
+            $('#auto').hide();
+            $('#manual').show();
+       }
+
+       });
+
         $("#myDropdown").change(function() {
             console.log("dopdown val :  " + $(this).val());
                

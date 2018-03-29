@@ -125,8 +125,8 @@ body {
     background: #FFFFFF;
     max-width: 720px;
     min-width: 120px;
-    margin: 100px auto auto auto;
-    padding: 5px;
+    margin: 150px auto auto auto;
+    padding: 10px;
     text-align: center;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
   }
