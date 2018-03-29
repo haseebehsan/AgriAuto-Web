@@ -106,7 +106,10 @@ function isFarmSet() {
 app.get('/', function (req, res) {
 
   if (firebase.auth().currentUser) {
-    res.render('index');
+    res.render('index', {
+      fid: req.session.farmId,
+      sid: req.session.siteId
+    });
   } else {
     res.render('login');
   }
@@ -114,8 +117,7 @@ app.get('/', function (req, res) {
 
 
 app.get('/dashboard', function (req, res) {
-  // if(req.session)
-  //   console.log('session present----------------'+req.session.ferro);
+
   res.render('dashboard');
 });
 
@@ -132,7 +134,11 @@ app.get('/chart', function (req, res) {
 //Renders the login page
 app.get('/login', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  res.render('login');
+  if (loggedIn())
+    res.render('login');
+  else
+    res.redirect('/');
+
 });
 
 app.get('/signout', function (req, res) {
@@ -147,7 +153,9 @@ app.get('/signout', function (req, res) {
 app.post('/login', upload.array(), function (req, res, next) {
   // res.status(200).json({ status: 'working' });
   // console.log(req.body.username);
+
   var farmid, siteid;
+
   firebase.auth().signInWithEmailAndPassword(req.body.u_email, req.body.password).catch(function (error) {
     // Handle Errors here.
     var errorCode = error.code;
@@ -158,11 +166,11 @@ app.post('/login', upload.array(), function (req, res, next) {
   }).then(function () {
 
     firebase.auth().onAuthStateChanged(function (user) {
-      (user.emailVerified) ? console.log('Email is verified')
-
-        : res.redirect("/verifyEmail")
+      (user.emailVerified) ? console.log('Email is verified'): res.redirect("/verifyEmail")
     });
+
     var user = firebase.auth().currentUser;
+
     firebase.database().ref('/users/' + user.uid + '/farm').once('value').then(function (snapshot) {
       fid = JSON.stringify(snapshot.val());
 
@@ -348,8 +356,8 @@ app.get('/irrigation', function (req, res) {
   var irrigationMode;
 
   if (loggedIn()) {
-   
-    firebase.database().ref('/farms/'+req.session.farmId+'/'+req.session.siteId+ '/irrigation/mode/mode').once('value').then(function (snapshot) {
+
+    firebase.database().ref('/farms/' + req.session.farmId + '/' + req.session.siteId + '/irrigation/mode/mode').once('value').then(function (snapshot) {
       // snapshot.forEach(function(childSnapshot) {
       //     console.log(JSON.stringify(childSnapshot.val()));
       //   });
@@ -360,22 +368,28 @@ app.get('/irrigation', function (req, res) {
         // siteid = siteid[1];
         console.log("farmid: " + req.session.farmId + " - siteid: " + req.session.siteId);
 
+        irrigationMode = snapshot.val();
 
       } else {
+
         irrigationMode = "none";
+
       }
     }).then(function () {
-      console.log("success gettting irrigation mode");
-      res.render('irrigation', {
-        irrigationmode: irrigationMode,
-        fid: req.session.farmId,
-        sid:  req.session.siteId
-      });
+
+        console.log("success gettting irrigation mode" + irrigationMode);
+        res.render('irrigation', {
+          irrigationmode: irrigationMode,
+          fid: req.session.farmId,
+          sid: req.session.siteId
+        });
+
+
     }, function () {
-      res.send('Error getting irrigation mode');
+          res.send('Error getting irrigation mode');
     });
     // res.send('Error getting irrigation details');
- 
+
   } else {
     res.redirect('login');
   }
@@ -405,7 +419,7 @@ app.get('/settings', function (req, res) {
   if (loggedIn()) {
 
     //get Ranges
-    firebase.database().ref('/farms/'+req.session.farmId+'/'+req.session.siteId+'/irrigation/auto').once('value').then(function (snapshot1) {
+    firebase.database().ref('/farms/' + req.session.farmId + '/' + req.session.siteId + '/irrigation/auto').once('value').then(function (snapshot1) {
 
       console.log('getting ranges' + snapshot1.val());
       snapshot1.forEach(function (childSnapshot) {
@@ -747,41 +761,41 @@ app.post('/api/sendAlert', function (req, res) {
 
   //getting data of all the users
   firebase.database().ref('/users/').once('value').then(function (snapshot) {
-    
+
     var selectedUser;
     var phone, phonefull, message;
-    
-    snapshot.forEach(function(childSnapshot) {
-        
-        selectedUser = childSnapshot.child('site')
-        if(req.body.siteid == selectedUser.val()){
-          console.log("matched users: "+JSON.stringify(childSnapshot.val()));
-          phone = childSnapshot.child('phone');
-          phonefull = JSON.stringify(phone.val());
-          console.log("type of: "+ typeof phonefull);
-          console.log("phone extracted:"+ phonefull);
-          // phone = phone.split()
-          phonefull = phonefull.slice(2, -1);
-          phonefull = "+92"+phonefull;
-          console.log("phone: "+phonefull);
 
-          message = "Dear: "+childSnapshot.child('firstName').val()+" "+childSnapshot.child('lastName').val()+":  " +req.body.msgbody+" "+req.body.siteid;
-          console.log("message: "+message);
-          client.messages.create({
-            to: phonefull,
-            from: '+13022488465',
-            body: message
-        
-          }, function (err, data) {
-            if (err) {
-              console.log(err);
-              
-            }
-            console.log(data);
-          });
+    snapshot.forEach(function (childSnapshot) {
 
-        }
-      });
+      selectedUser = childSnapshot.child('site')
+      if (req.body.siteid == selectedUser.val()) {
+        console.log("matched users: " + JSON.stringify(childSnapshot.val()));
+        phone = childSnapshot.child('phone');
+        phonefull = JSON.stringify(phone.val());
+        console.log("type of: " + typeof phonefull);
+        console.log("phone extracted:" + phonefull);
+        // phone = phone.split()
+        phonefull = phonefull.slice(2, -1);
+        phonefull = "+92" + phonefull;
+        console.log("phone: " + phonefull);
+
+        message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " " + req.body.siteid;
+        console.log("message: " + message);
+        client.messages.create({
+          to: phonefull,
+          from: '+13022488465',
+          body: message
+
+        }, function (err, data) {
+          if (err) {
+            console.log(err);
+
+          }
+          console.log(data);
+        });
+
+      }
+    });
 
     //console.log(snapshot.val());
     if (snapshot != null) {
@@ -793,7 +807,7 @@ app.post('/api/sendAlert', function (req, res) {
       res.json({
         status: -1
       });
-    } 
+    }
     console.log(data);
   });
 
