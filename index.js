@@ -814,7 +814,7 @@ app.post('/api/sendAlert', function (req, res) {
           } else {
             console.log("----------------inside else --------------------");
             //create a database log for alert
-            firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull).set({
+            firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull.slice(1)).set({
               message: message,
               data: data
             });
