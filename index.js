@@ -774,8 +774,8 @@ app.post('/api/sendAlert', function (req, res) {
   //   console.log(snapshot.key + " - " + JSON.stringify(snapshot));
   //   res.json(snapshot);
   // });
-  
-  
+
+
 
   //getting data of all the users
   firebase.database().ref('/users/').once('value').then(function (snapshot) {
@@ -806,13 +806,18 @@ app.post('/api/sendAlert', function (req, res) {
         }, function (err, data) {
           if (err) {
             console.log(err);
-
+            //create a database log for alert
+            firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull).set({
+              message: message,
+              data: err
+            });
+          } else {
+            //create a database log for alert
+            firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull).set({
+              message: message,
+              data: data
+            });
           }
-          //create a database log for alert
-          firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull).set({
-            message: message,
-            data: data
-          });
           console.log(data);
         });
 
@@ -846,6 +851,15 @@ app.post('/api/sendAlert', function (req, res) {
 });
 
 
+function logAlert(message, phone) {
+  console.log('in LogAlert');
+
+  //create a database log for alert
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull).set({
+    message: message,
+    data: data
+  });
+}
 
 
 
