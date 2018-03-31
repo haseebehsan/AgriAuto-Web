@@ -377,16 +377,16 @@ app.get('/irrigation', function (req, res) {
       }
     }).then(function () {
 
-        console.log("success gettting irrigation mode" + irrigationMode);
-        res.render('irrigation', {
-          irrigationmode: irrigationMode,
-          fid: req.session.farmId,
-          sid: req.session.siteId
-        });
+      console.log("success gettting irrigation mode" + irrigationMode);
+      res.render('irrigation', {
+        irrigationmode: irrigationMode,
+        fid: req.session.farmId,
+        sid: req.session.siteId
+      });
 
 
     }, function () {
-          res.send('Error getting irrigation mode');
+      res.send('Error getting irrigation mode');
     });
     // res.send('Error getting irrigation details');
 
@@ -758,12 +758,29 @@ app.post('/api/setIrrigationStatus', function (req, res) {
 app.post('/api/sendAlert', function (req, res) {
   console.log(req.body.phonenumber);
   console.log(req.body.msgbody);
+  console.log(req.body.farmid);
+  console.log(req.body.siteid);
+  console.log(req.body.date);
+  console.log(req.body.time);
+
+  var selectedUser;
+  var phone, phonefull, message;
+
+
+  // firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added", function (snapshot) {
+  //   var childstring;
+  //   var highest = '';
+  //   console.log(JSON.stringify(snapshot));
+  //   console.log(snapshot.key + " - " + JSON.stringify(snapshot));
+  //   res.json(snapshot);
+  // });
+  
+  
 
   //getting data of all the users
   firebase.database().ref('/users/').once('value').then(function (snapshot) {
 
-    var selectedUser;
-    var phone, phonefull, message;
+
 
     snapshot.forEach(function (childSnapshot) {
 
@@ -791,11 +808,24 @@ app.post('/api/sendAlert', function (req, res) {
             console.log(err);
 
           }
+          //create a database log for alert
+          firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull).set({
+            message: message,
+            data: data
+          });
           console.log(data);
         });
 
+
+
+
       }
     });
+
+
+
+
+
 
     //console.log(snapshot.val());
     if (snapshot != null) {
