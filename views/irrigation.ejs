@@ -47,7 +47,7 @@
         </div>
         <div class="ScheduledMode" style="display:none;" id="schedule">
             <h3>Schedule</h3>
-<table class="table" border="2px">
+<table class="table" border="2px" id="scheduleTable">
   <th text-align="center">Date</th>  <th>Time</th>  <th></th> 
   <tr>
     <td>asfsd</td>
@@ -110,9 +110,11 @@
        }
 
        });
-
+//changes the current div to show the selected mode's options
         $("#myDropdown").change(function() {
-            console.log("dopdown val :  " + $(this).val());
+        
+        
+        console.log("dopdown val :  " + $(this).val());
                
             if ($(this).val() == 1) {
 
@@ -134,6 +136,8 @@
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
                 xhttp.send("farmid=" + <%= fid %> + "&siteid=" + <%= sid %> + "&mode=auto");
+            
+            
             } else if ($(this).val() == 2) {
 
 
@@ -145,7 +149,7 @@
                 xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationMode", true);
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                        console.log(this.responseText);
+                        console.log("correct "+this.responseText);
                     } else {
                         console.log("error in output: " + this.responseText);
                     }
@@ -154,7 +158,9 @@
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
                 xhttp.send("farmid=" + <%=fid%> + "&siteid=" + <%=sid%> + "&mode=scheduled");
-
+                var reqData="farmid=" + <%=fid%> + "&siteid=" + <%=sid%>;
+              AjaxRequestGetSchedule("https://agripronode.herokuapp.com/api/getAllSchedules", reqData);
+               
 
             } else if ($(this).val() == 3) {
                 $('#schedule').hide();
@@ -180,6 +186,7 @@
 
         })
 
+        //Turn theirrigation status on/off (Manual mode)
         $("#ManualtogBtn").click(function() {
 
             if ($("#ManualtogBtn").val() == "Off") {
@@ -200,7 +207,7 @@
 
 
             } else {
-
+                var xhttp = new XMLHttpRequest();
                 xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationStatus", true);
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
@@ -234,6 +241,7 @@
             document.getElementById("myDropdown").classList.toggle("show");
         }
 
+
         // Close the dropdown menu if the user clicks outside of it
         window.onclick = function(event) {
             if (!event.target.matches('.dropbtn')) {
@@ -247,6 +255,73 @@
                     }
                 }
             }
+        }
+
+//Responsibilities: gets the latest schedule of the selected site and updates the schdule table with it
+//inputs:
+        // url
+        // data
+// outputs:
+//     Complete schedule
+
+        function AjaxRequestGetSchedule( url,data ){
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", url, true);
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                  
+                
+                    console.log(this.responseText);
+                    console.log(this.responseText.length);
+                         var revData =  JSON.parse(this.responseText);
+
+                         console.log(revData[0].addtime);                    // console.log("revData  "+revData[4]);
+                    // var keys = [];
+                    // for(var i = 0;i<revData[0].length;i++)
+                    // {
+                    //     Object.keys(revData[i]).forEach(function(key){
+                    //         if(keys.indexOf(key) == -1)
+                    //         {
+                    //             keys.push(key);
+                    //             console.log('key - '+key[3]);
+                    //         }
+                    //     });
+                    // }
+                    // console.log('keyss -- '+keys);
+                  //  console.log('key'+key[1]);
+                    //console.log(keys)
+                    // console.log("dynamic div manipulator : "+recievedSchedule);
+
+                    // for(var i in recievedSchedule){
+                    //   console.log("splitting data");
+                    //   var key = i;
+                    //   var val = recievedSchedule[i];
+                    //   for(var j in val){
+                    //       var sub_key = j;
+                    //       var sub_val = val[j];
+                    //       console.log(sub_key);
+                    //   }
+                //   }
+                    
+      
+      
+                  //   $('#location').append(
+                  //     $.map(data.Countries, function (country, index) {
+                  //         return '<tr><td>' + country + '</td><td>' + data.Cities[index] + '</td></tr>';
+                  // }).join());
+      
+      
+      
+                } else {
+                    console.log("error in output: " + this.responseText);
+         
+                }
+            };
+
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            xhttp.send(data);
+
         }
     </script>
 
