@@ -808,18 +808,13 @@ app.post('/api/sendAlert', function (req, res) {
           if (err) {
             console.log(err);
             //create a database log for alert
-            firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull.slice(1)).set({
-              message: message,
-              data: err
-            });
-          } else {
-            console.log("----------------inside else --------------------");
+            
+          }
             //create a database log for alert
             firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull.slice(1)).set({
-              message: message,
-              data: data
+              message: message
             });
-          }
+          
           console.log(data);
         });
 
