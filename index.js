@@ -767,81 +767,81 @@ app.post('/api/sendAlert', function (req, res) {
   var phone, phonefull, message;
 
 
-  // firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added", function (snapshot) {
-  //   var childstring;
-  //   var highest = '';
-  //   console.log(JSON.stringify(snapshot));
-  //   console.log(snapshot.key + " - " + JSON.stringify(snapshot));
-  //   res.json(snapshot);
-  // });
-
-
-
-  //getting data of all the users
-  firebase.database().ref('/users/').once('value').then(function (snapshot) {
-
-
-
-    snapshot.forEach(function (childSnapshot) {
-
-      selectedUser = childSnapshot.child('site')
-      if (req.body.siteid == selectedUser.val()) {
-        console.log("matched users: " + JSON.stringify(childSnapshot.val()));
-        phone = childSnapshot.child('phone');
-        phonefull = JSON.stringify(phone.val());
-        console.log("type of: " + typeof phonefull);
-        console.log("phone extracted:" + phonefull);
-        // phone = phone.split()
-        phonefull = phonefull.slice(2, -1);
-        phonefull = "+92" + phonefull;
-        console.log("phone: " + phonefull);
-
-        message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " " + req.body.siteid;
-        console.log("message: " + message);
-        client.messages.create({
-          to: phonefull,
-          from: '+13022488465',
-          body: message
-
-        }, function (err, data) {
-          console.log("message:::::::::::"+message);
-          if (err) {
-            console.log(err);
-            //create a database log for alert
-            
-          }
-            //create a database log for alert
-            firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull.slice(1)).set({
-              message: message
-            });
-          
-          console.log(data);
-        });
-
-
-
-
-      }
-    });
-
-
-
-
-
-
-    //console.log(snapshot.val());
-    if (snapshot != null) {
-      res.json({
-        status: 1
-      });
-
-    } else {
-      res.json({
-        status: -1
-      });
-    }
-    console.log(data);
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added", function (snapshot) {
+    var childstring;
+    var highest = '';
+    console.log(JSON.stringify(snapshot));
+    console.log(snapshot.key + " - " + JSON.stringify(snapshot));
+    res.json(snapshot);
   });
+
+
+
+  // //getting data of all the users
+  // firebase.database().ref('/users/').once('value').then(function (snapshot) {
+
+
+
+  //   snapshot.forEach(function (childSnapshot) {
+
+  //     selectedUser = childSnapshot.child('site')
+  //     if (req.body.siteid == selectedUser.val()) {
+  //       console.log("matched users: " + JSON.stringify(childSnapshot.val()));
+  //       phone = childSnapshot.child('phone');
+  //       phonefull = JSON.stringify(phone.val());
+  //       console.log("type of: " + typeof phonefull);
+  //       console.log("phone extracted:" + phonefull);
+  //       // phone = phone.split()
+  //       phonefull = phonefull.slice(2, -1);
+  //       phonefull = "+92" + phonefull;
+  //       console.log("phone: " + phonefull);
+
+  //       message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " " + req.body.siteid;
+  //       console.log("message: " + message);
+  //       client.messages.create({
+  //         to: phonefull,
+  //         from: '+13022488465',
+  //         body: message
+
+  //       }, function (err, data) {
+  //         console.log("message:::::::::::" + message);
+  //         if (err) {
+  //           console.log(err);
+  //           //create a database log for alert
+
+  //         }
+  //         //create a database log for alert
+  //         firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull.slice(1)).set({
+  //           message: message
+  //         });
+
+  //         console.log(data);
+  //       });
+
+
+
+
+  //     }
+  //   });
+
+
+
+
+
+
+  //   //console.log(snapshot.val());
+  //   if (snapshot != null) {
+  //     res.json({
+  //       status: 1
+  //     });
+
+  //   } else {
+  //     res.json({
+  //       status: -1
+  //     });
+  //   }
+  //   console.log(data);
+  // });
 
   res.status(200)
   // res.render('index');
