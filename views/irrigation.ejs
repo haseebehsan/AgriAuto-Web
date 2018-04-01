@@ -2,6 +2,10 @@
     <head>
         <% include ./partials/head.ejs %>
             <link rel="stylesheet" type="text/css" href="../assets/css/irrigation/irrigation.css">
+            <link rel="stylesheet" href="../assets/css/irrigation/datepicker.css">
+            
+            <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head>
     <body>
         <header>
@@ -36,17 +40,15 @@
                 </div>
                 <div class="ScheduledMode" style="display:none;" id="schedule">
                     <h3>Schedule</h3>
-                    <table class="table" border="2px" id="scheduleTable">
-                        <th text-align="center">Date</th>
-                        <th>Time</th>
+                    <table class="table" id="scheduleTable" align="center">
+                        <th ><center>Date </center></th>
+                        <th> <center>Time </center></th>
                         <th></th>
-                        <tr     >
-                            <td>asfsd</td>
-                            <td>asdfa</td>
-                            <td><span class="glyphicon glyphicon-trash"></span></td>
-                        </tr>
+                       <tr><td colspan="4"> <center>  <button id="AddBtn" type="button " width="20px" class="btn c-datepicker-btn  btn-rounded mb-4" ><span  id="AddBtnSpan" class="glyphicon glyphicon-plus" background="green"></span>Add Schedule&nbsp;</button></center></td></tr>
                         <tbody id="tbody">
                         </tbody>
+                       
+
                     </table>
 
                 </div>
@@ -70,15 +72,14 @@
 
 
             </div>
-
-
+         
 
 
 
             <script>
                 /* When the user clicks on the button, 
                             toggle between hiding and showing the dropdown content */
-                var x = '<%=irrigationmode%>';
+                            var x = '<%=irrigationmode%>';
                 $(function () {
 
 
@@ -287,8 +288,8 @@
                                 splittedDateNode=dateNode.split(" ");
                                 sdate=splittedDateNode[1];
                                 stime=splittedDateNode[3];
-                               deBtn = "glyphicon glyphicon-trash";
-                                 $('#tbody').append('<tr><td>'+ sdate +'</td><td>' + stime +  '</td><td><span class=""></span></td></tr>');
+                               deBtn = ["glyphicon","glyphicon-trash"];
+                                 $('#tbody').append('<tr align=\"center\" id=\"Date '+sdate+' Time '+stime+'\"><td>'+ sdate +'</td><td>' + stime +  '</td><td><button class=\"btn btn-danger\" onclick=\"delSchedule()\"><span class=\"glyphicon glyphicon-trash\"></span></button></td></tr>');
                                 
                                     // var tr = "<tr><td>"+ sdate +"</td><td>" + stime + " </td><td><span class="+"glyphicon glyphicon-trash"+"></span></td></tr>";
                                     
@@ -309,6 +310,12 @@
 
                     xhttp.send(data);
 
+                }
+
+
+                function delSchedule(){
+                    $(this).closest('tr').attr('id');
+                    
                 }
             </script>
 

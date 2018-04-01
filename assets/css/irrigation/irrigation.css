@@ -59,6 +59,10 @@ body {
   }
   
   .switch input {display:none;}
+
+  .glyphicon-trashs {background-color: #ca2222;}
+  
+  #AddBtn{background-color: #8DC26F}
   
   .slider {
     position: absolute;
