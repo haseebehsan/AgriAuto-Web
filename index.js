@@ -766,7 +766,7 @@ app.post('/api/sendAlert', function (req, res) {
   var selectedUser;
   var phone, phonefull, message;
 
-  var date1 = new Date(req.body.date+"T"+req.body.time);
+  var date1 = new Date(req.body.date + "T" + req.body.time);
   var date2;
 
   firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added", function (snapshot) {
@@ -778,9 +778,9 @@ app.post('/api/sendAlert', function (req, res) {
     date2 = new Date(snapshot.key);
 
     res.json(snapshot);
-  }).then(function(){
-    var differ = date2-date1;
-    console.log("difference:   ------------------  "+ differ);
+  }).then(function (onResolve, onReject) {
+    var differ = date2 - date1;
+    console.log("difference:   ------------------  " + differ);
   });
 
 
