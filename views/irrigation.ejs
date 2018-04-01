@@ -285,21 +285,20 @@
                                 //console.log("child---- " + JSON.stringify(child['addtime']));
                                 // console.log(dateNode[0]);
                                 var sdate,stime;
+                              
+                              //Spilitting the recieved schdule, and using without the descriptions
                                 splittedDateNode=dateNode.split(" ");
-                                sdate=splittedDateNode[1];
-                                stime=splittedDateNode[3];
-                               deBtn = ["glyphicon","glyphicon-trash"];
-                                 $('#tbody').append('<tr align=\"center\" id=\"Date '+sdate+' Time '+stime+'\"><td>'+ sdate +'</td><td>' + stime +  '</td><td><button class=\"btn btn-danger\" onclick=\"delSchedule()\"><span class=\"glyphicon glyphicon-trash\"></span></button></td></tr>');
+                                sdate=splittedDateNode[1]; //date
+                                stime=splittedDateNode[3]; //time
+                             
+                                 $('#tbody').append('<tr align=\"center\" id=\"Date: '+sdate+' Time: '+stime+'\"><td>'+ sdate +'</td><td>' + stime +  '</td><td><button class=\"btn btn-danger\" onclick=\"delSchedule(this)\"><span class=\"glyphicon glyphicon-trash\"></span></button></td></tr>');
                                 
                                     // var tr = "<tr><td>"+ sdate +"</td><td>" + stime + " </td><td><span class="+"glyphicon glyphicon-trash"+"></span></td></tr>";
                                     
                                     // row.append(tr);
                             });
 
-                            //oldTable.parentNode.replaceChild(newTable, oldTable);
-                            // $("#scheduleTable").innerHtml=row;
-                            
-
+                         
                         } else {
                             console.log("error in output: " + this.responseText);
 
@@ -313,9 +312,40 @@
                 }
 
 
-                function delSchedule(){
-                    $(this).closest('tr').attr('id');
+                function delSchedule(x){
+                   // console.log("del =---"+ typeof );
+                    var scheduletime= $(x).parent('td').parent('tr').attr('id');
+                    var data ="farmid=" + <%=fid%> + "&siteid=" + <%=sid%> + "&scheduletime="+scheduletime;
+                    console.log(data);
+                    AjaxRequestSimple("https://agripronode.herokuapp.com/api/removeSchedule", data);
                     
+                    //location.reload();
+                  
+                    console.log("delSchedule =---"+ scheduletime);
+                }
+
+
+                function AjaxRequestSimple(url, data) {
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", url, true);
+                    xhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+
+
+                            console.log(this.responseText);
+                            // console.log(this.responseText.length);
+                           
+                         
+                        } else {
+                            console.log("error in output: " + this.responseText);
+
+                        }
+                    };
+
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                    xhttp.send(data);
+
                 }
             </script>
 
