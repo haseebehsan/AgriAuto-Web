@@ -1,334 +1,320 @@
-
 <html>
+    <head>
+        <% include ./partials/head.ejs %>
+            <link rel="stylesheet" type="text/css" href="../assets/css/irrigation/irrigation.css">
+    </head>
+    <body>
+        <header>
+            <% include ./partials/header.ejs %>
+        </header>
+        <div class="layout">
+            <div class="SelectedMode" style="padding-top:20px">
 
-<head>
-    <% include ./partials/head.ejs %>
-        <link rel="stylesheet" type="text/css" href="../assets/css/irrigation/irrigation.css">
-</head>
+                <div class="dropdown">
+                    <label for="myDropdown"><strong> Irrigation Mode </strong> &nbsp; &nbsp;</label>
 
-<body>
-    <header>
-        <% include ./partials/header.ejs %>
-    </header>
-
-
-  
-    <div class="layout">
-        <div class="SelectedMode" style="padding-top:20px">
-          
-            <div class="dropdown">
-                <label for="myDropdown"><strong> Irrigation Mode </strong> &nbsp; &nbsp;</label>
-
-                <select id="myDropdown">
+                    <select id="myDropdown">
 					<option value="1" <% if (irrigationmode == 'auto') { %>selected<% } %>  ><strong>Auto</strong></option>
                     <option value="2" <% if (irrigationmode == 'scheduled') { %>selected<% } %>><strong>Scheduled</strong></option>
                     <option value="3" <% if (irrigationmode == 'manual') { %>selected<% } %>><strong>Manual</strong></option>
         </select>
+                </div>
+                <hr>
+                <div class="AutoMode clearfix" style="padding-top:10px; padding-bottom:10px;" id="auto">
+                    <div class="col-lg-3 col-md-5 col-sm-5">
+                    </div>
+                    <div class="col-lg-6 col-md-2 col-sm-2">
 
-        </div>
-<hr>
+                        <strong> Auto Mode</strong></br>
+                        The system takes the decision whether to turn on or off the irrigation based on the sensor's data
 
-        <div class="AutoMode clearfix" style="padding-top:10px; padding-bottom:10px;" id="auto">
-            <div class="col-lg-3 col-md-5 col-sm-5">
+                    </div>
+                    <div class="col-lg-3 col-md-5 col-sm-5">
+
+                    </div>
+
+                </div>
+                <div class="ScheduledMode" style="display:none;" id="schedule">
+                    <h3>Schedule</h3>
+                    <table class="table" border="2px" id="scheduleTable">
+                        <th text-align="center">Date</th>
+                        <th>Time</th>
+                        <th></th>
+                        <tr     >
+                            <td>asfsd</td>
+                            <td>asdfa</td>
+                            <td><span class="glyphicon glyphicon-trash"></span></td>
+                        </tr>
+                        <tbody id="tbody">
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="ManualMode clearfix " style="display:none; padding-top:35px; padding-bottom:25px;" id="manual">
+
+                    <div class="col-lg-4 col-md-5 col-sm-5">
+
+                    </div>
+                    <div class="col-lg-4 col-md-2 col-sm-2 ">
+
+
+                        <label for="switch">Irrigation status</label><label class="switch "><input type="checkbox" id="ManualtogBtn" value="Off"><div class="slider round"></div></label>
+
+                    </div class="col-lg-4 col-md-5 col-sm-5">
+                    <div>
+
+                    </div>
+
+                </div>
+
 
             </div>
-            <div class="col-lg-6 col-md-2 col-sm-2">
-
-                <strong> Auto Mode</strong></br>
-                The system takes the decision whether to turn on or off the irrigation based on the sensor's data
-
-            </div>
-            <div class="col-lg-3 col-md-5 col-sm-5">
-
-            </div>
-
-
-
-        </div>
-        <div class="ScheduledMode" style="display:none;" id="schedule">
-            <h3>Schedule</h3>
-<table class="table" border="2px" id="scheduleTable">
-  <th text-align="center">Date</th>  <th>Time</th>  <th></th> 
-  <tr>
-    <td>asfsd</td>
-    <td>asdfa</td>
-    <td><span class="glyphicon glyphicon-trash"></span></td>
-  </tr>
-</table>
-
-        </div>
-
-        <div class="ManualMode clearfix " style="display:none; padding-top:35px; padding-bottom:25px;" id="manual" >
-
-            <div class="col-lg-4 col-md-5 col-sm-5">
-
-            </div>
-            <div class="col-lg-4 col-md-2 col-sm-2 ">
-
-
-            <label for="switch" >Irrigation status</label><label class="switch " ><input type="checkbox" id="ManualtogBtn" value="Off"><div class="slider round"></div></label>
-
-            </div class="col-lg-4 col-md-5 col-sm-5">
-            <div>
-
-            </div>
-
-        </div>
-
-
-    </div>
 
 
 
 
 
-    <script>
-        /* When the user clicks on the button, 
-            toggle between hiding and showing the dropdown content */
-    var x= '<%=irrigationmode%>' ;
-       $(function(){
+            <script>
+                /* When the user clicks on the button, 
+                            toggle between hiding and showing the dropdown content */
+                var x = '<%=irrigationmode%>';
+                $(function () {
 
 
-         var   modeOnload =x;
+                    var modeOnload = x;
 
-       if(modeOnload=='auto'){
-            $('#auto').show();
-            $('#manual').hide();
-            $('#schedule').hide();
-       }
-       else if (modeOnload=='scheduled'){
-            $('#auto').hide();
-            $('#manual').hide();
-            $('#schedule').show();
+                    if (modeOnload == 'auto') {
+                        $('#auto').show();
+                        $('#manual').hide();
+                        $('#schedule').hide();
+                    } else if (modeOnload == 'scheduled') {
+                        $('#auto').hide();
+                        $('#manual').hide();
+                        $('#schedule').show();
+
+                        var reqData = "farmid=" + <%=fid%> + "&siteid=" + <%=sid%>;
+                        AjaxRequestGetSchedule("https://agripronode.herokuapp.com/api/getAllSchedules", reqData);
 
 
-
-       }else if (modeOnload=='manual'){
-            $('#schedule').hide();
-            $('#auto').hide();
-            $('#manual').show();
-       }
-
-       });
-//changes the current div to show the selected mode's options
-        $("#myDropdown").change(function() {
-        
-        
-        console.log("dopdown val :  " + $(this).val());
-               
-            if ($(this).val() == 1) {
-
-                $('#auto').show();
-                $('#manual').hide();
-                $('#schedule').hide();
-
-                console.log("Auto mode selected");
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationMode", true);
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log(this.responseText);
-                    } else {
-                        console.log("error in output: " + this.responseText);
+                    } else if (modeOnload == 'manual') {
+                        $('#schedule').hide();
+                        $('#auto').hide();
+                        $('#manual').show();
                     }
-                };
 
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-                xhttp.send("farmid=" + <%= fid %> + "&siteid=" + <%= sid %> + "&mode=auto");
-            
-            
-            } else if ($(this).val() == 2) {
+                });
+                //changes the current div to show the selected mode's options
+                $("#myDropdown").change(function () {
 
 
-                $('#auto').hide();
-                $('#manual').hide();
-                $('#schedule').show();
+                    console.log("dopdown val :  " + $(this).val());
 
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationMode", true);
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log("correct "+this.responseText);
-                    } else {
-                        console.log("error in output: " + this.responseText);
+                    if ($(this).val() == 1) {
+
+                        $('#auto').show();
+                        $('#manual').hide();
+                        $('#schedule').hide();
+
+                        console.log("Auto mode selected");
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationMode", true);
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                console.log(this.responseText);
+                            } else {
+                                console.log("error in output: " + this.responseText);
+                            }
+                        };
+
+                        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                        xhttp.send("farmid=" + <%= fid %> + "&siteid=" + <%= sid %> + "&mode=auto");
+
+
+                    } else if ($(this).val() == 2) {
+
+
+                        $('#auto').hide();
+                        $('#manual').hide();
+                        $('#schedule').show();
+
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationMode", true);
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                console.log("correct " + this.responseText);
+                            } else {
+                                console.log("error in output: " + this.responseText);
+                            }
+                        };
+
+                        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                        xhttp.send("farmid=" + <%=fid%> + "&siteid=" + <%=sid%> + "&mode=scheduled");
+                        var reqData = "farmid=" + <%=fid%> + "&siteid=" + <%=sid%>;
+                        AjaxRequestGetSchedule("https://agripronode.herokuapp.com/api/getAllSchedules", reqData);
+
+
+                    } else if ($(this).val() == 3) {
+                        $('#schedule').hide();
+                        $('#auto').hide();
+                        $('#manual').show();
+
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationMode", true);
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                console.log(this.responseText);
+                            } else {
+                                console.log("error in output: " + this.responseText);
+                            }
+                        };
+
+                        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                        xhttp.send("farmid=" + <%=fid%> + "&siteid=" + <%=sid%> + "&mode=manual");
+
+
                     }
-                };
 
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                })
 
-                xhttp.send("farmid=" + <%=fid%> + "&siteid=" + <%=sid%> + "&mode=scheduled");
-                var reqData="farmid=" + <%=fid%> + "&siteid=" + <%=sid%>;
-              AjaxRequestGetSchedule("https://agripronode.herokuapp.com/api/getAllSchedules", reqData);
-               
+                //Turn theirrigation status on/off (Manual mode)
+                $("#ManualtogBtn").click(function () {
 
-            } else if ($(this).val() == 3) {
-                $('#schedule').hide();
-                $('#auto').hide();
-                $('#manual').show();
+                    if ($("#ManualtogBtn").val() == "Off") {
+                        $("#ManualtogBtn").val("On");
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationStatus", true);
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                console.log(this.responseText);
+                            } else {
+                                console.log("error in output: " + this.responseText);
+                            }
+                        };
 
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationMode", true);
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log(this.responseText);
+                        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                        xhttp.send("farmid=" + <%=fid%> + "&siteid=" + <%=sid%> + "&status=1");
+
+
                     } else {
-                        console.log("error in output: " + this.responseText);
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationStatus", true);
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                console.log(this.responseText);
+                            } else {
+                                console.log("error in output: " + this.responseText);
+                            }
+                        };
+
+                        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                        xhttp.send("farmid=" + <%=fid%> + "&siteid=" + <%=sid%> + "&status=0");
+
+
+                        $("#AutotogBtn").val("Off");
+
+
                     }
-                };
-
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-                xhttp.send("farmid=" + <%=fid%> + "&siteid=" + <%=sid%> + "&mode=manual");
 
 
-            }
+                    //       
 
-        })
+                    console.log($("#AutotogBtn").val());
+                    // var xhttp = new XMLHttpRequest();
+                    ///////////////////////////////////////////MIN value set            
+                    //Sets the SM's min value
 
-        //Turn theirrigation status on/off (Manual mode)
-        $("#ManualtogBtn").click(function() {
+                });
 
-            if ($("#ManualtogBtn").val() == "Off") {
-                $("#ManualtogBtn").val("On");
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationStatus", true);
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log(this.responseText);
-                    } else {
-                        console.log("error in output: " + this.responseText);
-                    }
-                };
-
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-                xhttp.send("farmid=" + <%=fid%> + "&siteid=" + <%=sid%> + "&status=1");
+                function myFunction() {
+                    document.getElementById("myDropdown").classList.toggle("show");
+                }
 
 
-            } else {
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "https://agripronode.herokuapp.com/api/setIrrigationStatus", true);
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log(this.responseText);
-                    } else {
-                        console.log("error in output: " + this.responseText);
-                    }
-                };
+                // Close the dropdown menu if the user clicks outside of it
+                window.onclick = function (event) {
+                    if (!event.target.matches('.dropbtn')) {
 
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-                xhttp.send("farmid=" + <%=fid%> + "&siteid=" + <%=sid%> + "&status=0");
-
-
-                $("#AutotogBtn").val("Off");
-
-
-            }
-
-
-            //       
-
-            console.log($("#AutotogBtn").val());
-            // var xhttp = new XMLHttpRequest();
-            ///////////////////////////////////////////MIN value set            
-            //Sets the SM's min value
-
-        });
-
-        function myFunction() {
-            document.getElementById("myDropdown").classList.toggle("show");
-        }
-
-
-        // Close the dropdown menu if the user clicks outside of it
-        window.onclick = function(event) {
-            if (!event.target.matches('.dropbtn')) {
-
-                var dropdowns = document.getElementsByClassName("dropdown-content");
-                var i;
-                for (i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
+                        var dropdowns = document.getElementsByClassName("dropdown-content");
+                        var i;
+                        for (i = 0; i < dropdowns.length; i++) {
+                            var openDropdown = dropdowns[i];
+                            if (openDropdown.classList.contains('show')) {
+                                openDropdown.classList.remove('show');
+                            }
+                        }
                     }
                 }
-            }
-        }
 
-//Responsibilities: gets the latest schedule of the selected site and updates the schdule table with it
-//inputs:
-        // url
-        // data
-// outputs:
-//     Complete schedule
+                //Responsibilities: gets the latest schedule of the selected site and updates the schdule table with it
+                //inputs:
+                // url
+                // data
+                // outputs:
+                //     Complete schedule
 
-        function AjaxRequestGetSchedule( url,data ){
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", url, true);
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                  
-                
-                    console.log(this.responseText);
-                    // console.log(this.responseText.length);
-                    console.log("type of object:   ------------  "+typeof responseText);
-                         var revData =  JSON.parse(this.responseText);
+                function AjaxRequestGetSchedule(url, data) {
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", url, true);
+                    xhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
 
-                         console.log(revData[0].addtime);                    // console.log("revData  "+revData[4]);
-                    // var keys = [];
-                    // for(var i = 0;i<revData[0].length;i++)
-                    // {
-                    //     Object.keys(revData[i]).forEach(function(key){
-                    //         if(keys.indexOf(key) == -1)
-                    //         {
-                    //             keys.push(key);
-                    //             console.log('key - '+key[3]);
-                    //         }
-                    //     });
-                    // }
-                    // console.log('keyss -- '+keys);
-                  //  console.log('key'+key[1]);
-                    //console.log(keys)
-                    // console.log("dynamic div manipulator : "+recievedSchedule);
 
-                    // for(var i in recievedSchedule){
-                    //   console.log("splitting data");
-                    //   var key = i;
-                    //   var val = recievedSchedule[i];
-                    //   for(var j in val){
-                    //       var sub_key = j;
-                    //       var sub_val = val[j];
-                    //       console.log(sub_key);
-                    //   }
-                //   }
-                    
-      
-      
-                  //   $('#location').append(
-                  //     $.map(data.Countries, function (country, index) {
-                  //         return '<tr><td>' + country + '</td><td>' + data.Cities[index] + '</td></tr>';
-                  // }).join());
-      
-      
-      
-                } else {
-                    console.log("error in output: " + this.responseText);
-         
+                            console.log(this.responseText);
+                            // console.log(this.responseText.length);
+                            console.log("type of object:   ------------  " + typeof responseText);
+                            var revData = JSON.parse(this.responseText);
+                            var timeArr = [];
+                            console.log("type of object: ------" + revData);
+
+                            // var oldTable = document.getElementById('scheduleTable'),
+                            // newTable = oldTable.cloneNode(true);
+                            // var row;
+                            Object.keys(revData).forEach(function (dateNode) {
+                                // console.log(dateNode);
+                                timeArr.push(dateNode);
+                                // console.log(dateNode["addtime"]);
+                                var child = revData[dateNode];
+                                console.log(dateNode);
+                                //console.log("child---- " + JSON.stringify(child['addtime']));
+                                // console.log(dateNode[0]);
+                                var sdate,stime;
+                                splittedDateNode=dateNode.split(" ");
+                                sdate=splittedDateNode[1];
+                                stime=splittedDateNode[3];
+                               deBtn = "glyphicon glyphicon-trash";
+                                 $('#tbody').append('<tr><td>'+ sdate +'</td><td>' + stime +  '</td><td><span class=""></span></td></tr>');
+                                
+                                    // var tr = "<tr><td>"+ sdate +"</td><td>" + stime + " </td><td><span class="+"glyphicon glyphicon-trash"+"></span></td></tr>";
+                                    
+                                    // row.append(tr);
+                            });
+
+                            //oldTable.parentNode.replaceChild(newTable, oldTable);
+                            // $("#scheduleTable").innerHtml=row;
+                            
+
+                        } else {
+                            console.log("error in output: " + this.responseText);
+
+                        }
+                    };
+
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                    xhttp.send(data);
+
                 }
-            };
+            </script>
 
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-            xhttp.send(data);
-
-        }
-    </script>
-
-    <footer>
-        <% include ./partials/footer.ejs %>
-    </footer>
-</body>
+            <footer>
+                <% include ./partials/footer.ejs %>
+            </footer>
+    </body>
 
 </html>
