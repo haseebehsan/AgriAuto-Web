@@ -782,7 +782,7 @@ app.post('/api/sendAlert', function (req, res) {
       console.log(JSON.stringify(snapshot1));
       console.log(snapshot1.key + " - " + JSON.stringify(snapshot1));
 
-      date2 = new Date(snapshot1.key);
+      date2 = new Date(JSON.stringify(snapshot1.key));
       var differ = date2 - date1;
       console.log("difference:   ------------------  " + differ);
 
