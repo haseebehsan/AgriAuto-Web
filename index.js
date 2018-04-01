@@ -755,7 +755,7 @@ app.post('/api/setIrrigationStatus', function (req, res) {
 //output
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
-app.post('/api/sendAlert', async function (req, res) {
+app.post('/api/sendAlert', function (req, res) {
   console.log(req.body.phonenumber);
   console.log(req.body.msgbody);
   console.log(req.body.farmid);
@@ -770,32 +770,36 @@ app.post('/api/sendAlert', async function (req, res) {
   var date2;
 
   try {
-    var nodedata = await firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1)
-    
-    var lastNode = await nodedata.on("child_added", function (snapshot) {
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added", function (snapshot) {
       console.log("snapshot: " + JSON.stringify(snapshot));
-      return snapshot;
+      var snapshot1 = snapshot;
+      return snapshot1;
+    }).then(function (snapshot1) {
+      console.log("lastnode: " + JSON.stringify(snapshot1));
+    if (snapshot1 != null) {
+      var childstring;
+      var highest = '';
+      console.log(JSON.stringify(snapshot1));
+      console.log(snapshot1.key + " - " + JSON.stringify(snapshot1));
+
+      date2 = new Date(snapshot1.key);
+      var differ = date2 - date1;
+      console.log("difference:   ------------------  " + differ);
+
+
+    }
+    res.json(snapshot1);
     });
+
+    
+
+
+    
+
+  } catch (err) {
+    console("catch");
   }
-  catch (err){
-console("catch");
-  }
 
-
-  console.log("lastnode: " + JSON.stringify(lastNode));
-  if (lastNode != null) {
-    var childstring;
-    var highest = '';
-    console.log(JSON.stringify(lastNode));
-    console.log(lastNode.key + " - " + JSON.stringify(lastNode));
-
-    date2 = new Date(lastNode.key);
-    var differ = date2 - date1;
-    console.log("difference:   ------------------  " + differ);
-
-
-  }
-  res.json(lastNode);
 
   // .then(function (onResolve, onReject) {
   //   var differ = date2 - date1;
