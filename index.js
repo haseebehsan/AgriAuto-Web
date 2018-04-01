@@ -770,7 +770,9 @@ app.post('/api/sendAlert', async function (req, res) {
       var date2;
 
 
-      const lastNode = await firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added");
+      const lastNode = await firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added", function(snapshot){
+        return snapshot;
+      });
 
       console.log("lastnode: "+JSON.stringify(lastNode));
       if (lastNode != null) {
