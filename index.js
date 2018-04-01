@@ -772,26 +772,90 @@ app.post('/api/sendAlert', function (req, res) {
   try {
     firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).once('value', function (snapshot) {
       console.log("snapshot: " + JSON.stringify(snapshot));
-      var snapshot1 = snapshot;
-      return snapshot1.val();
-    }).then(function (snapshot1) {
-      console.log("lastnode: " + JSON.stringify(snapshot1));
-      if (snapshot1 != null) {
+      var snapshot2 = snapshot;
+      return snapshot2.val();
+    }).then(function (snapshot2) {
+      console.log("lastnode: " + JSON.stringify(snapshot2));
+      if (snapshot2 != null) {
         var childstring;
         var highest = '';
-        console.log(JSON.stringify(snapshot1));
+        console.log(JSON.stringify(snapshot2));
 
-        
-        var firstKey = Object.keys(snapshot1)[0];
-        console.log(firstKey + " - " + JSON.stringify(snapshot1));
 
-        date2 = new Date(JSON.stringify(firstKey));
+        var firstKey = Object.keys(JSON.parse(JSON.stringify(snapshot2)));
+
+
+
+
+
+        console.log(typeof firstKey);
+        firstKey = String(firstKey);
+        console.log(typeof firstKey);
+        date2 = new Date(firstKey);
+        date1 = new Date(req.body.date + "T" + req.body.time);
+
+        console.log(firstKey + " - " + req.body.date + "T" + req.body.time);
+
         var differ = date2 - date1;
-        console.log("difference:   ------------------  " + differ);
+        console.log(date1 - date2);
+        if (date1 - date2 > 300000) { //last alert was more than 5 minutes ago 
+          firebase.database().ref('/users/').once('value').then(function (snapshot) {
+
+
+
+            snapshot.forEach(function (childSnapshot) {
+
+              selectedUser = childSnapshot.child('site')
+              if (req.body.siteid == selectedUser.val()) {
+                console.log("matched users: " + JSON.stringify(childSnapshot.val()));
+                phone = childSnapshot.child('phone');
+                phonefull = JSON.stringify(phone.val());
+                console.log("type of: " + typeof phonefull);
+                console.log("phone extracted:" + phonefull);
+                // phone = phone.split()
+                phonefull = phonefull.slice(2, -1);
+                phonefull = "+92" + phonefull;
+                console.log("phone: " + phonefull);
+
+                message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " " + req.body.siteid;
+                console.log("message: " + message);
+                client.messages.create({
+                  to: phonefull,
+                  from: '+13022488465',
+                  body: message
+
+                }, function (err, data) {
+                  console.log("message:::::::::::" + message);
+                  if (err) {
+                    console.log(err);
+                    //create a database log for alert
+
+                  }
+                  //create a database log for alert
+                  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + 'T' + req.body.time + '/' + phonefull.slice(1)).set({
+                    message: message
+                  });
+
+                  console.log(data);
+                });
+
+
+
+
+              }
+            });
+
+
+
+
+
+
+          });
+        }
 
 
       }
-      res.json(snapshot1);
+      res.json(snapshot2);
     });
 
 
@@ -811,76 +875,27 @@ app.post('/api/sendAlert', function (req, res) {
 
 
 
-  // //getting data of all the users
-  // firebase.database().ref('/users/').once('value').then(function (snapshot) {
 
 
 
-  //   snapshot.forEach(function (childSnapshot) {
+  //   //   //console.log(snapshot.val());
+  //   //   if (snapshot != null) {
+  //   //     res.json({
+  //   //       status: 1
+  //   //     });
 
-  //     selectedUser = childSnapshot.child('site')
-  //     if (req.body.siteid == selectedUser.val()) {
-  //       console.log("matched users: " + JSON.stringify(childSnapshot.val()));
-  //       phone = childSnapshot.child('phone');
-  //       phonefull = JSON.stringify(phone.val());
-  //       console.log("type of: " + typeof phonefull);
-  //       console.log("phone extracted:" + phonefull);
-  //       // phone = phone.split()
-  //       phonefull = phonefull.slice(2, -1);
-  //       phonefull = "+92" + phonefull;
-  //       console.log("phone: " + phonefull);
+  //   //   } else {
+  //   //     res.json({
+  //   //       status: -1
+  //   //     });
+  //   //   }
+  //   //   console.log(data);
+  //   // });
 
-  //       message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " " + req.body.siteid;
-  //       console.log("message: " + message);
-  //       client.messages.create({
-  //         to: phonefull,
-  //         from: '+13022488465',
-  //         body: message
+  //   res.status(200)
+  //   // res.render('index');
 
-  //       }, function (err, data) {
-  //         console.log("message:::::::::::" + message);
-  //         if (err) {
-  //           console.log(err);
-  //           //create a database log for alert
-
-  //         }
-  //         //create a database log for alert
-  //         firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + 'T' + req.body.time + '/' + phonefull.slice(1)).set({
-  //           message: message
-  //         });
-
-  //         console.log(data);
-  //       });
-
-
-
-
-  // }
 });
-
-
-
-
-
-
-//   //   //console.log(snapshot.val());
-//   //   if (snapshot != null) {
-//   //     res.json({
-//   //       status: 1
-//   //     });
-
-//   //   } else {
-//   //     res.json({
-//   //       status: -1
-//   //     });
-//   //   }
-//   //   console.log(data);
-//   // });
-
-//   res.status(200)
-//   // res.render('index');
-// });
-
 
 function logAlert(message, phone) {
   console.log('in LogAlert');
