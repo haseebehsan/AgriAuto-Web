@@ -755,618 +755,618 @@ app.post('/api/setIrrigationStatus', function (req, res) {
 //output
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
-// app.post('/api/sendAlert', async function (req, res) {
-//   console.log(req.body.phonenumber);
-//   console.log(req.body.msgbody);
-//   console.log(req.body.farmid);
-//   console.log(req.body.siteid);
-//   console.log(req.body.date);
-//   console.log(req.body.time);
+app.post('/api/sendAlert', async function (req, res) {
+      console.log(req.body.phonenumber);
+      console.log(req.body.msgbody);
+      console.log(req.body.farmid);
+      console.log(req.body.siteid);
+      console.log(req.body.date);
+      console.log(req.body.time);
 
-//   var selectedUser;
-//   var phone, phonefull, message;
+      var selectedUser;
+      var phone, phonefull, message;
 
-//   var date1 = new Date(req.body.date + "T" + req.body.time);
-//   var date2;
+      var date1 = new Date(req.body.date + "T" + req.body.time);
+      var date2;
 
 
-//   const lastNode = await firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added");
+      const lastNode = await firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added");
 
-//   if (lastNode != null) {
-//     var childstring;
-//     var highest = '';
-//     console.log(JSON.stringify(lastNode));
-//     console.log(lastNode.key + " - " + JSON.stringify(lastNode));
+      if (lastNode != null) {
+        var childstring;
+        var highest = '';
+        console.log(JSON.stringify(lastNode));
+        console.log(lastNode.key + " - " + JSON.stringify(lastNode));
 
-//     date2 = new Date(lastNode.key);
-//     var differ = date2 - date1;
-//     console.log("difference:   ------------------  " + differ);
+        date2 = new Date(lastNode.key);
+        var differ = date2 - date1;
+        console.log("difference:   ------------------  " + differ);
 
-//     res.json(lastNode);
-//   }
+        res.json(lastNode);
+      }
 
-//   // .then(function (onResolve, onReject) {
-//   //   var differ = date2 - date1;
-//   //   console.log("difference:   ------------------  " + differ);
-//   // });
+      // .then(function (onResolve, onReject) {
+      //   var differ = date2 - date1;
+      //   console.log("difference:   ------------------  " + differ);
+      // });
 
 
 
-//   // //getting data of all the users
-//   // firebase.database().ref('/users/').once('value').then(function (snapshot) {
+      // //getting data of all the users
+      // firebase.database().ref('/users/').once('value').then(function (snapshot) {
 
 
 
-//   //   snapshot.forEach(function (childSnapshot) {
+      //   snapshot.forEach(function (childSnapshot) {
 
-//   //     selectedUser = childSnapshot.child('site')
-//   //     if (req.body.siteid == selectedUser.val()) {
-//   //       console.log("matched users: " + JSON.stringify(childSnapshot.val()));
-//   //       phone = childSnapshot.child('phone');
-//   //       phonefull = JSON.stringify(phone.val());
-//   //       console.log("type of: " + typeof phonefull);
-//   //       console.log("phone extracted:" + phonefull);
-//   //       // phone = phone.split()
-//   //       phonefull = phonefull.slice(2, -1);
-//   //       phonefull = "+92" + phonefull;
-//   //       console.log("phone: " + phonefull);
+      //     selectedUser = childSnapshot.child('site')
+      //     if (req.body.siteid == selectedUser.val()) {
+      //       console.log("matched users: " + JSON.stringify(childSnapshot.val()));
+      //       phone = childSnapshot.child('phone');
+      //       phonefull = JSON.stringify(phone.val());
+      //       console.log("type of: " + typeof phonefull);
+      //       console.log("phone extracted:" + phonefull);
+      //       // phone = phone.split()
+      //       phonefull = phonefull.slice(2, -1);
+      //       phonefull = "+92" + phonefull;
+      //       console.log("phone: " + phonefull);
 
-//   //       message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " " + req.body.siteid;
-//   //       console.log("message: " + message);
-//   //       client.messages.create({
-//   //         to: phonefull,
-//   //         from: '+13022488465',
-//   //         body: message
+      //       message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " " + req.body.siteid;
+      //       console.log("message: " + message);
+      //       client.messages.create({
+      //         to: phonefull,
+      //         from: '+13022488465',
+      //         body: message
 
-//   //       }, function (err, data) {
-//   //         console.log("message:::::::::::" + message);
-//   //         if (err) {
-//   //           console.log(err);
-//   //           //create a database log for alert
+      //       }, function (err, data) {
+      //         console.log("message:::::::::::" + message);
+      //         if (err) {
+      //           console.log(err);
+      //           //create a database log for alert
 
-//   //         }
-//   //         //create a database log for alert
-//   //         firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + 'T' + req.body.time + '/' + phonefull.slice(1)).set({
-//   //           message: message
-//   //         });
+      //         }
+      //         //create a database log for alert
+      //         firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + 'T' + req.body.time + '/' + phonefull.slice(1)).set({
+      //           message: message
+      //         });
 
-//   //         console.log(data);
-//   //       });
+      //         console.log(data);
+      //       });
 
 
 
 
-//   //     }
-//   //   });
+          // }
+        });
 
 
 
 
 
 
-//   //   //console.log(snapshot.val());
-//   //   if (snapshot != null) {
-//   //     res.json({
-//   //       status: 1
-//   //     });
+      //   //   //console.log(snapshot.val());
+      //   //   if (snapshot != null) {
+      //   //     res.json({
+      //   //       status: 1
+      //   //     });
 
-//   //   } else {
-//   //     res.json({
-//   //       status: -1
-//   //     });
-//   //   }
-//   //   console.log(data);
-//   // });
-
-//   res.status(200)
-//   // res.render('index');
-// });
-
-
-function logAlert(message, phone) {
-  console.log('in LogAlert');
-
-  //create a database log for alert
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull).set({
-    message: message,
-    data: data
-  });
-}
-
-
-
-/////////////
-//inputs
-// farmid
-//  siteid: 0000-9999
-//
-//output
-// status: 0,1, -1 (-1 shows there is no data on server)
-/////////////
-app.post('/api/getIrrigationStatus', function (req, res) {
-
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/manual').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
-
-    console.log(snapshot.val());
-    if (snapshot != null) {
-      res.json(snapshot.val());
-
-    } else {
-      res.json({
-        status: -1
-      });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
-
-
-  res.status(200)
-  // res.render('index');
-});
-
-
-
-/////////////
-//inputs
-// farmid
-//  siteid: 0000-9999
-//
-//output
-// status: 0,1, -1 (-1 shows there is no data on server)
-/////////////
-app.post('/api/getStatus', function (req, res) {
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
-
-    console.log(snapshot.val());
-    if (snapshot != null) {
-      res.json(snapshot.val());
-
-    } else {
-      res.json({
-        status: -1
-      });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
-
-
-  res.status(200)
-  // res.render('index');
-});
-
-/////////////
-//
-//
-//
-//
-//
-//
-/////////////
-app.post('/api/setMin', function (req, res) {
-  console.log(req.body.siteid);
-  console.log(req.body.sensor);
-  console.log(req.body.value);
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + "/irrigation/auto/" + req.body.sensor).update({
-    min: req.body.value
-  });
-
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
-});
-
-
-/////////////
-//
-//
-//
-//
-//
-//
-/////////////
-app.post('/api/setMax', function (req, res) {
-  console.log(req.body.siteid);
-  console.log(req.body.sensor);
-  console.log(req.body.value);
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + "/irrigation/auto/" + req.body.sensor).update({
-    max: req.body.value
-  });
-
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
-});
-
-/////////////
-//
-//
-//
-//
-//
-//
-/////////////
-app.post('/api/setMinMax', function (req, res) {
-
-  console.log(req.body.farmid);
-  console.log(req.body.siteid);
-
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/auto/' + req.body.sensor).update({
-    min: req.body.min,
-    max: req.body.max
-  });
+      //   //   } else {
+      //   //     res.json({
+      //   //       status: -1
+      //   //     });
+      //   //   }
+      //   //   console.log(data);
+      //   // });
 
-  res.status(200).json({
-    status: '1'
-  });
-});
-
-
-/////////////
-//
-//
-//
-//
-//
-//
-/////////////
-app.post('/api/getMinMax', function (req, res) {
+      //   res.status(200)
+      //   // res.render('index');
+      // });
 
-  console.log(req.body.farmid);
-  console.log(req.body.siteid);
 
+      function logAlert(message, phone) {
+        console.log('in LogAlert');
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/auto').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
+        //create a database log for alert
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull).set({
+          message: message,
+          data: data
+        });
+      }
 
-    console.log(snapshot.val());
-    if (snapshot != null) {
-      res.json(snapshot.val());
 
-    } else {
-      res.json({
-        status: -1
-      });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
 
+      /////////////
+      //inputs
+      // farmid
+      //  siteid: 0000-9999
+      //
+      //output
+      // status: 0,1, -1 (-1 shows there is no data on server)
+      /////////////
+      app.post('/api/getIrrigationStatus', function (req, res) {
 
 
-  // res.render('index');
-});
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/manual').once('value').then(function (snapshot) {
+          // snapshot.forEach(function(childSnapshot) {
+          //     console.log(JSON.stringify(childSnapshot.val()));
+          //   });
 
+          console.log(snapshot.val());
+          if (snapshot != null) {
+            res.json(snapshot.val());
 
+          } else {
+            res.json({
+              status: -1
+            });
+          }
+          //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+          // ...
+        });
 
 
-/////////////
-//
-//
-//
-//
-//
-//
-/////////////
-app.post('/api/setFarm', function (req, res) {
-
-
-
-  firebase.database().ref('/users/' + req.body.userid).update({
-    farm: req.body.farmid
-  });
-
-
-
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
-});
-
-
-/////////////
-//
-//username
-//siteid
-//
-//
-//
-/////////////
-app.post('/api/setSiteId', function (req, res) {
-
-
-
-  firebase.database().ref('/users/' + req.body.userid).update({
-    site: req.body.siteid
-  });
-  siteid = req.body.siteid
-
-
-
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
-});
-
-
-
-/////////////
-//
-//farmid
-//siteid
-//croptype
-//
-//
-/////////////
-app.post('/api/setCropType', function (req, res) {
-
-
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').update({
-    croptype: req.body.croptype
-  });
-
-
-
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
-});
-
-/////////////
-//
-//farmid
-//siteid
-//
-//
-//
-/////////////
-app.post('/api/getCropType', function (req, res) {
-
-
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
-
-    console.log(snapshot.child("croptype").val());
-    if (snapshot != null && snapshot.child("croptype" != null)) {
-      res.json({
-        croptype: snapshot.child("croptype").val()
+        res.status(200)
+        // res.render('index');
       });
 
-    } else {
-      res.json({
-        croptype: -1
+
+
+      /////////////
+      //inputs
+      // farmid
+      //  siteid: 0000-9999
+      //
+      //output
+      // status: 0,1, -1 (-1 shows there is no data on server)
+      /////////////
+      app.post('/api/getStatus', function (req, res) {
+
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation').once('value').then(function (snapshot) {
+          // snapshot.forEach(function(childSnapshot) {
+          //     console.log(JSON.stringify(childSnapshot.val()));
+          //   });
+
+          console.log(snapshot.val());
+          if (snapshot != null) {
+            res.json(snapshot.val());
+
+          } else {
+            res.json({
+              status: -1
+            });
+          }
+          //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+          // ...
+        });
+
+
+        res.status(200)
+        // res.render('index');
       });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
 
+      /////////////
+      //
+      //
+      //
+      //
+      //
+      //
+      /////////////
+      app.post('/api/setMin', function (req, res) {
+        console.log(req.body.siteid);
+        console.log(req.body.sensor);
+        console.log(req.body.value);
 
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + "/irrigation/auto/" + req.body.sensor).update({
+          min: req.body.value
+        });
 
-  res.status(200)
-  // res.render('index');
-});
-
-
-// /////////////
-// app.post('/api/setIrrigationStatus', function(req, res){
-//   res.status(200).json({ status: 'working' });
-//   // res.render('index');
-// });
-
-/////////////
-//add schedule
-//inputs:
-// farmid
-// siteid: 0000-9999
-//scheduletime: DateTimeStamp
-//addtime: DateTimeStamp
-//
-//output: okay
-/////////////
-app.post('/api/addSchedule', function (req, res) {
-  // res.status(200).json({ status: 'working' });
-  console.log(req.body.status);
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).set({
-    addtime: req.body.addtime
-  });
-
-
-
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
-});
-
-
-/////////////
-//
-//
-//
-//
-//
-//
-/////////////
-app.post('/api/addUser', function (req, res) {
-
-
-
-
-  firebase.database().ref('/users/' + req.body.username).set({
-
-    firstName: req.body.firstname,
-    middleName: req.body.middlename,
-    lastName: req.body.lastname,
-    phone: req.body.phonenumber
-  })
-
-  res.status(200).json({
-    status: '1'
-  });
-});
-
-
-
-
-/////////////
-//remove schedule
-//inputs:
-// farmid
-// siteid: 0000-9999
-//scheduletime: DateTimeStamp
-//
-//output: okay
-/////////////
-app.post('/api/removeSchedule', function (req, res) {
-  console.log(req.body.status);
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).remove();
-
-
-
-  res.status(200).json({
-    status: '1'
-  });
-
-});
-
-// app.post('/', function (req, res) {
-
-//   console.log(req.body.time)
-//   console.log(req.body.fieldid);
-//   console.log(req.body.temperature);
-//   console.log(req.body.humidity);
-//   console.log(req.body.soilmoisture);
-
-//   // Set Sample Data
-//   firebase.database().ref('/fields/' + req.body.fieldid + '/sensor/' + req.body.time + '/').set({
-//     humidity: req.body.humidity,
-//     soilMoisture: req.body.soilmoisture, temperature: req.body.temperature
-//   });
-
-//   res.send(
-//     '<form action="/upload" method="post" enctype="multipart/form-data">' +
-//     '<input type="file" name="source">' +
-//     '<input type="submit" value="Upload">' +
-//     '</form>'
-//   );
-// });
-
-
-/////////////
-//inputs
-//  farmid
-//  siteid: 0000-9999
-//
-//output
-// 
-/////////////
-app.post('/api/getAllSchedules', function (req, res) {
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
-
-    console.log(JSON.stringify(snapshot.val()));
-    if (snapshot.val() != null) {
-      res.json(snapshot.val());
-
-    } else {
-      res.json({
-        status: -1
+        res.status(200).json({
+          status: '1'
+        });
+        // res.render('index');
       });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
 
 
-  res.status(200)
-  // res.render('index');
-});
+      /////////////
+      //
+      //
+      //
+      //
+      //
+      //
+      /////////////
+      app.post('/api/setMax', function (req, res) {
+        console.log(req.body.siteid);
+        console.log(req.body.sensor);
+        console.log(req.body.value);
 
-/////////////
-//inputs
-//  farmid
-//  siteid: 0000-9999
-//
-//output
-// 
-/////////////
-app.post('/api/getIrrigationMode', function (req, res) {
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + "/irrigation/auto/" + req.body.sensor).update({
+          max: req.body.value
+        });
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
-
-    console.log(JSON.stringify(snapshot.val()));
-    if (snapshot.val() != null) {
-      res.json(snapshot.val());
-
-    } else {
-      res.json({
-        status: -1
+        res.status(200).json({
+          status: '1'
+        });
+        // res.render('index');
       });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
+
+      /////////////
+      //
+      //
+      //
+      //
+      //
+      //
+      /////////////
+      app.post('/api/setMinMax', function (req, res) {
+
+        console.log(req.body.farmid);
+        console.log(req.body.siteid);
 
 
-  res.status(200)
-  // res.render('index');
-});
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/auto/' + req.body.sensor).update({
+          min: req.body.min,
+          max: req.body.max
+        });
 
-/////////////
-//inputs: 
-//  farmid
-//  siteid
-//  mode
-//
-//
-///////////// 
-app.post('/api/setIrrigationMode', function (req, res) {
-  // res.status(200).json({ status: 'working' });
-  console.log(req.body.status);
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode/').set({
-    mode: req.body.mode
-  });
+        res.status(200).json({
+          status: '1'
+        });
+      });
 
 
+      /////////////
+      //
+      //
+      //
+      //
+      //
+      //
+      /////////////
+      app.post('/api/getMinMax', function (req, res) {
 
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
-});
+        console.log(req.body.farmid);
+        console.log(req.body.siteid);
 
-//Start Appliation on the given PORT number
-app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/auto').once('value').then(function (snapshot) {
+          // snapshot.forEach(function(childSnapshot) {
+          //     console.log(JSON.stringify(childSnapshot.val()));
+          //   });
+
+          console.log(snapshot.val());
+          if (snapshot != null) {
+            res.json(snapshot.val());
+
+          } else {
+            res.json({
+              status: -1
+            });
+          }
+          //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+          // ...
+        });
+
+
+
+        // res.render('index');
+      });
+
+
+
+
+      /////////////
+      //
+      //
+      //
+      //
+      //
+      //
+      /////////////
+      app.post('/api/setFarm', function (req, res) {
+
+
+
+        firebase.database().ref('/users/' + req.body.userid).update({
+          farm: req.body.farmid
+        });
+
+
+
+        res.status(200).json({
+          status: '1'
+        });
+        // res.render('index');
+      });
+
+
+      /////////////
+      //
+      //username
+      //siteid
+      //
+      //
+      //
+      /////////////
+      app.post('/api/setSiteId', function (req, res) {
+
+
+
+        firebase.database().ref('/users/' + req.body.userid).update({
+          site: req.body.siteid
+        });
+        siteid = req.body.siteid
+
+
+
+        res.status(200).json({
+          status: '1'
+        });
+        // res.render('index');
+      });
+
+
+
+      /////////////
+      //
+      //farmid
+      //siteid
+      //croptype
+      //
+      //
+      /////////////
+      app.post('/api/setCropType', function (req, res) {
+
+
+
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').update({
+          croptype: req.body.croptype
+        });
+
+
+
+        res.status(200).json({
+          status: '1'
+        });
+        // res.render('index');
+      });
+
+      /////////////
+      //
+      //farmid
+      //siteid
+      //
+      //
+      //
+      /////////////
+      app.post('/api/getCropType', function (req, res) {
+
+
+
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').once('value').then(function (snapshot) {
+          // snapshot.forEach(function(childSnapshot) {
+          //     console.log(JSON.stringify(childSnapshot.val()));
+          //   });
+
+          console.log(snapshot.child("croptype").val());
+          if (snapshot != null && snapshot.child("croptype" != null)) {
+            res.json({
+              croptype: snapshot.child("croptype").val()
+            });
+
+          } else {
+            res.json({
+              croptype: -1
+            });
+          }
+          //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+          // ...
+        });
+
+
+
+        res.status(200)
+        // res.render('index');
+      });
+
+
+      // /////////////
+      // app.post('/api/setIrrigationStatus', function(req, res){
+      //   res.status(200).json({ status: 'working' });
+      //   // res.render('index');
+      // });
+
+      /////////////
+      //add schedule
+      //inputs:
+      // farmid
+      // siteid: 0000-9999
+      //scheduletime: DateTimeStamp
+      //addtime: DateTimeStamp
+      //
+      //output: okay
+      /////////////
+      app.post('/api/addSchedule', function (req, res) {
+        // res.status(200).json({ status: 'working' });
+        console.log(req.body.status);
+
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).set({
+          addtime: req.body.addtime
+        });
+
+
+
+        res.status(200).json({
+          status: '1'
+        });
+        // res.render('index');
+      });
+
+
+      /////////////
+      //
+      //
+      //
+      //
+      //
+      //
+      /////////////
+      app.post('/api/addUser', function (req, res) {
+
+
+
+
+        firebase.database().ref('/users/' + req.body.username).set({
+
+          firstName: req.body.firstname,
+          middleName: req.body.middlename,
+          lastName: req.body.lastname,
+          phone: req.body.phonenumber
+        })
+
+        res.status(200).json({
+          status: '1'
+        });
+      });
+
+
+
+
+      /////////////
+      //remove schedule
+      //inputs:
+      // farmid
+      // siteid: 0000-9999
+      //scheduletime: DateTimeStamp
+      //
+      //output: okay
+      /////////////
+      app.post('/api/removeSchedule', function (req, res) {
+        console.log(req.body.status);
+
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).remove();
+
+
+
+        res.status(200).json({
+          status: '1'
+        });
+
+      });
+
+      // app.post('/', function (req, res) {
+
+      //   console.log(req.body.time)
+      //   console.log(req.body.fieldid);
+      //   console.log(req.body.temperature);
+      //   console.log(req.body.humidity);
+      //   console.log(req.body.soilmoisture);
+
+      //   // Set Sample Data
+      //   firebase.database().ref('/fields/' + req.body.fieldid + '/sensor/' + req.body.time + '/').set({
+      //     humidity: req.body.humidity,
+      //     soilMoisture: req.body.soilmoisture, temperature: req.body.temperature
+      //   });
+
+      //   res.send(
+      //     '<form action="/upload" method="post" enctype="multipart/form-data">' +
+      //     '<input type="file" name="source">' +
+      //     '<input type="submit" value="Upload">' +
+      //     '</form>'
+      //   );
+      // });
+
+
+      /////////////
+      //inputs
+      //  farmid
+      //  siteid: 0000-9999
+      //
+      //output
+      // 
+      /////////////
+      app.post('/api/getAllSchedules', function (req, res) {
+
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules').once('value').then(function (snapshot) {
+          // snapshot.forEach(function(childSnapshot) {
+          //     console.log(JSON.stringify(childSnapshot.val()));
+          //   });
+
+          console.log(JSON.stringify(snapshot.val()));
+          if (snapshot.val() != null) {
+            res.json(snapshot.val());
+
+          } else {
+            res.json({
+              status: -1
+            });
+          }
+          //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+          // ...
+        });
+
+
+        res.status(200)
+        // res.render('index');
+      });
+
+      /////////////
+      //inputs
+      //  farmid
+      //  siteid: 0000-9999
+      //
+      //output
+      // 
+      /////////////
+      app.post('/api/getIrrigationMode', function (req, res) {
+
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode').once('value').then(function (snapshot) {
+          // snapshot.forEach(function(childSnapshot) {
+          //     console.log(JSON.stringify(childSnapshot.val()));
+          //   });
+
+          console.log(JSON.stringify(snapshot.val()));
+          if (snapshot.val() != null) {
+            res.json(snapshot.val());
+
+          } else {
+            res.json({
+              status: -1
+            });
+          }
+          //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+          // ...
+        });
+
+
+        res.status(200)
+        // res.render('index');
+      });
+
+      /////////////
+      //inputs: 
+      //  farmid
+      //  siteid
+      //  mode
+      //
+      //
+      ///////////// 
+      app.post('/api/setIrrigationMode', function (req, res) {
+        // res.status(200).json({ status: 'working' });
+        console.log(req.body.status);
+
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode/').set({
+          mode: req.body.mode
+        });
+
+
+
+        res.status(200).json({
+          status: '1'
+        });
+        // res.render('index');
+      });
+
+      //Start Appliation on the given PORT number
+      app.listen(PORT, () => console.log(`Listening on ${PORT}`));
