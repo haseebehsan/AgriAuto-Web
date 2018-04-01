@@ -755,7 +755,7 @@ app.post('/api/setIrrigationStatus', function (req, res) {
 //output
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
-app.post('/api/sendAlert', function (req, res) {
+app.post('/api/sendAlert', async function (req, res) {
   console.log(req.body.phonenumber);
   console.log(req.body.msgbody);
   console.log(req.body.farmid);
@@ -769,19 +769,26 @@ app.post('/api/sendAlert', function (req, res) {
   var date1 = new Date(req.body.date + "T" + req.body.time);
   var date2;
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added", function (snapshot) {
+
+  const lastNode = await firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added");
+
+  if (lastNode != null) {
     var childstring;
     var highest = '';
-    console.log(JSON.stringify(snapshot));
-    console.log(snapshot.key + " - " + JSON.stringify(snapshot));
+    console.log(JSON.stringify(lastNode));
+    console.log(lastNode.key + " - " + JSON.stringify(lastNode));
 
-    date2 = new Date(snapshot.key);
-
-    res.json(snapshot);
-  }).then(function (onResolve, onReject) {
+    date2 = new Date(lastNode.key);
     var differ = date2 - date1;
     console.log("difference:   ------------------  " + differ);
-  });
+
+    res.json(lastNode);
+  }
+
+  // .then(function (onResolve, onReject) {
+  //   var differ = date2 - date1;
+  //   console.log("difference:   ------------------  " + differ);
+  // });
 
 
 
