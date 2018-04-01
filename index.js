@@ -771,6 +771,7 @@ app.post('/api/sendAlert', async function (req, res) {
 
 
       const lastNode = await firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added", function(snapshot){
+        console.log("snapshot: "+JSON.stringify(snapshot));
         return snapshot;
       });
 
