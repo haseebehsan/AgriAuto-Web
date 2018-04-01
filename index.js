@@ -776,28 +776,31 @@ app.post('/api/sendAlert', function (req, res) {
       return snapshot1;
     }).then(function (snapshot1) {
       console.log("lastnode: " + JSON.stringify(snapshot1));
-    if (snapshot1 != null) {
-      var childstring;
-      var highest = '';
-      console.log(JSON.stringify(snapshot1));
-      console.log(snapshot1.key + " - " + JSON.stringify(snapshot1));
+      if (snapshot1 != null) {
+        var childstring;
+        var highest = '';
+        console.log(JSON.stringify(snapshot1));
 
-      date2 = new Date(JSON.stringify(snapshot1.key));
-      var differ = date2 - date1;
-      console.log("difference:   ------------------  " + differ);
+        
+        var firstKey = Object.keys(snapshot1)[0];
+        console.log(firstKey + " - " + JSON.stringify(snapshot1));
+
+        date2 = new Date(JSON.stringify(firstKey));
+        var differ = date2 - date1;
+        console.log("difference:   ------------------  " + differ);
 
 
-    }
-    res.json(snapshot1);
+      }
+      res.json(snapshot1);
     });
 
-    
 
 
-    
+
+
 
   } catch (err) {
-    console.log("catch: "+ err);
+    console.log("catch: " + err);
   }
 
 
