@@ -777,7 +777,7 @@ app.post('/api/sendAlert', async function (req, res) {
       return snapshot;
     });
   }
-  catch {
+  catch (err){
 console("catch");
   }
 
