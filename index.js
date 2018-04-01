@@ -797,7 +797,7 @@ app.post('/api/sendAlert', function (req, res) {
     
 
   } catch (err) {
-    console("catch");
+    console.log("catch: "+ err);
   }
 
 
