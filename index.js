@@ -773,7 +773,7 @@ app.post('/api/sendAlert', function (req, res) {
     firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).once('value', function (snapshot) {
       console.log("snapshot: " + JSON.stringify(snapshot));
       var snapshot1 = snapshot;
-      return snapshot1;
+      return snapshot1.val();
     }).then(function (snapshot1) {
       console.log("lastnode: " + JSON.stringify(snapshot1));
       if (snapshot1 != null) {
