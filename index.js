@@ -772,6 +772,7 @@ app.post('/api/sendAlert', async function (req, res) {
 
       const lastNode = await firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added");
 
+      console.log("lastnode: "+JSON.stringify(lastNode));
       if (lastNode != null) {
         var childstring;
         var highest = '';
@@ -782,8 +783,9 @@ app.post('/api/sendAlert', async function (req, res) {
         var differ = date2 - date1;
         console.log("difference:   ------------------  " + differ);
 
-        res.json(lastNode);
+       
       }
+      res.json(lastNode);
 
       // .then(function (onResolve, onReject) {
       //   var differ = date2 - date1;
