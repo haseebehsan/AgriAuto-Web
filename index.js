@@ -1277,7 +1277,10 @@ app.post('/api/addUser', function (req, res) {
 //output: okay
 /////////////
 app.post('/api/removeSchedule', function (req, res) {
-  console.log(req.body.status);
+  console.log(req.body.scheduletime);
+  console.log(req.body.siteid);
+  console.log(req.body.farmid);
+
 
   firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).remove();
 
