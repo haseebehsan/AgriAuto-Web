@@ -766,13 +766,21 @@ app.post('/api/sendAlert', function (req, res) {
   var selectedUser;
   var phone, phonefull, message;
 
+  var date1 = new Date(req.body.date+"T"+req.body.time);
+  var date2;
 
   firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).on("child_added", function (snapshot) {
     var childstring;
     var highest = '';
     console.log(JSON.stringify(snapshot));
     console.log(snapshot.key + " - " + JSON.stringify(snapshot));
+
+    date2 = new Date(snapshot.key);
+
     res.json(snapshot);
+  }).then(function(){
+    var differ = date2-date1;
+    console.log("difference:   ------------------  "+ differ);
   });
 
 
@@ -811,7 +819,7 @@ app.post('/api/sendAlert', function (req, res) {
 
   //         }
   //         //create a database log for alert
-  //         firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull.slice(1)).set({
+  //         firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + 'T' + req.body.time + '/' + phonefull.slice(1)).set({
   //           message: message
   //         });
 
