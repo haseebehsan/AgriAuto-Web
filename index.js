@@ -522,6 +522,21 @@ app.get('/report', function (req, res) {
 
 });
 
+
+//About Page
+app.get('/generateReport', function (req, res) {
+
+  console.log(req.body.farmid)
+  console.log(req.body.siteid)
+  console.log(req.body.startdate)
+  console.log(req.body.enddate)
+
+
+
+  res.status(200).json({ status: 'working' });
+  // res.render('report');
+});
+
 ////////////////---------------------------------------------------------------
 // All API POST requests
 ////////////////---------------------------------------------------------------  
@@ -586,6 +601,99 @@ app.post('/api/getSensorData', function (req, res) {
   // res.render('index');
 });
 
+
+
+
+/////////////
+//inputs:
+//  farmid: 0000-9999 
+//  siteid
+//  startdate: yyyy-mm-dd
+//  enddate: yyyy-mm-dd
+//output
+//  sensor data in JSON
+/////////////
+app.post('/api/webGetSensorData', function (req, res) {
+
+  console.log(req.body.farmid);
+  console.log(req.body.siteid);
+  console.log(req.body.startdate);
+  console.log(req.body.enddate);
+
+  var startDate = req.body.startdate;
+  var endDate = req.body.enddate;
+  var returnData = "{ \""+req.body.siteid+"\": [ ";
+  var count = 0;
+
+  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').once('value').then(function (snapshot) {
+    var childstring;
+    snapshot.forEach(function (childSnapshot) {
+      // console.log("key: "+childSnapshot.key);
+
+
+
+
+
+      if (childSnapshot.key >= startDate && childSnapshot.key <= endDate) {
+        
+        childSnapshot.forEach(function(dataSnapshot){
+
+          var HUM = dataSnapshot.child('hum').val();
+          var SM  = dataSnapshot.child('sm').val();
+          var TEMP  = dataSnapshot.child('temp').val();
+
+          var childst = "{ \"date\": \""+childSnapshot.key+" "+dataSnapshot.key+"\"  ,  \"sm\":  \""+SM+"\" , \"temp\": \""+TEMP+"\" , \"hum\": \""+HUM+"\" }";
+          
+          if (count == 0) {
+
+            count = 1
+          } else {
+            childst = "," + childst;
+          }
+
+          returnData += childst;
+          
+        });
+
+
+
+
+
+
+
+
+
+        // // console.log("key: "+childSnapshot.key);
+        // childstring = JSON.stringify(childSnapshot.val());
+        // // console.log(childstring);
+        // // childstring = childstring.substring(1, childstring.length -1);
+        // childstring = "\"" + childSnapshot.key + "\":" + childstring;
+        // if (count == 0) {
+
+        //   count = 1
+        // } else {
+        //   childstring = "," + childstring;
+        // }
+
+        // returnData += childstring;
+        
+
+      }
+
+    });
+
+    returnData += " ]}";
+    console.log(returnData);
+    // console.log(snapshot.val());
+    res.json(JSON.parse(returnData));
+    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+    // ...
+  });
+
+
+  res.status(200);
+  // res.render('index');
+});
 
 
 
