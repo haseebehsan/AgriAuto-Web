@@ -821,6 +821,8 @@ app.post('/api/sendAlert', function (req, res) {
         date2 = new Date(firstKey);
         date1 = new Date(req.body.date + "T" + req.body.time);
 
+        console.log("----------------------"+String(Object.keys(JSON.parse(JSON.stringify(snapshot2.child(firstKey))))));
+
         console.log(firstKey + " - " + req.body.date + "T" + req.body.time);
 
         var differ = date2 - date1;
