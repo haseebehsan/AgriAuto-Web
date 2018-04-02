@@ -149,14 +149,9 @@ app.get('/chart', function (req, res) {
 //Renders the login page
 app.get('/login', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  if (loggedIn()){
-    res.redirect('/');
-  }
-    
-  else
- {
+ 
   res.render('login');
- }
+ 
 
 });
 
