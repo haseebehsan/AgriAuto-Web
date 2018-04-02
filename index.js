@@ -817,7 +817,7 @@ app.post('/api/sendAlert', function (req, res) {
                 phonefull = "+92" + phonefull;
                 console.log("phone: " + phonefull);
 
-                message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " " + req.body.siteid;
+                message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " at site: " + req.body.siteid;
                 console.log("message: " + message);
                 client.messages.create({
                   to: phonefull,
