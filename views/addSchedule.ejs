@@ -10,6 +10,12 @@ thead{background-color: #4CAF50;}
   <body>
   <header>
   <% include ./partials/header.ejs %>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<!-- bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
   <script>
   $(function(){
     $('[type="date"].min-today').prop('min', function(){
@@ -18,17 +24,50 @@ thead{background-color: #4CAF50;}
 });
 
 function saveSchedule(){
-   var x= $("#dates").valueAsDate;
-   console.log(document.getElementById('dates').value);
-   console.log(document.getElementById('time').value);
-   console.log(new Date(Date.now()));
-   var scheduletime="wwe"
-var addtime= new Date(Date.now()).toLocaleString();
-//    var data ="farmid=" + <%fid%> + "&siteid=" + <%=sid%> + "&scheduletime="+scheduletime+"&addtime="+addtime;
-   var url="";
+    var x= $("#dates").valueAsDate;
+    var sdate=document.getElementById('dates').value;
+    var stime=document.getElementById('time').value;
+ console.log(sdate[0]);
+    if(sdate[0]){
+    
+        console.log('enter date');
+   
 
+    
+    var splitted= sdate.split('-');
+    var dd=splitted[2];
+    var mm=splitted[1];
+    var yy=splitted[0];
+    
+    console.log('day - '+dd );
+    console.log('m- '+mm );
+    console.log('y - '+yy );
+
+    console.log(document.getElementById('dates').value);
+    console.log(document.getElementById('time').value);
+    console.log(new Date(Date.now() ));
+
+    var scheduletime='Date: '+dd+'-'+mm+'-'+yy+' Time: '+stime;
+    console.log('schedule to be added '+ scheduletime);
+    var addtime= new Date(Date.now());
+    var data ="farmid=" + <%=fid%> + "&siteid=" + <%=sid%> + "&scheduletime="+scheduletime+"&addtime="+addtime;
+    console.log('data-  '+ data);
+    AjaxRequestSimple("https://agripronode.herokuapp.com/api/addSchedule", data);
+}else{
+    toggleAlert();
+}
    
 }
+
+function toggleAlert(){
+    $(".alert").toggleClass('in out'); 
+    return false; // Keep close.bs.alert event from removing from DOM
+}
+
+
+// $("#btn").on("click", toggleAlert);
+$('#bsalert').on('close.bs.alert', toggleAlert);
+
 
 function AjaxRequestSimple(url, data) {
     var xhttp = new XMLHttpRequest();
@@ -39,7 +78,7 @@ function AjaxRequestSimple(url, data) {
 
             console.log(this.responseText);
             // console.log(this.responseText.length);
-           
+            window.location = "http://localhost:5000/irrigation";
          
         } else {
             console.log("error in output: " + this.responseText);
@@ -57,15 +96,20 @@ function AjaxRequestSimple(url, data) {
 
 <div class="login-page" id="login-page">
 
+<div class="alert alert-warning fade out" id="bsalert">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Error:</strong> Please select a dat for the schedule
+</div>
     <div class="form">
+    <div id="error"></div>
     <center> <h4>Add Schedule </h4>  </center>
     <hr>
     <label for="date">Date</label> 
-    <input name="date" type="date" id="dates" placeholder="DD-MM-YYY" class="min-today" required="true" autocomplete/>
+    <input name="date" type="date" id="dates"  class="min-today" required="true"  />
     <label for="time">Time</label> 
     <input type="time" id="time" name="ttime" placeholder="" value="00:00" autocomplete/>
   
-    <button  onclick="saveSchedule()">Save Schedule</button>
+    <button  onclick="saveSchedule()" id="sbtn">Save Schedule</button>
   
 
 

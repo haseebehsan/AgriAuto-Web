@@ -311,7 +311,7 @@
                     var scheduletime= $(x).parent('td').parent('tr').attr('id');
                     var data ="farmid=" + <%=fid%> + "&siteid=" + <%=sid%> + "&scheduletime="+scheduletime;
                     console.log(data);
-                    AjaxRequestSimple("https://agripronode.herokuapp.com/api/removeSchedule", data);
+                    AjaxRequestSimpleDeleteSchedule("https://agripronode.herokuapp.com/api/removeSchedule", data);
                     
                     //location.reload();
                   
@@ -319,7 +319,7 @@
                 }
 
 
-                function AjaxRequestSimple(url, data) {
+                function AjaxRequestDeleteSchedule(url, data) {
                     var xhttp = new XMLHttpRequest();
                     xhttp.open("POST", url, true);
                     xhttp.onreadystatechange = function () {
@@ -329,7 +329,7 @@
                             console.log(this.responseText);
                             // console.log(this.responseText.length);
                            
-                         
+                            window.location = "http://localhost:5000/irrigation";
                         } else {
                             console.log("error in output: " + this.responseText);
 
