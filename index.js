@@ -180,7 +180,7 @@ app.post('/login', upload.array(), function (req, res, next) {
     var errorCode = error.code;
     var errorMessage = error.message;
     console.log(errorCode + "  " + errorMessage);
-    res.redirect('/login');
+    res.render('login');
     // ...
   }).then(function () {
 
@@ -189,7 +189,9 @@ app.post('/login', upload.array(), function (req, res, next) {
     });
 
     var user = firebase.auth().currentUser;
-
+if(!user){
+  res.render('login');
+}
     firebase.database().ref('/users/' + user.uid + '/farm').once('value').then(function (snapshot) {
       fid = JSON.stringify(snapshot.val());
 
