@@ -453,7 +453,7 @@ app.get('/settings', function (req, res) {
   var user = firebase.auth().currentUser;
   var irrigationMode;
   var minsm, minhum, mintemp;
-  var maxsm, maxtemp, maxtemp, farmid, siteid;
+  var maxsm, maxtemp, maxtemp;
 
   if (loggedIn()) {
 
@@ -496,8 +496,8 @@ app.get('/settings', function (req, res) {
         hummax: maxhum,
         tempmin: mintemp,
         tempmax: maxtemp,
-        fid: farmid,
-        sid: siteid
+        fid: req.session.farmId,
+        sid: req.session.siteId
       });
     }, function () {
       res.send('none');

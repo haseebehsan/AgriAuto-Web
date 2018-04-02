@@ -14,7 +14,7 @@
 
     <div class="login-page" id="login-page">
         <div class="form">
-            <form class="register-form">
+            <div class="register-form">
 
                 <h2 style="text-align:center; ">Settings</h2>
                 <table style="text-align:center; ">
@@ -32,7 +32,7 @@
 
                         <td style="padding: 0px 10px 5px 5px;">
 
-                            <input name="MinSoilMoisture" type="text" placeholder="0-100" required="true" id="MinSoilMoistures" value="<%=smmin%>" />
+                            <input min="1" max="100" name="MinSoilMoisture" type="number" placeholder="0-100" required="true" id="MinSoilMoistures" value="<%=smmin%>" />
 
 
                         </td>
@@ -41,7 +41,7 @@
                         </td>
 
                         <td style="padding: 0px 10px 5px 5px;">
-                            <input name="MaxSoilMoisture" type="text" placeholder="0-100" required="true"  id="MaxSoilMoistures" value="<%=smmax%>" />
+                            <input  min="1" max="100" name="MaxSoilMoisture" type="number" placeholder="0-100" required="true"  id="MaxSoilMoistures" value="<%=smmax%>" />
                         </td>
                     </tr>
 
@@ -60,7 +60,7 @@
                         </td>
 
                         <td style="padding: 5px 10px 5px 5px;">
-                            <input name="Mintemp" id="MinTemps" type="text" placeholder="Celcius" required="true" value="<%=tempmin%>" />
+                            <input min="1" max="100" name="Mintemp" id="MinTemps" type="number" placeholder="Celcius" required="true" value="<%=tempmin%>" />
                         </td>
 
                         <td style="padding: 5px 10px 15px 100px;">
@@ -68,7 +68,7 @@
                         </td>
 
                         <td style="padding: 5px 10px 5px 5px;">
-                            <input name="Maxtemp" id="MMaxtemps" type="text" placeholder="Celcius" required="true" / value="<%=tempmax%>">
+                            <input min="1" max="100" name="Maxtemp" id="MMaxtemps" type="number" placeholder="Celcius" required="true" / value="<%=tempmax%>">
                         </td>
                     </tr>
 <tr><hr></tr>
@@ -87,7 +87,7 @@
                         </td>
 
                         <td style="padding: 5px 10px 5px 5px;">
-                            <input name="Minhum" id="Minhums" type="text" placeholder="0-100" required="true" value="<%=hummin%>" />
+                            <input min="1" max="100" name="Minhum" id="Minhums" type="number" placeholder="0-100" required="true" value="<%=hummin%>" />
                         </td>
 
                         <td style="padding: 5px 10px 15px 100px;">
@@ -95,7 +95,7 @@
                         </td>
 
                         <td style="padding: 5px 10px 5px 5px;">
-                            <input name="Maxhum" id="Maxhums" type="text" placeholder="0-100" required="true" value="<%=hummax%>" />
+                            <input min="1" max="100" name="Maxhum" id="Maxhums" type="number" placeholder="0-100" required="true" value="<%=hummax%>" />
                         </td>
                     </tr>
                 </table>
@@ -103,7 +103,7 @@
 
                 <button id="saveBtn" width="100px">Save</button>
 
-            </form>
+            </div>
         </div>
     </div>
     </div>
@@ -130,8 +130,8 @@
             var dataTEMP="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&min="+valueminTEMP+"&max="+valuemaxTEMP;
             
             ajaxRequest(url, dataSM);
-        ajaxRequest(url, dataHUM);
-        ajaxRequest(url, dataTEMP);
+            ajaxRequest(url, dataHUM);
+            ajaxRequest(url, dataTEMP);
         
         $('.message a').click(function () {
             $('form').animate({
@@ -140,7 +140,10 @@
             }, "slow");
         });
         
-        function ajaxRequest(url, data){
+        
+            
+                    });
+                    function ajaxRequest(url, data){
             var xhttp = new XMLHttpRequest();
             ///////////////////////////////////////////MIN value set            
             //Sets the SM's min value
@@ -157,8 +160,7 @@
                         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             
                         xhttp.send(data);
-            
-                    });
+
         }
     </script>
     <footer>
