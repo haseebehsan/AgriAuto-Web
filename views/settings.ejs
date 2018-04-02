@@ -124,25 +124,15 @@
 //            console.log("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor="+sensor+"&value="+valueminSM );
             console.log(valueminHum);
             console.log(valuemaxHum);
-            var xhttp = new XMLHttpRequest();
-///////////////////////////////////////////MIN value set            
-//Sets the SM's min value
-            xhttp.open("POST", "https://agripronode.herokuapp.com/api/setMin", true);
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    console.log(this.responseText);
-                }
-                else{
-                    console.log("error in output: " + this.responseText);
-                }
-            };
-    
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-            xhttp.send("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&value="+valueminSM);
-
-        });
-
+             var  url=    "https://agripronode.herokuapp.com/api/setMinMax";
+            var dataSM="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&min="+valueminSM+"&max="+valuemaxSM;
+            var dataHUM="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&min="+valueminHUM+"&max="+valuemaxHUM;
+            var dataTEMP="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&min="+valueminTEMP+"&max="+valuemaxTEMP;
+            
+            ajaxRequest(url, dataSM);
+        ajaxRequest(url, dataHUM);
+        ajaxRequest(url, dataTEMP);
+        
         $('.message a').click(function () {
             $('form').animate({
                 height: "toggle",
@@ -150,6 +140,26 @@
             }, "slow");
         });
         
+        function ajaxRequest(url, data){
+            var xhttp = new XMLHttpRequest();
+            ///////////////////////////////////////////MIN value set            
+            //Sets the SM's min value
+                        xhttp.open("POST", url, true);
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                console.log(this.responseText);
+                            }
+                            else{
+                                console.log("error in output: " + this.responseText);
+                            }
+                        };
+                
+                        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            
+                        xhttp.send(data);
+            
+                    });
+        }
     </script>
     <footer>
         <% include ./partials/footer %>
