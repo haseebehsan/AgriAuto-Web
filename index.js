@@ -530,17 +530,136 @@ app.get('/report', function (req, res) {
 //About Page
 app.get('/generateReport', function (req, res) {
 
-  console.log(req.body.farmid)
-  console.log(req.body.siteid)
-  console.log(req.body.startdate)
-  console.log(req.body.enddate)
+  console.log(req.query.farmid)
+  console.log(req.query.siteid)
+  console.log(req.query.startdate)
+  console.log(req.query.enddate)
+
+
+  var startDate = req.query.startdate;
+  var endDate = req.query.enddate;
+  var childstring;
+  var minSM, maxSM, minHUM, maxHUM, minTEMP, maxTEMP;
+  var count = 0;
+  var sumSM = 0, sumTEMP = 0, sumHUM = 0;
+  var aveSM = 0, aveTEMP = 0, aveHUM = 0;
+  // var returnData = "{ ";
+  // var count = 0;
+
+  firebase.database().ref('/farms/' + req.query.farmid + '/' + req.query.siteid + '/sensor/').once('value').then(function (snapshot) {
+
+    snapshot.forEach(function (childSnapshot) {
+      // console.log("key: "+childSnapshot.key);
+
+      if (childSnapshot.key >= startDate && childSnapshot.key <= endDate) {
+        // console.log("key: "+childSnapshot.key);
+
+        childSnapshot.forEach(function (dataSnapshot) {
+
+          var HUM = parseFloat(dataSnapshot.child('hum').val());
+          var SM = parseFloat(dataSnapshot.child('sm').val());
+          var TEMP = parseFloat(dataSnapshot.child('temp').val());
+
+          var childst = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
+
+          if (count == 0) {
+            minSM = SM;
+            maxSM = SM;
+            minTEMP = TEMP;
+            maxTEMP = TEMP;
+            minHUM = HUM;
+            maxHUM = HUM;
+          } else {
+            childst = "," + childst;
+          }
+
+          if (HUM < minHUM) {
+            minHUM = HUM;
+          }
+
+          if (HUM > maxHUM) {
+            maxHUM = HUM;
+          }
+
+          if (SM < minSM) {
+            minSM = SM;
+
+          }
+
+          if (SM > maxSM) {
+            maxSM = SM;
+          }
+
+          if (TEMP < minTEMP) {
+            minTEMP = TEMP;
+          }
+
+          if (TEMP > maxTEMP) {
+            maxTEMP = TEMP;
+          }
+
+
+          ///////////////average
+
+          sumSM = sumSM + SM;
+          sumTEMP = sumTEMP + TEMP;
+          sumHUM = sumHUM + HUM;
+
+          count = count + 1;
 
 
 
-  res.status(200).json({
-    status: 'working'
+          // returnData += childst;
+
+        });
+
+
+        // childstring = JSON.stringify(childSnapshot.val());
+        // // console.log(childstring);
+        // // childstring = childstring.substring(1, childstring.length -1);
+        // childstring = "\"" + childSnapshot.key + "\":" + childstring;
+        // if (count == 0) {
+
+        //   count = 1
+        // } else {
+        //   childstring = "," + childstring;
+        // }
+
+        // returnData += childstring;
+        // console.log(returnData);
+
+      }
+
+    });
+
+
+
+    // returnData += " }";
+
+    console.log("min SM: " + minSM);
+    console.log("max SM: " + maxSM);
+    console.log("min TEMP: " + minTEMP);
+    console.log("max SM: " + maxTEMP);
+    console.log("min TEMP: " + minTEMP);
+    console.log("max TEMP: " + maxTEMP);
+
+    if(count != 0){
+      aveSM = sumSM/count;
+      aveTEMP = sumTEMP/count;
+      aveHUM = sumHUM/count;
+    }
+
+    console.log("average SM: "+aveSM);
+    console.log("average TEMP: "+aveTEMP);
+    console.log("average HUM: "+aveHUM);
+
+
+    res.json({"minsm": minSM, "maxsm":maxSM, "mintemp": minTEMP, "maxtemp": maxTEMP, "minhum": minHUM, "maxhum": maxHUM, "avesm":aveSM, "avetemp":aveTEMP , "avehum":aveHUM});
+
+
+
+    // res.render('report');
   });
-  // res.render('report');
 });
 
 ////////////////---------------------------------------------------------------
