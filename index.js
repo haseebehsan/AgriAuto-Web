@@ -29,7 +29,7 @@ app.use(expressSession({
   resave: false
 }));
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
@@ -149,10 +149,14 @@ app.get('/chart', function (req, res) {
 //Renders the login page
 app.get('/login', function (req, res) {
   // res.status(200).json({ status: 'working' });
-  if (loggedIn())
-    res.render('login');
-  else
+  if (loggedIn()){
     res.redirect('/');
+  }
+    
+  else
+ {
+  res.render('login');
+ }
 
 });
 
@@ -416,10 +420,13 @@ app.get('/addSchedule', function (req, res) {
 
   if (loggedIn()) {
 
-    res.render('addSchedule',{fid: req.session.farmId,sid: req.session.siteId});
-  
+    res.render('addSchedule', {
+      fid: req.session.farmId,
+      sid: req.session.siteId
+    });
+
   } else {
-    
+
     res.redirect('login');
 
   }
@@ -533,7 +540,9 @@ app.get('/generateReport', function (req, res) {
 
 
 
-  res.status(200).json({ status: 'working' });
+  res.status(200).json({
+    status: 'working'
+  });
   // res.render('report');
 });
 
@@ -622,7 +631,7 @@ app.post('/api/webGetSensorData', function (req, res) {
 
   var startDate = req.body.startdate;
   var endDate = req.body.enddate;
-  var returnData = "{ \""+req.body.siteid+"\": [ ";
+  var returnData = "{ \"" + req.body.siteid + "\": [ ";
   var count = 0;
 
   firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').once('value').then(function (snapshot) {
@@ -635,15 +644,15 @@ app.post('/api/webGetSensorData', function (req, res) {
 
 
       if (childSnapshot.key >= startDate && childSnapshot.key <= endDate) {
-        
-        childSnapshot.forEach(function(dataSnapshot){
+
+        childSnapshot.forEach(function (dataSnapshot) {
 
           var HUM = dataSnapshot.child('hum').val();
-          var SM  = dataSnapshot.child('sm').val();
-          var TEMP  = dataSnapshot.child('temp').val();
+          var SM = dataSnapshot.child('sm').val();
+          var TEMP = dataSnapshot.child('temp').val();
 
-          var childst = "{ \"date\": \""+childSnapshot.key+" "+dataSnapshot.key+"\"  ,  \"sm\":  \""+SM+"\" , \"temp\": \""+TEMP+"\" , \"hum\": \""+HUM+"\" }";
-          
+          var childst = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
+
           if (count == 0) {
 
             count = 1
@@ -652,7 +661,7 @@ app.post('/api/webGetSensorData', function (req, res) {
           }
 
           returnData += childst;
-          
+
         });
 
 
@@ -676,7 +685,7 @@ app.post('/api/webGetSensorData', function (req, res) {
         // }
 
         // returnData += childstring;
-        
+
 
       }
 
@@ -935,9 +944,9 @@ app.post('/api/sendAlert', function (req, res) {
         date2 = new Date(firstKey);
         date1 = new Date(req.body.date + "T" + req.body.time);
         var nextKey = String(Object.keys(JSON.parse(JSON.stringify(snapshot2.child(firstKey)))));
-        
+
         var ms = snapshot2.child(firstKey).child(nextKey).child('type').val();
-        console.log("----------------------"+ms);
+        console.log("----------------------" + ms);
 
         console.log(firstKey + " - " + req.body.date + "T" + req.body.time);
 
@@ -945,15 +954,14 @@ app.post('/api/sendAlert', function (req, res) {
         console.log(date1 - date2);
         console.log(req.body.type == ms);
         var msgTrigger = false;
-        if (  req.body.type == ms) { //last alert was more than 5 minutes ago 
-          if(date1 - date2 > 300000){
+        if (req.body.type == ms) { //last alert was more than 5 minutes ago 
+          if (date1 - date2 > 300000) {
             msgTrigger = true;
           }
-        }
-        else{
+        } else {
           msgTrigger = true;
         }
-        if(msgTrigger){
+        if (msgTrigger) {
           firebase.database().ref('/users/').once('value').then(function (snapshot) {
 
 
@@ -974,30 +982,30 @@ app.post('/api/sendAlert', function (req, res) {
 
                 message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " at site: " + req.body.siteid;
                 console.log("message: " + message);
-                try{
-                client.messages.create({
-                  to: phonefull,
-                  from: '+13022488465',
-                  body: message
+                try {
+                  client.messages.create({
+                    to: phonefull,
+                    from: '+13022488465',
+                    body: message
 
-                }, function (err, data) {
-                  console.log("message:::::::::::" + message);
-                  if (err) {
-                    console.log(err);
+                  }, function (err, data) {
+                    console.log("message:::::::::::" + message);
+                    if (err) {
+                      console.log(err);
+                      //create a database log for alert
+
+                    }
                     //create a database log for alert
+                    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + 'T' + req.body.time + '/' + phonefull.slice(1)).set({
+                      message: message,
+                      type: req.body.type
+                    });
 
-                  }
-                  //create a database log for alert
-                  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + 'T' + req.body.time + '/' + phonefull.slice(1)).set({
-                    message: message, type: req.body.type
+                    console.log(data);
                   });
-
-                  console.log(data);
-                });
-              }
-              catch(err){
-                console.log("error in msg sending"+err);
-              }
+                } catch (err) {
+                  console.log("error in msg sending" + err);
+                }
 
 
 
@@ -1012,7 +1020,7 @@ app.post('/api/sendAlert', function (req, res) {
           });
         }
 
-      
+
       }
       res.json(snapshot2);
     });
@@ -1381,7 +1389,7 @@ app.post('/api/getCropType', function (req, res) {
 //output: okay
 /////////////
 app.post('/api/addSchedule', function (req, res) {
-  
+
   console.log(req.body.status);
 
   firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).set({
@@ -1448,6 +1456,7 @@ app.post('/api/removeSchedule', function (req, res) {
   });
 
 });
+
 
 // app.post('/', function (req, res) {
 

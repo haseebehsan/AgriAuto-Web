@@ -11,6 +11,18 @@
   <header>
     <% include ./partials/header %>
   </header>
+  <style> /* set the CSS */
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+</style>
+<body>
+
+<!-- load the d3.js library -->    	
+
 <!--
    <div id="demo">
      <h2>The XMLHttpRequest Object</h2>
@@ -34,14 +46,8 @@
   //   %>
 
 -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-  <script>
-    $('.message a').click(function () {
-      $('form').animate({ height: "toggle", opacity: "toggle" }, "slow");
-    });
-
-  </script>
+  
+  
   <footer>
     <% include ./partials/footer %>
   </footer>
