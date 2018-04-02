@@ -126,8 +126,8 @@
             console.log(valuemaxHum);
              var  url=    "https://agripronode.herokuapp.com/api/setMinMax";
             var dataSM="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&min="+valueminSM+"&max="+valuemaxSM;
-            var dataHUM="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&min="+valueminHUM+"&max="+valuemaxHUM;
-            var dataTEMP="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&min="+valueminTEMP+"&max="+valuemaxTEMP;
+            var dataHUM="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=hum&min="+valueminHUM+"&max="+valuemaxHUM;
+            var dataTEMP="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&min="+valueminTEMP+"&max="+valuemaxTEMP;
             
             ajaxRequest(url, dataSM);
         ajaxRequest(url, dataHUM);
