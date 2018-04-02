@@ -412,8 +412,11 @@ app.get('/addSchedule', function (req, res) {
   if (loggedIn()) {
 
     res.render('addSchedule',{fid: req.session.farmId,sid: req.session.siteId});
+  
   } else {
+    
     res.redirect('login');
+
   }
 
 });
