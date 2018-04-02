@@ -794,6 +794,7 @@ app.post('/api/sendAlert', function (req, res) {
   console.log(req.body.siteid);
   console.log(req.body.date);
   console.log(req.body.time);
+  console.log(req.body.type);
 
   var selectedUser;
   var phone, phonefull, message;
@@ -825,14 +826,26 @@ app.post('/api/sendAlert', function (req, res) {
         console.log(typeof firstKey);
         date2 = new Date(firstKey);
         date1 = new Date(req.body.date + "T" + req.body.time);
-
-        console.log("----------------------"+String(Object.keys(JSON.parse(JSON.stringify(snapshot2.child(firstKey))))));
+        var nextKey = String(Object.keys(JSON.parse(JSON.stringify(snapshot2.child(firstKey)))));
+        
+        var ms = snapshot2.child(firstKey).child(nextKey).child('type').val();
+        console.log("----------------------"+ms);
 
         console.log(firstKey + " - " + req.body.date + "T" + req.body.time);
 
         var differ = date2 - date1;
         console.log(date1 - date2);
-        if (date1 - date2 > 300000) { //last alert was more than 5 minutes ago 
+        console.log(req.body.type == ms);
+        var msgTrigger = false;
+        if (  req.body.type == ms) { //last alert was more than 5 minutes ago 
+          if(date1 - date2 > 300000){
+            msgTrigger = true;
+          }
+        }
+        else{
+          msgTrigger = true;
+        }
+        if(msgTrigger){
           firebase.database().ref('/users/').once('value').then(function (snapshot) {
 
 
@@ -853,6 +866,7 @@ app.post('/api/sendAlert', function (req, res) {
 
                 message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " at site: " + req.body.siteid;
                 console.log("message: " + message);
+                try{
                 client.messages.create({
                   to: phonefull,
                   from: '+13022488465',
@@ -867,12 +881,15 @@ app.post('/api/sendAlert', function (req, res) {
                   }
                   //create a database log for alert
                   firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + 'T' + req.body.time + '/' + phonefull.slice(1)).set({
-                    message: message
+                    message: message, type: req.body.type
                   });
 
                   console.log(data);
                 });
-
+              }
+              catch(err){
+                console.log("error in msg sending"+err);
+              }
 
 
 
@@ -887,7 +904,7 @@ app.post('/api/sendAlert', function (req, res) {
           });
         }
 
-
+      
       }
       res.json(snapshot2);
     });
