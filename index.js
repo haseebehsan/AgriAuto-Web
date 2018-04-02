@@ -115,6 +115,16 @@ app.get('/', function (req, res) {
   }
 });
 
+app.get('/me', function (req, res) {
+
+  if (loggedIn()) {
+
+    res.render('me');
+  } else {
+    res.redirect('login');
+  }
+
+});
 
 app.get('/dashboard', function (req, res) {
 
@@ -394,6 +404,20 @@ app.get('/irrigation', function (req, res) {
     res.redirect('login');
   }
 });
+
+
+
+app.get('/addSchedule', function (req, res) {
+
+  if (loggedIn()) {
+
+    res.render('addSchedule',{fid: req.session.farmId,sid: req.session.siteId});
+  } else {
+    res.redirect('login');
+  }
+
+});
+
 
 
 
@@ -1222,14 +1246,12 @@ app.post('/api/getCropType', function (req, res) {
 //output: okay
 /////////////
 app.post('/api/addSchedule', function (req, res) {
-  // res.status(200).json({ status: 'working' });
+  
   console.log(req.body.status);
 
   firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).set({
     addtime: req.body.addtime
   });
-
-
 
   res.status(200).json({
     status: '1'
