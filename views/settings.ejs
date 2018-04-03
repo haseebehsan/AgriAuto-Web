@@ -3,7 +3,7 @@
 
 <head>
     <% include ./partials/head.ejs %>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -68,7 +68,7 @@
                         </td>
 
                         <td style="padding: 5px 10px 5px 5px;">
-                            <input min="1" max="100" name="Maxtemp" id="Maxtemps" type="number" placeholder="Celcius" required="true" / value="<%=tempmax%>">
+                            <input min="1" max="100" name="Maxtemp" id="MaxTemps" type="number" placeholder="Celcius" required="true" / value="<%=tempmax%>">
                         </td>
                     </tr>
 <tr><hr></tr>
@@ -87,7 +87,7 @@
                         </td>
 
                         <td style="padding: 5px 10px 5px 5px;">
-                            <input min="1" max="100" name="Minhum" id="Minhums" type="number" placeholder="0-100" required="true" value="<%=hummin%>" />
+                            <input min="1" max="100" name="Minhum" id="MinHums" type="number" placeholder="0-100" required="true" value="<%=hummin%>" />
                         </td>
 
                         <td style="padding: 5px 10px 15px 100px;">
@@ -95,7 +95,7 @@
                         </td>
 
                         <td style="padding: 5px 10px 5px 5px;">
-                            <input min="1" max="100" name="Maxhum" id="Maxhums" type="number" placeholder="0-100" required="true" value="<%=hummax%>" />
+                            <input min="1" max="100" name="Maxhum" id="MaxHums" type="number" placeholder="0-100" required="true" value="<%=hummax%>" />
                         </td>
                     </tr>
                 </table>
@@ -107,25 +107,27 @@
         </div>
     </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
 
     <script>
         $("#saveBtn").click(function () {
 
-            var valueminSM = $("#MinSoilMoistures").val();
-            var valuemaxSM = $("#MaxSoilMoistures").val();
+            var valueminSM = document.getElementById("MinSoilMoistures").value;
 
-            var valueminTemp = $("#MinTemps").val();
-            var valuemaxTemp = $("#MaxTemps").val();
+            var valuemaxSM =document.getElementById("MaxSoilMoistures").value;
 
-            var valueminHum = $("#MinHums").val();
-            var valuemaxHum = $("#MaxHums").val();
+            var valueminTemp = document.getElementById("MinTemps").value;
+            var valuemaxTemp = document.getElementById("MaxTemps").value;
+
+            var valueminHum = document.getElementById("MinHums").value;
+            var valuemaxHum = document.getElementById("MaxHums").value;
 
 //            console.log("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor="+sensor+"&value="+valueminSM );
-            console.log(valueminHum);
+            console.log(valueminSM);
             console.log(valuemaxHum);
-           if(valueminHum<100 &&valueminHum<valuemaxHum &&valueminHum>0 &&valuemaxHum<100 &&valuemaxHum>valuemminHum &&valuemaxHum>0 && valueminSM<100 &&valueminSM<valuemaxHum &&valueminSM>0 &&valuemaxSM<100 &&valuemaxSM>valuemminSM &&valuemaxSM>0
-           && valueminSTemp<100 &&valueminTemp<valuemaxTemp &&valueminTemp>0 &&valuemaxTemp<100 &&valuemaxTemp>valuemminTemp&&valuemaxTemp>0 ){
+            console.log(valuemaxTemp);
+            console.log(valueminHum);
+           if(valueminHum<100 &&valueminHum<valuemaxHum &&valueminHum>0 &&valuemaxHum<100 &&valuemaxHum>valueminHum &&valuemaxHum>0 && valueminSM<100 &&valueminSM<valuemaxHum &&valueminSM>0 &&valuemaxSM<100 &&valuemaxSM>valueminSM &&valuemaxSM>0 && valueminTemp<100 &&valueminTemp<valuemaxTemp &&valueminTemp>0 &&valuemaxTemp<100 &&valuemaxTemp>valueminTemp&&valuemaxTemp>0 ){
            
            
             var  url=    "https://agripronode.herokuapp.com/api/setMinMax";
