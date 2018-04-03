@@ -68,7 +68,7 @@
                         </td>
 
                         <td style="padding: 5px 10px 5px 5px;">
-                            <input min="1" max="100" name="Maxtemp" id="MMaxtemps" type="number" placeholder="Celcius" required="true" / value="<%=tempmax%>">
+                            <input min="1" max="100" name="Maxtemp" id="Maxtemps" type="number" placeholder="Celcius" required="true" / value="<%=tempmax%>">
                         </td>
                     </tr>
 <tr><hr></tr>
@@ -124,7 +124,11 @@
 //            console.log("farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor="+sensor+"&value="+valueminSM );
             console.log(valueminHum);
             console.log(valuemaxHum);
-             var  url=    "https://agripronode.herokuapp.com/api/setMinMax";
+           if(valueminHum<100 &&valueminHum<valuemaxHum &&valueminHum>0 &&valuemaxHum<100 &&valuemaxHum>valuemminHum &&valuemaxHum>0 && valueminSM<100 &&valueminSM<valuemaxHum &&valueminSM>0 &&valuemaxSM<100 &&valuemaxSM>valuemminSM &&valuemaxSM>0
+           && valueminSTemp<100 &&valueminTemp<valuemaxTemp &&valueminTemp>0 &&valuemaxTemp<100 &&valuemaxTemp>valuemminTemp&&valuemaxTemp>0 ){
+           
+           
+            var  url=    "https://agripronode.herokuapp.com/api/setMinMax";
             var dataSM="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&min="+valueminSM+"&max="+valuemaxSM;
             var dataHUM="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=hum&min="+valueminHum+"&max="+valuemaxHum;
             var dataTEMP="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=temp&min="+valueminTemp+"&max="+valuemaxTemp;
@@ -132,16 +136,20 @@
             ajaxRequest(url, dataSM);
             ajaxRequest(url, dataHUM);
             ajaxRequest(url, dataTEMP);
-        
-        $('.message a').click(function () {
-            $('form').animate({
-                height: "toggle",
-                opacity: "toggle"
-            }, "slow");
-        });
+        }
+        else{
+        alert('recheck values');
+        }
+    
         
         
             
+                    });
+                    $('.message a').click(function () {
+                        $('form').animate({
+                            height: "toggle",
+                            opacity: "toggle"
+                        }, "slow");
                     });
                     function ajaxRequest(url, data){
             var xhttp = new XMLHttpRequest();
