@@ -54,21 +54,21 @@ $(document).ready(function () {
  
 
 </div></p>
-      <input name="firstName" type="text" placeholder="First Name" required="true" autofill/>
-        <input name="middleName" type="text" placeholder="Middle Name" autofill/>
-        <input name="lastName" type="text" placeholder="Last Name"  required="true" autofill/>
-        <input name="phoneNumber" type="text" placeholder="Phone Number"  required="true" autofill/>
-        <input name="u_email" type="email" placeholder="Email address" required="true" autofill/>
-        <input class="txtpassword" id="txtpassword" name="password" type="password" placeholder="Password" required="true" autofill/>
-        <input class="txtconfirmpassword" id="txtconfirmpassword" name="confirmPassword" type="password" placeholder="Confirm password" required="true" onChange="checkPasswordMatch();"autofill/>
+      <input name="firstName" type="text" placeholder="First Name" required="true" autocomplete/>
+        <input name="middleName" type="text" placeholder="Middle Name" autocomplete/>
+        <input name="lastName" type="text" placeholder="Last Name"  required="true" autocomplete/>
+        <input name="phoneNumber" type="text" placeholder="Phone Number"  required="true" autocomplete/>
+        <input name="u_email" type="email" placeholder="Email address" required="true" autocomplete/>
+        <input class="txtpassword" id="txtpassword" name="password" type="password" placeholder="Password" required="true" autocomplete/>
+        <input class="txtconfirmpassword" id="txtconfirmpassword" name="confirmPassword" type="password" placeholder="Confirm password" required="true" onChange="checkPasswordMatch();" autocomplete/>
     
-        <button type="submit">create</button>
+        <button type="submit">Create Acount</button>
         <p class="message">Already registered? <a href="#">Sign In</a></p>
       </form>
       <form class="login-form" method="POST" action="/login" >
-        <input name="u_email" type="email" placeholder="Email"autofill/>
-        <input type="password"name="password" placeholder="password"autofill/>
-       <a href="/forgotPassword" style="text-align:left; "  >Forgot Password?</a>
+        <input name="u_email" type="email" placeholder="Email" autocomplete/>
+        <input type="password"name="password" placeholder="password" autocomplete/>
+       <a href="/forgotPassword" style="text-align:left; " class="forgotPasswordLink" >Forgot Password?</a>
         <button type="submit">login</button>
         <p class="message">Not registered? <a href="#">Create an account</a></p>
       </form>

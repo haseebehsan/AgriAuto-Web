@@ -1,7 +1,7 @@
 
 .login-page {
     width: 720px;
-    padding: 8% 0 0;
+    padding: 4% 0 0;
     margin: auto;
   }
   .form {
@@ -18,7 +18,7 @@
     font-family: "Roboto", sans-serif;
     outline: 0;
     background: #f2f2f2;
-    width: 100%;
+    width: 80%;
     border: 0;
     margin: 0 0 15px;
     padding: 15px;
@@ -57,7 +57,7 @@
   .container {
     position: relative;
     z-index: 1;
-    max-width: 300px;
+    max-width: 700px;
     margin: 0 auto;
   }
   .container:before, .container:after {

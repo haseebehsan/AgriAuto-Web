@@ -18,7 +18,7 @@
 
                 <h2 style="text-align:center; ">Settings</h2>
                 <table style="text-align:center; ">
-                    <tr style="text-align:center; " align="center">
+                    <tr style="text-align:center; " >
                         <td  colspan="4">
                             <h4 style="text-align:center ">
                                 <strong style="text-align:center ">Soil Mositure &nbsp;</strong>
@@ -173,6 +173,12 @@
 
         }
     </script>
+    
+  <script>
+  $('.message a').click(function(){
+ $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+});
+</script>
     <footer>
         <% include ./partials/footer %>
     </footer>
