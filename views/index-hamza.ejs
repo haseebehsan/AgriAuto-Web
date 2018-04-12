@@ -11,7 +11,13 @@
 <body>
 <script src="http://d3js.org/d3.v3.js"></script>
 <script>
-    var jdata = [{
+
+
+var  url=    "https://agripronode.herokuapp.com/api/getSensorData";
+//var reqData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm";
+
+
+var jdata = [{
             "date": "2013-01",
             "value": "53"
         }, {
@@ -96,7 +102,28 @@
         }).attr("height", function(d) {
             return height - y(d.value);
         });
-    //You forgot to comment this out... // });
+  
+
+
+        function ajaxRequest(url, data){
+    var xhttp = new XMLHttpRequest();
+    ///////////////////////////////////////////MIN value set            
+    //Sets the SM's min value
+                xhttp.open("POST", url, true);
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log("ajax request success: "+this.responseText);
+                    }
+                    else{
+                        console.log("error in output: " + this.responseText);
+                    }
+                };
+        
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    
+                xhttp.send(data);
+
+}
 </script>
 <style>
 

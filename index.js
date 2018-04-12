@@ -17,22 +17,22 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 app.use('/assets', express.static('assets'));
 app.use(bodyParser.urlencoded({
-  extended: true
+    extended: true
 }));
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(expressSession({
-  name: 'app.sid',
-  secret: 'agrimax',
-  store: new MemoryStore(),
-  saveUninitialized: false,
-  resave: false
+    name: 'app.sid',
+    secret: 'agrimax',
+    store: new MemoryStore(),
+    saveUninitialized: false,
+    resave: false
 }));
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
 });
 
 // app.use(session({
@@ -44,10 +44,10 @@ app.use(function (req, res, next) {
 // }));
 //Firebase Config
 var config = {
-  apiKey: "AIzaSyACMgec6EghmqZ5eRZGKablbh5LXvGz4Cw",
-  authDomain: "narc-agriauto.firebaseapp.com",
-  databaseURL: "https://narc-agriauto.firebaseio.com/",
-  storageBucket: "narc-agriauto.appspot.com",
+    apiKey: "AIzaSyACMgec6EghmqZ5eRZGKablbh5LXvGz4Cw",
+    authDomain: "narc-agriauto.firebaseapp.com",
+    databaseURL: "https://narc-agriauto.firebaseio.com/",
+    storageBucket: "narc-agriauto.appspot.com",
 };
 firebase.initializeApp(config);
 
@@ -57,178 +57,183 @@ var database = firebase.database();
 app.set('view engine', 'ejs');
 
 //Firebase user state observer
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
 
-    // User is signed in.
-    var displayName = user.displayName;
-    var email = user.email;
-    var emailVerified = user.emailVerified;
+        // User is signed in.
+        var displayName = user.displayName;
+        var email = user.email;
+        var emailVerified = user.emailVerified;
 
-    var isAnonymous = user.isAnonymous;
-    var uid = user.uid;
-    // ...
-  } else if (!user) {
+        var isAnonymous = user.isAnonymous;
+        var uid = user.uid;
+        // ...
+    } else if (!user) {
 
-    console.log('Logged Out');
-  }
+        console.log('Logged Out');
+    }
 });
 
 //Checks if user is logged in
 //c
 function loggedIn() {
-  var user = firebase.auth().currentUser;
-  if (user) {
-    return true;
+    var user = firebase.auth().currentUser;
+    if (user) {
+        return true;
 
-  } else {
-    return false;
-  }
+    } else {
+        return false;
+    }
 }
 
 //input: curreetn user's uid
 ///output: boolean
 function isFarmSet() {
-  //Checks whether a farm has been assigned to a user
-  firebase.database().ref('/users/' + firebase.auth().currentUser.uid).once('value').then(function (snapshot) {
+    //Checks whether a farm has been assigned to a user
+    firebase.database().ref('/users/' + firebase.auth().currentUser.uid).once('value').then(function(snapshot) {
 
 
-    // console.log(snapshot.val());
-    if (snapshot != null) {
-      return true;
+        // console.log(snapshot.val());
+        if (snapshot != null) {
+            return true;
 
-    } else {
-      return false;
-    }
+        } else {
+            return false;
+        }
 
-  });
+    });
 }
 
 //////////////////////////////
 // ROUTES
 /////////////////////////////
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
 
-  if (firebase.auth().currentUser) {
-    res.render('index', {
-      fid: req.session.farmId,
-      sid: req.session.siteId
-    });
-  } else {
-    res.render('login');
-  }
+    if (firebase.auth().currentUser) {
+        res.render('index', {
+            fid: req.session.farmId,
+            sid: req.session.siteId
+        });
+    } else {
+        res.render('login');
+    }
 });
 
-app.get('/me', function (req, res) {
+app.get('/me', function(req, res) {
 
-  if (loggedIn()) {
+    if (loggedIn()) {
 
-    res.render('me');
-  } else {
-    res.redirect('login');
-  }
+        res.render('me');
+    } else {
+        res.redirect('login');
+    }
 
 });
 
-app.get('/dashboard', function (req, res) {
+app.get('/dashboard', function(req, res) {
 
-  res.render('dashboard');
+    res.render('dashboard');
 });
 
 
-app.get('/chart', function (req, res) {
+app.get('/chart', function(req, res) {
 
-  // req.session.ferro='1';
-
-  res.render('index-hamza');
+    // req.session.ferro='1';
+if(loggedIn()){
+    res.render('index-hamza', {fid: req.session.farmId, sid: req.session.siteId});
+}
+else{
+    res.render('login',{flash: "Please login" });
+}
 });
 
 
 ////// @hamza
 //Renders the login page
-app.get('/login', function (req, res) {
-  // res.status(200).json({ status: 'working' });
- 
-  res.render('login');
- 
+app.get('/login', function(req, res) {
+    // res.status(200).json({ status: 'working' });
+
+    res.render('login');
+
 
 });
 
-app.get('/signout', function (req, res) {
-  // res.status(200).json({ status: 'working' });
-  firebase.auth().signOut();
-  res.render('login');
+app.get('/signout', function(req, res) {
+    // res.status(200).json({ status: 'working' });
+    firebase.auth().signOut();
+    res.render('login');
 });
 
 
 
 //Asynchronously signs in using an email and password.
-app.post('/login', upload.array(), function (req, res, next) {
-  // res.status(200).json({ status: 'working' });
-  // console.log(req.body.username);
+app.post('/login', upload.array(), function(req, res, next) {
+    // res.status(200).json({ status: 'working' });
+    // console.log(req.body.username);
 
-  var farmid, siteid;
+    var farmid, siteid;
 
-  firebase.auth().signInWithEmailAndPassword(req.body.u_email, req.body.password).catch(function (error) {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    console.log(errorCode + "  " + errorMessage);
-    res.render('login');
-    // ...
-  }).then(function () {
+    firebase.auth().signInWithEmailAndPassword(req.body.u_email, req.body.password).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode + "  " + errorMessage);
+        res.render('login');
+        // ...
+    }).then(function() {
 
-    firebase.auth().onAuthStateChanged(function (user) {
-      (user.emailVerified) ? console.log('Email is verified'): res.redirect("/verifyEmail")
+        firebase.auth().onAuthStateChanged(function(user) {
+            (user.emailVerified) ? console.log('Email is verified'): res.redirect("/verifyEmail")
+        });
+
+
+
+        if (!loggedIn()) {
+            res.render('login');
+        }
+        var user=firebase.auth().currentUser;
+        firebase.database().ref('/users/' + user.uid + '/farm').once('value').then(function(snapshot) {
+            fid = JSON.stringify(snapshot.val());
+
+            console.log(fid[1]);
+
+            farmid = fid[1];
+            console.log("Farm id in login : " + farmid);
+
+
+        });
+
+        firebase.database().ref('/users/' + user.uid + '/site').once('value').then(function(snapshot) {
+            sid = JSON.stringify(snapshot.val());
+
+            console.log(sid);
+            console.log(sid[1]);
+
+            siteid = sid[1];
+            console.log("Site Id in login " + siteid);
+            //userfarmid=fid[1];
+
+            req.session.siteId = siteid;
+            req.session.farmId = farmid;
+            console.log("Farmid from session " + req.session.farmId);
+            res.redirect('/');
+        });
+
+
+    }, function() {
+        res.redirect('/login');
+
     });
-
-    
-
-if(!firebase.auth().currentUser){
-  res.render('login');
-}
-    firebase.database().ref('/users/' + user.uid + '/farm').once('value').then(function (snapshot) {
-      fid = JSON.stringify(snapshot.val());
-
-      console.log(fid[1]);
-
-      farmid = fid[1];
-      console.log("Farm id in login : " + farmid);
-
-
-    });
-
-    firebase.database().ref('/users/' + user.uid + '/site').once('value').then(function (snapshot) {
-      sid = JSON.stringify(snapshot.val());
-
-      console.log(sid);
-      console.log(sid[1]);
-
-      siteid = sid[1];
-      console.log("Site Id in login " + siteid);
-      //userfarmid=fid[1];
-
-      req.session.siteId = siteid;
-      req.session.farmId = farmid;
-      console.log("Farmid from session " + req.session.farmId);
-      res.redirect('/');
-    });
-
-
-  }, function () {
-    res.redirect('/login');
-
-  });
 
 
 });
 
 
 
-app.get('/verifyEmail', function (req, res) {
-  // res.status(200).json({ status: 'working' });
-  res.render('verifyEmail');
+app.get('/verifyEmail', function(req, res) {
+    // res.status(200).json({ status: 'working' });
+    res.render('verifyEmail');
 });
 
 
@@ -240,194 +245,194 @@ app.get('/verifyEmail', function (req, res) {
 //Output: A new user account is created and redirected to the dashboad, 
 //       in case of error the signup page is loaded
 /////////////
-app.post('/signup', upload.array(), function (req, res) {
-  // res.status(200).json({ status: 'working' });
-  // console.log(req.body.username);
-  if (req.body.password == req.body.confirmPassword) {
+app.post('/signup', upload.array(), function(req, res) {
+    // res.status(200).json({ status: 'working' });
+    // console.log(req.body.username);
+    if (req.body.password == req.body.confirmPassword) {
 
-    firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password)
+        firebase.auth().createUserWithEmailAndPassword(req.body.u_email.toString(), req.body.password)
 
-      .catch(function (error) {
+        .catch(function(error) {
 
-        // Handle Errors 
+                // Handle Errors 
 
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(errorCode + "\n Messsage: " + errorMessage);
-        // ...
-        //req.flash('error', errorMessage);
-        res.render('login',{eMsg: errorMessage});
-      })
-      .then(function (user) {
-        //Send verification email to user
-        firebase.auth().onAuthStateChanged(function (user) {
-          (user.emailVerified) ?
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(errorCode + "\n Messsage: " + errorMessage);
+                // ...
+                //req.flash('error', errorMessage);
+                res.render('login', { eMsg: errorMessage });
+            })
+            .then(function(user) {
+                //Send verification email to user
+                firebase.auth().onAuthStateChanged(function(user) {
+                    (user.emailVerified) ?
 
-          console.log('Email is verified'):
+                    console.log('Email is verified'):
 
-            user.sendEmailVerification();
-        });
+                        user.sendEmailVerification();
+                });
 
-      }).then(function () {
-        //Add rest of the information in the users profile
-        firebase.database().ref('/users/' + firebase.auth().currentUser.uid).set({
+            }).then(function() {
+                //Add rest of the information in the users profile
+                firebase.database().ref('/users/' + firebase.auth().currentUser.uid).set({
 
-            firstname: req.body.firstName,
-            middlename: req.body.middleName,
-            lastname: req.body.lastName,
-            phone: req.body.phoneNumber
-          }
-
-
-        )
-      });
+                        firstname: req.body.firstName,
+                        middlename: req.body.middleName,
+                        lastname: req.body.lastName,
+                        phone: req.body.phoneNumber
+                    }
 
 
-    console.log(req.body.u_email);
-    res.send("Signed up \n" + req.body.u_email + " -- " + req.body.password + "   ");
+                )
+            });
 
-  } else {
-    res.render('signup');
-  }
+
+        console.log(req.body.u_email);
+        res.send("Signed up \n" + req.body.u_email + " -- " + req.body.password + "   ");
+
+    } else {
+        res.render('signup');
+    }
 });
 
 ////////
 // checks if the user's email address is verified or not, 
 //if it is not verified a new verififcation email is sent to the user
 ///////
-app.post('/resendVerificationEmail', upload.array(), function (req, res) {
+app.post('/resendVerificationEmail', upload.array(), function(req, res) {
 
-  firebase.auth().onAuthStateChanged(function (user) {
-    (user.emailVerified) ? res.redirect('login'): user.sendEmailVerification();
-  });
-  res.redirect('/verifyEmail');
+    firebase.auth().onAuthStateChanged(function(user) {
+        (user.emailVerified) ? res.redirect('login'): user.sendEmailVerification();
+    });
+    res.redirect('/verifyEmail');
 });
 
 
 
 //redirects the user to the signup page
-app.get('/signup', function (req, res) {
-  // res.status(200).json({ status: 'working' });
-  res.render('signup');
+app.get('/signup', function(req, res) {
+    // res.status(200).json({ status: 'working' });
+    res.render('signup');
 });
 
 //opens the Forgot password page, where user enters his//her email address
-app.get('/forgotPassword', function (req, res) {
+app.get('/forgotPassword', function(req, res) {
 
-  if (loggedIn())
-    res.render('forgotPassword');
-  else
-    res.redirect('login');
+    if (loggedIn())
+        res.render('forgotPassword');
+    else
+        res.redirect('login');
 });
 
-app.post('/forgotpassword', function (req, res) {
-  if (loggedIn()) {
-    firebase.auth().sendPasswordResetEmail(req.body.u_email.toString());
+app.post('/forgotpassword', function(req, res) {
+    if (loggedIn()) {
+        firebase.auth().sendPasswordResetEmail(req.body.u_email.toString());
 
-    res.send("Password reset email sent");
-  } else {
-    res.redirect('login');
-  }
+        res.send("Password reset email sent");
+    } else {
+        res.redirect('login');
+    }
 });
 
 //redirects the user to the signup page
-app.get('/setFarm', function (req, res) {
-  // res.status(200).json({ status: 'working' });
-  if (loggedIn())
-    res.render('setFarm');
-  else
-    res.redirect('login');
+app.get('/setFarm', function(req, res) {
+    // res.status(200).json({ status: 'working' });
+    if (loggedIn())
+        res.render('setFarm');
+    else
+        res.redirect('login');
 });
 
-app.get('/changePassword', function (req, res) {
-  // res.status(200).json({ status: 'working' });
-  if (loggedIn())
-    res.redirect('changePassword');
-  else
-    res.redirect('login');
+app.get('/changePassword', function(req, res) {
+    // res.status(200).json({ status: 'working' });
+    if (loggedIn())
+        res.redirect('changePassword');
+    else
+        res.redirect('login');
 });
 
 function getFarmid() {
 
-  var user = firebase.auth().currentUser;
-  console.log("userid: " + user.uid);
-  farmid = 0;
+    var user = firebase.auth().currentUser;
+    console.log("userid: " + user.uid);
+    farmid = 0;
 
-  firebase.database().ref('/users/' + user.uid + '/farm').once('value').then(function (snapshot) {
+    firebase.database().ref('/users/' + user.uid + '/farm').once('value').then(function(snapshot) {
 
-    console.log("farmid: " + snapshot.val());
-    if (snapshot.val() != null) {
-      farmid = snapshot.val();
+        console.log("farmid: " + snapshot.val());
+        if (snapshot.val() != null) {
+            farmid = snapshot.val();
 
-    } else {
-      farmid = 0;
-    }
+        } else {
+            farmid = 0;
+        }
 
-  });
-  return farmid;
+    });
+    return farmid;
 }
 
-app.get('/irrigation', function (req, res) {
-  // res.status(200).json({ status: 'working' });
-  var user = firebase.auth().currentUser;
-  var irrigationMode;
+app.get('/irrigation', function(req, res) {
+    // res.status(200).json({ status: 'working' });
+    var user = firebase.auth().currentUser;
+    var irrigationMode;
 
-  if (loggedIn()) {
+    if (loggedIn()) {
 
-    firebase.database().ref('/farms/' + req.session.farmId + '/' + req.session.siteId + '/irrigation/mode/mode').once('value').then(function (snapshot) {
-      // snapshot.forEach(function(childSnapshot) {
-      //     console.log(JSON.stringify(childSnapshot.val()));
-      //   });
+        firebase.database().ref('/farms/' + req.session.farmId + '/' + req.session.siteId + '/irrigation/mode/mode').once('value').then(function(snapshot) {
+            // snapshot.forEach(function(childSnapshot) {
+            //     console.log(JSON.stringify(childSnapshot.val()));
+            //   });
 
-      console.log("mode output: " + JSON.stringify(snapshot.val()));
-      if (snapshot.val() != null) {
+            console.log("mode output: " + JSON.stringify(snapshot.val()));
+            if (snapshot.val() != null) {
 
-        // siteid = siteid[1];
-        console.log("farmid: " + req.session.farmId + " - siteid: " + req.session.siteId);
+                // siteid = siteid[1];
+                console.log("farmid: " + req.session.farmId + " - siteid: " + req.session.siteId);
 
-        irrigationMode = snapshot.val();
+                irrigationMode = snapshot.val();
 
-      } else {
+            } else {
 
-        irrigationMode = "none";
+                irrigationMode = "none";
 
-      }
-    }).then(function () {
+            }
+        }).then(function() {
 
-      console.log("success gettting irrigation mode" + irrigationMode);
-      res.render('irrigation', {
-        irrigationmode: irrigationMode,
-        fid: req.session.farmId,
-        sid: req.session.siteId
-      });
+            console.log("success gettting irrigation mode" + irrigationMode);
+            res.render('irrigation', {
+                irrigationmode: irrigationMode,
+                fid: req.session.farmId,
+                sid: req.session.siteId
+            });
 
 
-    }, function () {
-      res.send('Error getting irrigation mode');
-    });
-    // res.send('Error getting irrigation details');
+        }, function() {
+            res.send('Error getting irrigation mode');
+        });
+        // res.send('Error getting irrigation details');
 
-  } else {
-    res.redirect('login');
-  }
+    } else {
+        res.redirect('login');
+    }
 });
 
 
 
-app.get('/addSchedule', function (req, res) {
+app.get('/addSchedule', function(req, res) {
 
-  if (loggedIn()) {
+    if (loggedIn()) {
 
-    res.render('addSchedule', {
-      fid: req.session.farmId,
-      sid: req.session.siteId
-    });
+        res.render('addSchedule', {
+            fid: req.session.farmId,
+            sid: req.session.siteId
+        });
 
-  } else {
+    } else {
 
-    res.redirect('login');
+        res.redirect('login');
 
-  }
+    }
 
 });
 
@@ -443,66 +448,66 @@ app.get('/addSchedule', function (req, res) {
 //load page
 
 
-app.get('/settings', function (req, res) {
-  // res.status(200).json({ status: 'working' });
+app.get('/settings', function(req, res) {
+    // res.status(200).json({ status: 'working' });
 
-  console.log('session value farm ' + req.session.farmId);
-  console.log('session value site ' + req.session.siteId);
-  var user = firebase.auth().currentUser;
-  var irrigationMode;
-  var minsm, minhum, mintemp;
-  var maxsm, maxtemp, maxtemp;
+    console.log('session value farm ' + req.session.farmId);
+    console.log('session value site ' + req.session.siteId);
+    var user = firebase.auth().currentUser;
+    var irrigationMode;
+    var minsm, minhum, mintemp;
+    var maxsm, maxtemp, maxtemp;
 
-  if (loggedIn()) {
+    if (loggedIn()) {
 
-    //get Ranges
-    firebase.database().ref('/farms/' + req.session.farmId + '/' + req.session.siteId + '/irrigation/auto').once('value').then(function (snapshot1) {
+        //get Ranges
+        firebase.database().ref('/farms/' + req.session.farmId + '/' + req.session.siteId + '/irrigation/auto').once('value').then(function(snapshot1) {
 
-      console.log('getting ranges' + snapshot1.val());
-      snapshot1.forEach(function (childSnapshot) {
-        //console.log(JSON.stringify(childSnapshot.val()));
-        if (childSnapshot.key == "temp") {
-          mintemp = JSON.stringify(childSnapshot.child('min').val());
-          maxtemp = JSON.stringify(childSnapshot.child('max').val());
-        } else if (childSnapshot.key == "hum") {
-          minhum = JSON.stringify(childSnapshot.child('min').val());
-          maxhum = JSON.stringify(childSnapshot.child('max').val());
-        } else if (childSnapshot.key == "sm") {
-          minsm = JSON.stringify(childSnapshot.child('min').val());
-          maxsm = JSON.stringify(childSnapshot.child('max').val());
-        }
+            console.log('getting ranges' + snapshot1.val());
+            snapshot1.forEach(function(childSnapshot) {
+                //console.log(JSON.stringify(childSnapshot.val()));
+                if (childSnapshot.key == "temp") {
+                    mintemp = JSON.stringify(childSnapshot.child('min').val());
+                    maxtemp = JSON.stringify(childSnapshot.child('max').val());
+                } else if (childSnapshot.key == "hum") {
+                    minhum = JSON.stringify(childSnapshot.child('min').val());
+                    maxhum = JSON.stringify(childSnapshot.child('max').val());
+                } else if (childSnapshot.key == "sm") {
+                    minsm = JSON.stringify(childSnapshot.child('min').val());
+                    maxsm = JSON.stringify(childSnapshot.child('max').val());
+                }
 
-      });
-
-
-
-    }).then(function () {
-
-      minsm = minsm.substring(1, minsm.length - 1);
-      maxsm = maxsm.substring(1, maxsm.length - 1);
-      minhum = minhum.substring(1, minhum.length - 1);
-      maxhum = maxhum.substring(1, maxhum.length - 1);
-      mintemp = mintemp.substring(1, mintemp.length - 1);
-      maxtemp = maxtemp.substring(1, maxtemp.length - 1);
+            });
 
 
 
-      res.render('settings', {
-        smmin: minsm,
-        smmax: maxsm,
-        hummin: minhum,
-        hummax: maxhum,
-        tempmin: mintemp,
-        tempmax: maxtemp,
-        fid: req.session.farmId,
-        sid: req.session.siteId
-      });
-    }, function () {
-      res.send('none');
-    });
-  } else {
-    res.redirect('login');
-  }
+        }).then(function() {
+
+            minsm = minsm.substring(1, minsm.length - 1);
+            maxsm = maxsm.substring(1, maxsm.length - 1);
+            minhum = minhum.substring(1, minhum.length - 1);
+            maxhum = maxhum.substring(1, maxhum.length - 1);
+            mintemp = mintemp.substring(1, mintemp.length - 1);
+            maxtemp = maxtemp.substring(1, maxtemp.length - 1);
+
+
+
+            res.render('settings', {
+                smmin: minsm,
+                smmax: maxsm,
+                hummin: minhum,
+                hummax: maxhum,
+                tempmin: mintemp,
+                tempmax: maxtemp,
+                fid: req.session.farmId,
+                sid: req.session.siteId
+            });
+        }, function() {
+            res.send('none');
+        });
+    } else {
+        res.redirect('login');
+    }
 
 
 
@@ -512,155 +517,159 @@ app.get('/settings', function (req, res) {
 
 
 //About Page
-app.get('/about', function (req, res) {
+app.get('/about', function(req, res) {
 
-  // res.status(200).json({ status: 'working' });
-  res.render('about');
+    // res.status(200).json({ status: 'working' });
+    res.render('about');
 });
 
-app.get('/report', function (req, res) {
-  // res.status(200).json({ status: 'working' });
-  if (loggedIn)
-    res.render('report');
-  else
-    res.redirect('login');
+app.get('/report', function(req, res) {
+    // res.status(200).json({ status: 'working' });
+    if (loggedIn)
+        res.render('report');
+    else
+        res.redirect('login');
 
 });
 
 
 //About Page
-app.get('/generateReport', function (req, res) {
+app.get('/generateReport', function(req, res) {
 
-  console.log(req.query.farmid)
-  console.log(req.query.siteid)
-  console.log(req.query.startdate)
-  console.log(req.query.enddate)
-
-
-  var startDate = req.query.startdate;
-  var endDate = req.query.enddate;
-  var childstring;
-  var minSM, maxSM, minHUM, maxHUM, minTEMP, maxTEMP;
-  var count = 0;
-  var sumSM = 0, sumTEMP = 0, sumHUM = 0;
-  var aveSM = 0, aveTEMP = 0, aveHUM = 0;
-  // var returnData = "{ ";
-  // var count = 0;
-
-  firebase.database().ref('/farms/' + req.query.farmid + '/' + req.query.siteid + '/sensor/').once('value').then(function (snapshot) {
-
-    snapshot.forEach(function (childSnapshot) {
-      // console.log("key: "+childSnapshot.key);
-
-      if (childSnapshot.key >= startDate && childSnapshot.key <= endDate) {
-        // console.log("key: "+childSnapshot.key);
-
-        childSnapshot.forEach(function (dataSnapshot) {
-
-          var HUM = parseFloat(dataSnapshot.child('hum').val());
-          var SM = parseFloat(dataSnapshot.child('sm').val());
-          var TEMP = parseFloat(dataSnapshot.child('temp').val());
-
-          var childst = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
-
-          if (count == 0) {
-            minSM = SM;
-            maxSM = SM;
-            minTEMP = TEMP;
-            maxTEMP = TEMP;
-            minHUM = HUM;
-            maxHUM = HUM;
-          } else {
-            childst = "," + childst;
-          }
-
-          if (HUM < minHUM) {
-            minHUM = HUM;
-          }
-
-          if (HUM > maxHUM) {
-            maxHUM = HUM;
-          }
-
-          if (SM < minSM) {
-            minSM = SM;
-
-          }
-
-          if (SM > maxSM) {
-            maxSM = SM;
-          }
-
-          if (TEMP < minTEMP) {
-            minTEMP = TEMP;
-          }
-
-          if (TEMP > maxTEMP) {
-            maxTEMP = TEMP;
-          }
+    console.log(req.query.farmid)
+    console.log(req.query.siteid)
+    console.log(req.query.startdate)
+    console.log(req.query.enddate)
 
 
-          ///////////////average
+    var startDate = req.query.startdate;
+    var endDate = req.query.enddate;
+    var childstring;
+    var minSM, maxSM, minHUM, maxHUM, minTEMP, maxTEMP;
+    var count = 0;
+    var sumSM = 0,
+        sumTEMP = 0,
+        sumHUM = 0;
+    var aveSM = 0,
+        aveTEMP = 0,
+        aveHUM = 0;
+    // var returnData = "{ ";
+    // var count = 0;
 
-          sumSM = sumSM + SM;
-          sumTEMP = sumTEMP + TEMP;
-          sumHUM = sumHUM + HUM;
+    firebase.database().ref('/farms/' + req.query.farmid + '/' + req.query.siteid + '/sensor/').once('value').then(function(snapshot) {
 
-          count = count + 1;
+        snapshot.forEach(function(childSnapshot) {
+            // console.log("key: "+childSnapshot.key);
+
+            if (childSnapshot.key >= startDate && childSnapshot.key <= endDate) {
+                // console.log("key: "+childSnapshot.key);
+
+                childSnapshot.forEach(function(dataSnapshot) {
+
+                    var HUM = parseFloat(dataSnapshot.child('hum').val());
+                    var SM = parseFloat(dataSnapshot.child('sm').val());
+                    var TEMP = parseFloat(dataSnapshot.child('temp').val());
+
+                    var childst = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
+
+                    if (count == 0) {
+                        minSM = SM;
+                        maxSM = SM;
+                        minTEMP = TEMP;
+                        maxTEMP = TEMP;
+                        minHUM = HUM;
+                        maxHUM = HUM;
+                    } else {
+                        childst = "," + childst;
+                    }
+
+                    if (HUM < minHUM) {
+                        minHUM = HUM;
+                    }
+
+                    if (HUM > maxHUM) {
+                        maxHUM = HUM;
+                    }
+
+                    if (SM < minSM) {
+                        minSM = SM;
+
+                    }
+
+                    if (SM > maxSM) {
+                        maxSM = SM;
+                    }
+
+                    if (TEMP < minTEMP) {
+                        minTEMP = TEMP;
+                    }
+
+                    if (TEMP > maxTEMP) {
+                        maxTEMP = TEMP;
+                    }
+
+
+                    ///////////////average
+
+                    sumSM = sumSM + SM;
+                    sumTEMP = sumTEMP + TEMP;
+                    sumHUM = sumHUM + HUM;
+
+                    count = count + 1;
 
 
 
-          // returnData += childst;
+                    // returnData += childst;
+
+                });
+
+
+                // childstring = JSON.stringify(childSnapshot.val());
+                // // console.log(childstring);
+                // // childstring = childstring.substring(1, childstring.length -1);
+                // childstring = "\"" + childSnapshot.key + "\":" + childstring;
+                // if (count == 0) {
+
+                //   count = 1
+                // } else {
+                //   childstring = "," + childstring;
+                // }
+
+                // returnData += childstring;
+                // console.log(returnData);
+
+            }
 
         });
 
 
-        // childstring = JSON.stringify(childSnapshot.val());
-        // // console.log(childstring);
-        // // childstring = childstring.substring(1, childstring.length -1);
-        // childstring = "\"" + childSnapshot.key + "\":" + childstring;
-        // if (count == 0) {
 
-        //   count = 1
-        // } else {
-        //   childstring = "," + childstring;
-        // }
+        // returnData += " }";
 
-        // returnData += childstring;
-        // console.log(returnData);
+        console.log("min SM: " + minSM);
+        console.log("max SM: " + maxSM);
+        console.log("min TEMP: " + minTEMP);
+        console.log("max SM: " + maxTEMP);
+        console.log("min TEMP: " + minTEMP);
+        console.log("max TEMP: " + maxTEMP);
 
-      }
+        if (count != 0) {
+            aveSM = sumSM / count;
+            aveTEMP = sumTEMP / count;
+            aveHUM = sumHUM / count;
+        }
 
+        console.log("average SM: " + aveSM);
+        console.log("average TEMP: " + aveTEMP);
+        console.log("average HUM: " + aveHUM);
+
+
+        res.json({ "minsm": minSM, "maxsm": maxSM, "mintemp": minTEMP, "maxtemp": maxTEMP, "minhum": minHUM, "maxhum": maxHUM, "avesm": aveSM, "avetemp": aveTEMP, "avehum": aveHUM });
+
+
+
+        // res.render('report');
     });
-
-
-
-    // returnData += " }";
-
-    console.log("min SM: " + minSM);
-    console.log("max SM: " + maxSM);
-    console.log("min TEMP: " + minTEMP);
-    console.log("max SM: " + maxTEMP);
-    console.log("min TEMP: " + minTEMP);
-    console.log("max TEMP: " + maxTEMP);
-
-    if(count != 0){
-      aveSM = sumSM/count;
-      aveTEMP = sumTEMP/count;
-      aveHUM = sumHUM/count;
-    }
-
-    console.log("average SM: "+aveSM);
-    console.log("average TEMP: "+aveTEMP);
-    console.log("average HUM: "+aveHUM);
-
-
-    res.json({"minsm": minSM, "maxsm":maxSM, "mintemp": minTEMP, "maxtemp": maxTEMP, "minhum": minHUM, "maxhum": maxHUM, "avesm":aveSM, "avetemp":aveTEMP , "avehum":aveHUM});
-
-
-
-    // res.render('report');
-  });
 });
 
 ////////////////---------------------------------------------------------------
@@ -677,54 +686,55 @@ app.get('/generateReport', function (req, res) {
 //output
 //  sensor data in JSON
 /////////////
-app.post('/api/getSensorData', function (req, res) {
+app.post('/api/getSensorData', function(req, res) {
 
-  console.log(req.body.farmid);
-  console.log(req.body.siteid);
-  console.log(req.body.startdate);
-  console.log(req.body.enddate);
+    console.log(req.body.farmid);
+    console.log(req.body.siteid);
+    console.log(req.body.startdate);
+    console.log(req.body.enddate);
 
-  var startDate = req.body.startdate;
-  var endDate = req.body.enddate;
-  var returnData = "{ ";
-  var count = 0;
+    var startDate = req.body.startdate;
+    var endDate = req.body.enddate;
+    var returnData = "{ ";
+    var count = 0;
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').once('value').then(function (snapshot) {
-    var childstring;
-    snapshot.forEach(function (childSnapshot) {
-      // console.log("key: "+childSnapshot.key);
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').once('value').then(function(snapshot) {
+        var childstring;
 
-      if (childSnapshot.key >= startDate && childSnapshot.key <= endDate) {
-        // console.log("key: "+childSnapshot.key);
-        childstring = JSON.stringify(childSnapshot.val());
-        // console.log(childstring);
-        // childstring = childstring.substring(1, childstring.length -1);
-        childstring = "\"" + childSnapshot.key + "\":" + childstring;
-        if (count == 0) {
+        snapshot.forEach(function(childSnapshot) {
+            // console.log("key: "+childSnapshot.key);
 
-          count = 1
-        } else {
-          childstring = "," + childstring;
-        }
+            if (childSnapshot.key >= startDate && childSnapshot.key <= endDate) {
+                // console.log("key: "+childSnapshot.key);
+                childstring = JSON.stringify(childSnapshot.val());
+                // console.log(childstring);
+                // childstring = childstring.substring(1, childstring.length -1);
+                childstring = "\"" + childSnapshot.key + "\":" + childstring;
+                if (count == 0) {
 
-        returnData += childstring;
-        console.log(returnData);
+                    count = 1
+                } else {
+                    childstring = "," + childstring;
+                }
 
-      }
+                returnData += childstring;
+                console.log(returnData);
 
+            }
+
+        });
+
+        returnData += " }";
+
+        console.log(snapshot.val());
+        res.json(JSON.parse(returnData));
+        //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        // ...
     });
 
-    returnData += " }";
 
-    console.log(snapshot.val());
-    res.json(JSON.parse(returnData));
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
-
-
-  res.status(200);
-  // res.render('index');
+    res.status(200);
+    // res.render('index');
 });
 
 
@@ -739,86 +749,86 @@ app.post('/api/getSensorData', function (req, res) {
 //output
 //  sensor data in JSON
 /////////////
-app.post('/api/webGetSensorData', function (req, res) {
+app.post('/api/webGetSensorData', function(req, res) {
 
-  console.log(req.body.farmid);
-  console.log(req.body.siteid);
-  console.log(req.body.startdate);
-  console.log(req.body.enddate);
+    console.log(req.body.farmid);
+    console.log(req.body.siteid);
+    console.log(req.body.startdate);
+    console.log(req.body.enddate);
 
-  var startDate = req.body.startdate;
-  var endDate = req.body.enddate;
-  var returnData = "{ \"" + req.body.siteid + "\": [ ";
-  var count = 0;
+    var startDate = req.body.startdate;
+    var endDate = req.body.enddate;
+    var returnData = "{ \"" + req.body.siteid + "\": [ ";
+    var count = 0;
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').once('value').then(function (snapshot) {
-    var childstring;
-    snapshot.forEach(function (childSnapshot) {
-      // console.log("key: "+childSnapshot.key);
-
-
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').once('value').then(function(snapshot) {
+        var childstring;
+        snapshot.forEach(function(childSnapshot) {
+            // console.log("key: "+childSnapshot.key);
 
 
 
-      if (childSnapshot.key >= startDate && childSnapshot.key <= endDate) {
 
-        childSnapshot.forEach(function (dataSnapshot) {
 
-          var HUM = dataSnapshot.child('hum').val();
-          var SM = dataSnapshot.child('sm').val();
-          var TEMP = dataSnapshot.child('temp').val();
+            if (childSnapshot.key >= startDate && childSnapshot.key <= endDate) {
 
-          var childst = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
+                childSnapshot.forEach(function(dataSnapshot) {
 
-          if (count == 0) {
+                    var HUM = dataSnapshot.child('hum').val();
+                    var SM = dataSnapshot.child('sm').val();
+                    var TEMP = dataSnapshot.child('temp').val();
 
-            count = 1
-          } else {
-            childst = "," + childst;
-          }
+                    var childst = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
 
-          returnData += childst;
+                    if (count == 0) {
+
+                        count = 1
+                    } else {
+                        childst = "," + childst;
+                    }
+
+                    returnData += childst;
+
+                });
+
+
+
+
+
+
+
+
+
+                // // console.log("key: "+childSnapshot.key);
+                // childstring = JSON.stringify(childSnapshot.val());
+                // // console.log(childstring);
+                // // childstring = childstring.substring(1, childstring.length -1);
+                // childstring = "\"" + childSnapshot.key + "\":" + childstring;
+                // if (count == 0) {
+
+                //   count = 1
+                // } else {
+                //   childstring = "," + childstring;
+                // }
+
+                // returnData += childstring;
+
+
+            }
 
         });
 
-
-
-
-
-
-
-
-
-        // // console.log("key: "+childSnapshot.key);
-        // childstring = JSON.stringify(childSnapshot.val());
-        // // console.log(childstring);
-        // // childstring = childstring.substring(1, childstring.length -1);
-        // childstring = "\"" + childSnapshot.key + "\":" + childstring;
-        // if (count == 0) {
-
-        //   count = 1
-        // } else {
-        //   childstring = "," + childstring;
-        // }
-
-        // returnData += childstring;
-
-
-      }
-
+        returnData += " ]}";
+        console.log(returnData);
+        // console.log(snapshot.val());
+        res.json(JSON.parse(returnData));
+        //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        // ...
     });
 
-    returnData += " ]}";
-    console.log(returnData);
-    // console.log(snapshot.val());
-    res.json(JSON.parse(returnData));
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
 
-
-  res.status(200);
-  // res.render('index');
+    res.status(200);
+    // res.render('index');
 });
 
 
@@ -830,26 +840,26 @@ app.post('/api/webGetSensorData', function (req, res) {
 //output
 //  sensor data in JSON
 /////////////
-app.post('/api/getLatestSensorData', function (req, res) {
+app.post('/api/getLatestSensorData', function(req, res) {
 
-  console.log(req.body.farmid);
-  console.log(req.body.siteid);
-
-
+    console.log(req.body.farmid);
+    console.log(req.body.siteid);
 
 
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').orderByKey().limitToLast(1).on("child_added", function (snapshot) {
-    var childstring;
-    var highest = '';
-    console.log(JSON.stringify(snapshot));
-    console.log(snapshot.key + " - " + JSON.stringify(snapshot));
-    res.json(snapshot);
-  });
 
 
-  res.status(200);
-  // res.render('index');
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').orderByKey().limitToLast(1).on("child_added", function(snapshot) {
+        var childstring;
+        var highest = '';
+        console.log(JSON.stringify(snapshot));
+        console.log(snapshot.key + " - " + JSON.stringify(snapshot));
+        res.json(snapshot);
+    });
+
+
+    res.status(200);
+    // res.render('index');
 });
 
 
@@ -863,51 +873,51 @@ app.post('/api/getLatestSensorData', function (req, res) {
 //output
 //  sites data in JSON
 /////////////
-app.post('/api/getFarmSites', function (req, res) {
+app.post('/api/getFarmSites', function(req, res) {
 
-  console.log(req.body.farmid);
-
-
-  var returnData = "{ ";
-  var count = 0;
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/').once('value').then(function (snapshot) {
-    var childstring;
-    snapshot.forEach(function (childSnapshot) {
-      // console.log("key: "+childSnapshot.key);
+    console.log(req.body.farmid);
 
 
+    var returnData = "{ ";
+    var count = 0;
 
-      // console.log("key: "+childSnapshot.key);
-      childstring = JSON.stringify(childSnapshot.child('info').val());
-      console.log("childstring: " + childstring);
-      // childstring = childstring.substring(1, childstring.length -1);
-      childstring = "\"" + childSnapshot.key + "\":" + childstring;
-      if (count == 0) {
-
-        count = 1
-      } else {
-        childstring = "," + childstring;
-      }
-
-      returnData += childstring;
-      console.log(returnData);
+    firebase.database().ref('/farms/' + req.body.farmid + '/').once('value').then(function(snapshot) {
+        var childstring;
+        snapshot.forEach(function(childSnapshot) {
+            // console.log("key: "+childSnapshot.key);
 
 
 
+            // console.log("key: "+childSnapshot.key);
+            childstring = JSON.stringify(childSnapshot.child('info').val());
+            console.log("childstring: " + childstring);
+            // childstring = childstring.substring(1, childstring.length -1);
+            childstring = "\"" + childSnapshot.key + "\":" + childstring;
+            if (count == 0) {
+
+                count = 1
+            } else {
+                childstring = "," + childstring;
+            }
+
+            returnData += childstring;
+            console.log(returnData);
+
+
+
+        });
+
+        returnData += " }";
+
+        console.log(snapshot.val());
+        res.json(JSON.parse(returnData));
+        //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        // ...
     });
 
-    returnData += " }";
 
-    console.log(snapshot.val());
-    res.json(JSON.parse(returnData));
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
-
-
-  res.status(200);
-  // res.render('index');
+    res.status(200);
+    // res.render('index');
 });
 
 
@@ -930,27 +940,27 @@ app.post('/api/getFarmSites', function (req, res) {
 //  output
 //  status
 /////////////
-app.post('/api/setSensorData', function (req, res) {
-  console.log(req.body.farmid);
-  console.log(req.body.date);
-  console.log(req.body.time);
-  console.log(req.body.siteid);
-  console.log(req.body.temp);
-  console.log(req.body.hum);
-  console.log(req.body.sm);
+app.post('/api/setSensorData', function(req, res) {
+    console.log(req.body.farmid);
+    console.log(req.body.date);
+    console.log(req.body.time);
+    console.log(req.body.siteid);
+    console.log(req.body.temp);
+    console.log(req.body.hum);
+    console.log(req.body.sm);
 
-  // Set Sample Data
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/' + req.body.date + '/' + req.body.time).set({
-    hum: req.body.hum,
-    sm: req.body.sm,
-    temp: req.body.temp
-  });
+    // Set Sample Data
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/' + req.body.date + '/' + req.body.time).set({
+        hum: req.body.hum,
+        sm: req.body.sm,
+        temp: req.body.temp
+    });
 
 
-  res.status(200).json({
-    status: "1"
-  });
-  // res.render('index');
+    res.status(200).json({
+        status: "1"
+    });
+    // res.render('index');
 });
 
 
@@ -962,21 +972,21 @@ app.post('/api/setSensorData', function (req, res) {
 //output
 //  status
 /////////////
-app.post('/api/setIrrigationStatus', function (req, res) {
+app.post('/api/setIrrigationStatus', function(req, res) {
 
 
-  console.log(req.body.status);
-  if (req.body.status == '0' || req.body.status == '1') {
-    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/manual/').set({
-      status: req.body.status
+    console.log(req.body.status);
+    if (req.body.status == '0' || req.body.status == '1') {
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/manual/').set({
+            status: req.body.status
+        });
+        console.log("inside.");
+    }
+
+    res.status(200).json({
+        status: '1'
     });
-    console.log("inside.");
-  }
-
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
+    // res.render('index');
 });
 
 /////////////
@@ -1021,174 +1031,174 @@ app.post('/api/setIrrigationStatus', function (req, res) {
 //output
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
-app.post('/api/sendAlert', function (req, res) {
-  console.log(req.body.phonenumber);
-  console.log(req.body.msgbody);
-  console.log(req.body.farmid);
-  console.log(req.body.siteid);
-  console.log(req.body.date);
-  console.log(req.body.time);
-  console.log(req.body.type);
+app.post('/api/sendAlert', function(req, res) {
+    console.log(req.body.phonenumber);
+    console.log(req.body.msgbody);
+    console.log(req.body.farmid);
+    console.log(req.body.siteid);
+    console.log(req.body.date);
+    console.log(req.body.time);
+    console.log(req.body.type);
 
-  var selectedUser;
-  var phone, phonefull, message;
+    var selectedUser;
+    var phone, phonefull, message;
 
-  var date1 = new Date(req.body.date + "T" + req.body.time);
-  var date2;
+    var date1 = new Date(req.body.date + "T" + req.body.time);
+    var date2;
 
-  try {
-    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).once('value', function (snapshot) {
-      console.log("snapshot: " + JSON.stringify(snapshot));
-      var snapshot2 = snapshot;
-      return snapshot2.val();
-    }).then(function (snapshot2) {
-      console.log("lastnode: " + JSON.stringify(snapshot2));
-      if (snapshot2 != null) {
-        var childstring;
-        var highest = '';
-        console.log(JSON.stringify(snapshot2));
-
-
-        var firstKey = Object.keys(JSON.parse(JSON.stringify(snapshot2)));
+    try {
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/').orderByKey().limitToLast(1).once('value', function(snapshot) {
+            console.log("snapshot: " + JSON.stringify(snapshot));
+            var snapshot2 = snapshot;
+            return snapshot2.val();
+        }).then(function(snapshot2) {
+            console.log("lastnode: " + JSON.stringify(snapshot2));
+            if (snapshot2 != null) {
+                var childstring;
+                var highest = '';
+                console.log(JSON.stringify(snapshot2));
 
 
+                var firstKey = Object.keys(JSON.parse(JSON.stringify(snapshot2)));
 
 
 
-        console.log(typeof firstKey);
-        firstKey = String(firstKey);
-        console.log(typeof firstKey);
-        date2 = new Date(firstKey);
-        date1 = new Date(req.body.date + "T" + req.body.time);
-        var nextKey = String(Object.keys(JSON.parse(JSON.stringify(snapshot2.child(firstKey)))));
-
-        var ms = snapshot2.child(firstKey).child(nextKey).child('type').val();
-        console.log("----------------------" + ms);
-
-        console.log(firstKey + " - " + req.body.date + "T" + req.body.time);
-
-        var differ = date2 - date1;
-        console.log(date1 - date2);
-        console.log(req.body.type == ms);
-        var msgTrigger = false;
-        if (req.body.type == ms) { //last alert was more than 5 minutes ago 
-          if (date1 - date2 > 300000) {
-            msgTrigger = true;
-          }
-        } else {
-          msgTrigger = true;
-        }
-        if (msgTrigger) {
-          firebase.database().ref('/users/').once('value').then(function (snapshot) {
 
 
+                console.log(typeof firstKey);
+                firstKey = String(firstKey);
+                console.log(typeof firstKey);
+                date2 = new Date(firstKey);
+                date1 = new Date(req.body.date + "T" + req.body.time);
+                var nextKey = String(Object.keys(JSON.parse(JSON.stringify(snapshot2.child(firstKey)))));
 
-            snapshot.forEach(function (childSnapshot) {
+                var ms = snapshot2.child(firstKey).child(nextKey).child('type').val();
+                console.log("----------------------" + ms);
 
-              selectedUser = childSnapshot.child('site')
-              if (req.body.siteid == selectedUser.val()) {
-                console.log("matched users: " + JSON.stringify(childSnapshot.val()));
-                phone = childSnapshot.child('phone');
-                phonefull = JSON.stringify(phone.val());
-                console.log("type of: " + typeof phonefull);
-                console.log("phone extracted:" + phonefull);
-                // phone = phone.split()
-                phonefull = phonefull.slice(2, -1);
-                phonefull = "+92" + phonefull;
-                console.log("phone: " + phonefull);
+                console.log(firstKey + " - " + req.body.date + "T" + req.body.time);
 
-                message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " at site: " + req.body.siteid;
-                console.log("message: " + message);
-                try {
-                  client.messages.create({
-                    to: phonefull,
-                    from: '+13022488465',
-                    body: message
-
-                  }, function (err, data) {
-                    console.log("message:::::::::::" + message);
-                    if (err) {
-                      console.log(err);
-                      //create a database log for alert
-
+                var differ = date2 - date1;
+                console.log(date1 - date2);
+                console.log(req.body.type == ms);
+                var msgTrigger = false;
+                if (req.body.type == ms) { //last alert was more than 5 minutes ago 
+                    if (date1 - date2 > 300000) {
+                        msgTrigger = true;
                     }
-                    //create a database log for alert
-                    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + 'T' + req.body.time + '/' + phonefull.slice(1)).set({
-                      message: message,
-                      type: req.body.type
-                    });
+                } else {
+                    msgTrigger = true;
+                }
+                if (msgTrigger) {
+                    firebase.database().ref('/users/').once('value').then(function(snapshot) {
 
-                    console.log(data);
-                  });
-                } catch (err) {
-                  console.log("error in msg sending" + err);
+
+
+                        snapshot.forEach(function(childSnapshot) {
+
+                            selectedUser = childSnapshot.child('site')
+                            if (req.body.siteid == selectedUser.val()) {
+                                console.log("matched users: " + JSON.stringify(childSnapshot.val()));
+                                phone = childSnapshot.child('phone');
+                                phonefull = JSON.stringify(phone.val());
+                                console.log("type of: " + typeof phonefull);
+                                console.log("phone extracted:" + phonefull);
+                                // phone = phone.split()
+                                phonefull = phonefull.slice(2, -1);
+                                phonefull = "+92" + phonefull;
+                                console.log("phone: " + phonefull);
+
+                                message = "Dear: " + childSnapshot.child('firstName').val() + " " + childSnapshot.child('lastName').val() + ":  " + req.body.msgbody + " at site: " + req.body.siteid;
+                                console.log("message: " + message);
+                                try {
+                                    client.messages.create({
+                                        to: phonefull,
+                                        from: '+13022488465',
+                                        body: message
+
+                                    }, function(err, data) {
+                                        console.log("message:::::::::::" + message);
+                                        if (err) {
+                                            console.log(err);
+                                            //create a database log for alert
+
+                                        }
+                                        //create a database log for alert
+                                        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + 'T' + req.body.time + '/' + phonefull.slice(1)).set({
+                                            message: message,
+                                            type: req.body.type
+                                        });
+
+                                        console.log(data);
+                                    });
+                                } catch (err) {
+                                    console.log("error in msg sending" + err);
+                                }
+
+
+
+                            }
+                        });
+
+
+
+
+
+
+                    });
                 }
 
 
-
-              }
-            });
-
-
-
-
-
-
-          });
-        }
-
-
-      }
-      res.json(snapshot2);
-    });
+            }
+            res.json(snapshot2);
+        });
 
 
 
 
 
 
-  } catch (err) {
-    console.log("catch: " + err);
-  }
+    } catch (err) {
+        console.log("catch: " + err);
+    }
 
 
-  // .then(function (onResolve, onReject) {
-  //   var differ = date2 - date1;
-  //   console.log("difference:   ------------------  " + differ);
-  // });
-
-
-
+    // .then(function (onResolve, onReject) {
+    //   var differ = date2 - date1;
+    //   console.log("difference:   ------------------  " + differ);
+    // });
 
 
 
-  //   //   //console.log(snapshot.val());
-  //   //   if (snapshot != null) {
-  //   //     res.json({
-  //   //       status: 1
-  //   //     });
 
-  //   //   } else {
-  //   //     res.json({
-  //   //       status: -1
-  //   //     });
-  //   //   }
-  //   //   console.log(data);
-  //   // });
 
-  //   res.status(200)
-  //   // res.render('index');
+
+    //   //   //console.log(snapshot.val());
+    //   //   if (snapshot != null) {
+    //   //     res.json({
+    //   //       status: 1
+    //   //     });
+
+    //   //   } else {
+    //   //     res.json({
+    //   //       status: -1
+    //   //     });
+    //   //   }
+    //   //   console.log(data);
+    //   // });
+
+    //   res.status(200)
+    //   // res.render('index');
 
 });
 
 function logAlert(message, phone) {
-  console.log('in LogAlert');
+    console.log('in LogAlert');
 
-  //create a database log for alert
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull).set({
-    message: message,
-    data: data
-  });
+    //create a database log for alert
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/alerts/logs/' + req.body.date + '-' + req.body.time + '/' + phonefull).set({
+        message: message,
+        data: data
+    });
 }
 
 
@@ -1201,30 +1211,30 @@ function logAlert(message, phone) {
 //output
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
-app.post('/api/getIrrigationStatus', function (req, res) {
+app.post('/api/getIrrigationStatus', function(req, res) {
 
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/manual').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/manual').once('value').then(function(snapshot) {
+        // snapshot.forEach(function(childSnapshot) {
+        //     console.log(JSON.stringify(childSnapshot.val()));
+        //   });
 
-    console.log(snapshot.val());
-    if (snapshot != null) {
-      res.json(snapshot.val());
+        console.log(snapshot.val());
+        if (snapshot != null) {
+            res.json(snapshot.val());
 
-    } else {
-      res.json({
-        status: -1
-      });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
+        } else {
+            res.json({
+                status: -1
+            });
+        }
+        //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        // ...
+    });
 
 
-  res.status(200)
-  // res.render('index');
+    res.status(200)
+        // res.render('index');
 });
 
 
@@ -1237,29 +1247,29 @@ app.post('/api/getIrrigationStatus', function (req, res) {
 //output
 // status: 0,1, -1 (-1 shows there is no data on server)
 /////////////
-app.post('/api/getStatus', function (req, res) {
+app.post('/api/getStatus', function(req, res) {
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation').once('value').then(function(snapshot) {
+        // snapshot.forEach(function(childSnapshot) {
+        //     console.log(JSON.stringify(childSnapshot.val()));
+        //   });
 
-    console.log(snapshot.val());
-    if (snapshot != null) {
-      res.json(snapshot.val());
+        console.log(snapshot.val());
+        if (snapshot != null) {
+            res.json(snapshot.val());
 
-    } else {
-      res.json({
-        status: -1
-      });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
+        } else {
+            res.json({
+                status: -1
+            });
+        }
+        //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        // ...
+    });
 
 
-  res.status(200)
-  // res.render('index');
+    res.status(200)
+        // res.render('index');
 });
 
 /////////////
@@ -1270,67 +1280,19 @@ app.post('/api/getStatus', function (req, res) {
 //
 //
 /////////////
-app.post('/api/setMin', function (req, res) {
-  console.log(req.body.siteid);
-  console.log(req.body.sensor);
-  console.log(req.body.value);
+app.post('/api/setMin', function(req, res) {
+    console.log(req.body.siteid);
+    console.log(req.body.sensor);
+    console.log(req.body.value);
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + "/irrigation/auto/" + req.body.sensor).update({
-    min: req.body.value
-  });
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + "/irrigation/auto/" + req.body.sensor).update({
+        min: req.body.value
+    });
 
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
-});
-
-
-/////////////
-//
-//
-//
-//
-//
-//
-/////////////
-app.post('/api/setMax', function (req, res) {
-  console.log(req.body.siteid);
-  console.log(req.body.sensor);
-  console.log(req.body.value);
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + "/irrigation/auto/" + req.body.sensor).update({
-    max: req.body.value
-  });
-
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
-});
-
-/////////////
-//
-//
-//
-//
-//
-//
-/////////////
-app.post('/api/setMinMax', function (req, res) {
-
-  console.log(req.body.farmid);
-  console.log(req.body.siteid);
-
-
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/auto/' + req.body.sensor).update({
-    min: req.body.min,
-    max: req.body.max
-  });
-
-  res.status(200).json({
-    status: '1'
-  });
+    res.status(200).json({
+        status: '1'
+    });
+    // res.render('index');
 });
 
 
@@ -1342,33 +1304,81 @@ app.post('/api/setMinMax', function (req, res) {
 //
 //
 /////////////
-app.post('/api/getMinMax', function (req, res) {
+app.post('/api/setMax', function(req, res) {
+    console.log(req.body.siteid);
+    console.log(req.body.sensor);
+    console.log(req.body.value);
 
-  console.log(req.body.farmid);
-  console.log(req.body.siteid);
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + "/irrigation/auto/" + req.body.sensor).update({
+        max: req.body.value
+    });
+
+    res.status(200).json({
+        status: '1'
+    });
+    // res.render('index');
+});
+
+/////////////
+//
+//
+//
+//
+//
+//
+/////////////
+app.post('/api/setMinMax', function(req, res) {
+
+    console.log(req.body.farmid);
+    console.log(req.body.siteid);
 
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/auto').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/auto/' + req.body.sensor).update({
+        min: req.body.min,
+        max: req.body.max
+    });
 
-    console.log(snapshot.val());
-    if (snapshot != null) {
-      res.json(snapshot.val());
-
-    } else {
-      res.json({
-        status: -1
-      });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
+    res.status(200).json({
+        status: '1'
+    });
+});
 
 
+/////////////
+//
+//
+//
+//
+//
+//
+/////////////
+app.post('/api/getMinMax', function(req, res) {
 
-  // res.render('index');
+    console.log(req.body.farmid);
+    console.log(req.body.siteid);
+
+
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/auto').once('value').then(function(snapshot) {
+        // snapshot.forEach(function(childSnapshot) {
+        //     console.log(JSON.stringify(childSnapshot.val()));
+        //   });
+
+        console.log(snapshot.val());
+        if (snapshot != null) {
+            res.json(snapshot.val());
+
+        } else {
+            res.json({
+                status: -1
+            });
+        }
+        //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        // ...
+    });
+
+
+
+    // res.render('index');
 });
 
 
@@ -1382,20 +1392,20 @@ app.post('/api/getMinMax', function (req, res) {
 //
 //
 /////////////
-app.post('/api/setFarm', function (req, res) {
+app.post('/api/setFarm', function(req, res) {
 
 
 
-  firebase.database().ref('/users/' + req.body.userid).update({
-    farm: req.body.farmid
-  });
+    firebase.database().ref('/users/' + req.body.userid).update({
+        farm: req.body.farmid
+    });
 
 
 
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
+    res.status(200).json({
+        status: '1'
+    });
+    // res.render('index');
 });
 
 
@@ -1407,21 +1417,21 @@ app.post('/api/setFarm', function (req, res) {
 //
 //
 /////////////
-app.post('/api/setSiteId', function (req, res) {
+app.post('/api/setSiteId', function(req, res) {
 
 
 
-  firebase.database().ref('/users/' + req.body.userid).update({
-    site: req.body.siteid
-  });
-  siteid = req.body.siteid
+    firebase.database().ref('/users/' + req.body.userid).update({
+        site: req.body.siteid
+    });
+    siteid = req.body.siteid
 
 
 
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
+    res.status(200).json({
+        status: '1'
+    });
+    // res.render('index');
 });
 
 
@@ -1434,20 +1444,20 @@ app.post('/api/setSiteId', function (req, res) {
 //
 //
 /////////////
-app.post('/api/setCropType', function (req, res) {
+app.post('/api/setCropType', function(req, res) {
 
 
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').update({
-    croptype: req.body.croptype
-  });
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').update({
+        croptype: req.body.croptype
+    });
 
 
 
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
+    res.status(200).json({
+        status: '1'
+    });
+    // res.render('index');
 });
 
 /////////////
@@ -1458,34 +1468,34 @@ app.post('/api/setCropType', function (req, res) {
 //
 //
 /////////////
-app.post('/api/getCropType', function (req, res) {
+app.post('/api/getCropType', function(req, res) {
 
 
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').once('value').then(function(snapshot) {
+        // snapshot.forEach(function(childSnapshot) {
+        //     console.log(JSON.stringify(childSnapshot.val()));
+        //   });
 
-    console.log(snapshot.child("croptype").val());
-    if (snapshot != null && snapshot.child("croptype" != null)) {
-      res.json({
-        croptype: snapshot.child("croptype").val()
-      });
+        console.log(snapshot.child("croptype").val());
+        if (snapshot != null && snapshot.child("croptype" != null)) {
+            res.json({
+                croptype: snapshot.child("croptype").val()
+            });
 
-    } else {
-      res.json({
-        croptype: -1
-      });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
+        } else {
+            res.json({
+                croptype: -1
+            });
+        }
+        //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        // ...
+    });
 
 
 
-  res.status(200)
-  // res.render('index');
+    res.status(200)
+        // res.render('index');
 });
 
 
@@ -1505,18 +1515,18 @@ app.post('/api/getCropType', function (req, res) {
 //
 //output: okay
 /////////////
-app.post('/api/addSchedule', function (req, res) {
+app.post('/api/addSchedule', function(req, res) {
 
-  console.log(req.body.status);
+    console.log(req.body.status);
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).set({
-    addtime: req.body.addtime
-  });
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).set({
+        addtime: req.body.addtime
+    });
 
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
+    res.status(200).json({
+        status: '1'
+    });
+    // res.render('index');
 });
 
 
@@ -1528,22 +1538,22 @@ app.post('/api/addSchedule', function (req, res) {
 //
 //
 /////////////
-app.post('/api/addUser', function (req, res) {
+app.post('/api/addUser', function(req, res) {
 
 
 
 
-  firebase.database().ref('/users/' + req.body.username).set({
+    firebase.database().ref('/users/' + req.body.username).set({
 
-    firstName: req.body.firstname,
-    middleName: req.body.middlename,
-    lastName: req.body.lastname,
-    phone: req.body.phonenumber
-  })
+        firstName: req.body.firstname,
+        middleName: req.body.middlename,
+        lastName: req.body.lastname,
+        phone: req.body.phonenumber
+    })
 
-  res.status(200).json({
-    status: '1'
-  });
+    res.status(200).json({
+        status: '1'
+    });
 });
 
 
@@ -1558,19 +1568,19 @@ app.post('/api/addUser', function (req, res) {
 //
 //output: okay
 /////////////
-app.post('/api/removeSchedule', function (req, res) {
-  console.log(req.body.scheduletime);
-  console.log(req.body.siteid);
-  console.log(req.body.farmid);
+app.post('/api/removeSchedule', function(req, res) {
+    console.log(req.body.scheduletime);
+    console.log(req.body.siteid);
+    console.log(req.body.farmid);
 
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).remove();
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules/' + req.body.scheduletime).remove();
 
 
 
-  res.status(200).json({
-    status: '1'
-  });
+    res.status(200).json({
+        status: '1'
+    });
 
 });
 
@@ -1606,29 +1616,29 @@ app.post('/api/removeSchedule', function (req, res) {
 //output
 // 
 /////////////
-app.post('/api/getAllSchedules', function (req, res) {
+app.post('/api/getAllSchedules', function(req, res) {
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/schedules').once('value').then(function(snapshot) {
+        // snapshot.forEach(function(childSnapshot) {
+        //     console.log(JSON.stringify(childSnapshot.val()));
+        //   });
 
-    console.log(JSON.stringify(snapshot.val()));
-    if (snapshot.val() != null) {
-      res.json(snapshot.val());
+        console.log(JSON.stringify(snapshot.val()));
+        if (snapshot.val() != null) {
+            res.json(snapshot.val());
 
-    } else {
-      res.json({
-        status: -1
-      });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
+        } else {
+            res.json({
+                status: -1
+            });
+        }
+        //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        // ...
+    });
 
 
-  res.status(200)
-  // res.render('index');
+    res.status(200)
+        // res.render('index');
 });
 
 /////////////
@@ -1639,29 +1649,29 @@ app.post('/api/getAllSchedules', function (req, res) {
 //output
 // 
 /////////////
-app.post('/api/getIrrigationMode', function (req, res) {
+app.post('/api/getIrrigationMode', function(req, res) {
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode').once('value').then(function (snapshot) {
-    // snapshot.forEach(function(childSnapshot) {
-    //     console.log(JSON.stringify(childSnapshot.val()));
-    //   });
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode').once('value').then(function(snapshot) {
+        // snapshot.forEach(function(childSnapshot) {
+        //     console.log(JSON.stringify(childSnapshot.val()));
+        //   });
 
-    console.log(JSON.stringify(snapshot.val()));
-    if (snapshot.val() != null) {
-      res.json(snapshot.val());
+        console.log(JSON.stringify(snapshot.val()));
+        if (snapshot.val() != null) {
+            res.json(snapshot.val());
 
-    } else {
-      res.json({
-        status: -1
-      });
-    }
-    //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-    // ...
-  });
+        } else {
+            res.json({
+                status: -1
+            });
+        }
+        //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        // ...
+    });
 
 
-  res.status(200)
-  // res.render('index');
+    res.status(200)
+        // res.render('index');
 });
 
 /////////////
@@ -1672,20 +1682,20 @@ app.post('/api/getIrrigationMode', function (req, res) {
 //
 //
 ///////////// 
-app.post('/api/setIrrigationMode', function (req, res) {
-  // res.status(200).json({ status: 'working' });
-  console.log(req.body.status);
+app.post('/api/setIrrigationMode', function(req, res) {
+    // res.status(200).json({ status: 'working' });
+    console.log(req.body.status);
 
-  firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode/').set({
-    mode: req.body.mode
-  });
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/irrigation/mode/').set({
+        mode: req.body.mode
+    });
 
 
 
-  res.status(200).json({
-    status: '1'
-  });
-  // res.render('index');
+    res.status(200).json({
+        status: '1'
+    });
+    // res.render('index');
 });
 
 //Start Appliation on the given PORT number
