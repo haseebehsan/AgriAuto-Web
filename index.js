@@ -183,8 +183,9 @@ app.post('/login', upload.array(), function (req, res, next) {
       (user.emailVerified) ? console.log('Email is verified'): res.redirect("/verifyEmail")
     });
 
-    var user = firebase.auth().currentUser;
-if(!user){
+    
+
+if(!firebase.auth().currentUser){
   res.render('login');
 }
     firebase.database().ref('/users/' + user.uid + '/farm').once('value').then(function (snapshot) {
@@ -255,7 +256,7 @@ app.post('/signup', upload.array(), function (req, res) {
         console.log(errorCode + "\n Messsage: " + errorMessage);
         // ...
         //req.flash('error', errorMessage);
-        res.render('login');
+        res.render('login',{eMsg: errorMessage});
       })
       .then(function (user) {
         //Send verification email to user
