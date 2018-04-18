@@ -171,12 +171,15 @@ app.post('/login', upload.array(), function(req, res, next) {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorCode + "  " + errorMessage);
-        res.render('login');
+        res.redirect('login');
         // ...
     }).then(function() {
 
+
         firebase.auth().onAuthStateChanged(function(user) {
-            (user.emailVerified) ? console.log('Email is verified'): res.redirect("/verifyEmail")
+        if(user){
+            (user.emailVerified) ? console.log('Email is verified'): res.redirect("/verifyEmail");
+        }
         });
 
 
@@ -200,7 +203,7 @@ app.post('/login', upload.array(), function(req, res, next) {
             sid = JSON.stringify(snapshot.val());
 
             console.log(sid);
-        console.log(sid[1]);
+            console.log(sid[1]);
 
             siteid = sid[1];
             console.log("Site Id in login " + siteid);
@@ -215,7 +218,9 @@ app.post('/login', upload.array(), function(req, res, next) {
 
     }).catch(function (err){
         res.redirect('/login');
-    });
+    });  
+
+
 
 
 });
