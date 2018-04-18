@@ -200,7 +200,7 @@ app.post('/login', upload.array(), function(req, res, next) {
             sid = JSON.stringify(snapshot.val());
 
             console.log(sid);
-            console.log(sid[1]);\
+        console.log(sid[1]);
 
             siteid = sid[1];
             console.log("Site Id in login " + siteid);
