@@ -108,7 +108,7 @@ app.get('/', function(req, res) {
             sid: req.session.siteId
         });
     } else {
-        res.render('login');
+        res.render('login',{err:"Please Login"});
     }
 });
 
@@ -136,7 +136,7 @@ if(loggedIn()){
     res.render('index-hamza', {fid: req.session.farmId, sid: req.session.siteId});
 }
 else{
-    res.render('login',{flash: "Please login" });
+    res.render('login',{err:"Please Login"});
 }
 });
 
@@ -146,7 +146,7 @@ else{
 app.get('/login', function(req, res) {
     // res.status(200).json({ status: 'working' });
 
-    res.render('login');
+    res.render('login',{err:""});
 
 
 });
@@ -154,7 +154,7 @@ app.get('/login', function(req, res) {
 app.get('/signout', function(req, res) {
     // res.status(200).json({ status: 'working' });
     firebase.auth().signOut();
-    res.render('login');
+    res.render('login',{err:"Please Login"});
 });
 
 
@@ -168,13 +168,13 @@ app.post('/login', upload.array(), function(req, res, next) {
 
     firebase.auth().signInWithEmailAndPassword(req.body.u_email, req.body.password).catch(function(error) {
         // Handle Errors here.
+        var err;
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorCode + "  " + errorMessage);
-        res.redirect('login');
+        res.render('login',{err: errorMessage});        
         // ...
     }).then(function() {
-
 
         firebase.auth().onAuthStateChanged(function(user) {
         if(user){
@@ -182,13 +182,10 @@ app.post('/login', upload.array(), function(req, res, next) {
         }
         });
 
-
-
-        if (!loggedIn()) {
-            res.render('login');
-        }
-        var user=firebase.auth().currentUser;
-        firebase.database().ref('/users/' + user.uid + '/farm').once('value').then(function(snapshot) {
+        if (loggedIn()) {
+            
+            var user=firebase.auth().currentUser;
+            firebase.database().ref('/users/' + user.uid + '/farm').once('value').then(function(snapshot) {
             fid = JSON.stringify(snapshot.val());
 
             console.log(fid[1]);
@@ -215,9 +212,9 @@ app.post('/login', upload.array(), function(req, res, next) {
             res.redirect('/');
         });
 
-
-    }).catch(function (err){
-        res.redirect('/login');
+    }
+    },function(){
+        res.render('login',{err:"Unable to login"});
     });  
 
 
@@ -257,7 +254,7 @@ app.post('/signup', upload.array(), function(req, res) {
                 console.log(errorCode + "\n Messsage: " + errorMessage);
                 // ...
                 //req.flash('error', errorMessage);
-                res.render('login', { eMsg: errorMessage });
+                res.render('login', { err: errorMessage });
             })
             .then(function(user) {
                 //Send verification email to user
@@ -318,7 +315,7 @@ app.get('/forgotPassword', function(req, res) {
     if (loggedIn())
         res.render('forgotPassword');
     else
-        res.redirect('login');
+        res.redirect('login',{err:"Please Login"});
 });
 
 app.post('/forgotpassword', function(req, res) {
@@ -327,7 +324,7 @@ app.post('/forgotpassword', function(req, res) {
 
         res.send("Password reset email sent");
     } else {
-        res.redirect('login');
+        res.redirect('login',{err:"Please Login"});
     }
 });
 
@@ -337,7 +334,7 @@ app.get('/setFarm', function(req, res) {
     if (loggedIn())
         res.render('setFarm');
     else
-        res.redirect('login');
+        res.render('login',{err:"Please Login"});
 });
 
 app.get('/changePassword', function(req, res) {
@@ -345,7 +342,7 @@ app.get('/changePassword', function(req, res) {
     if (loggedIn())
         res.redirect('changePassword');
     else
-        res.redirect('login');
+        res.render('login',{err:"Please Login"});
 });
 
 function getFarmid() {
@@ -409,7 +406,7 @@ app.get('/irrigation', function(req, res) {
         // res.send('Error getting irrigation details');
 
     } else {
-        res.redirect('login');
+        res.render('login',{err:"Please Login"});
     }
 });
 
@@ -426,7 +423,7 @@ app.get('/addSchedule', function(req, res) {
 
     } else {
 
-        res.redirect('login');
+        res.render('login',{err:"Please Login"});
 
     }
 
@@ -502,7 +499,7 @@ app.get('/settings', function(req, res) {
             res.send('none');
         });
     } else {
-        res.redirect('login');
+        res.render('login',{err:"Please Login"});
     }
 
 
@@ -524,7 +521,7 @@ app.get('/report', function(req, res) {
     if (loggedIn)
         res.render('report');
     else
-        res.redirect('login');
+        res.render('login',{err:"Please Login"});
 
 });
 
