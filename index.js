@@ -35,13 +35,6 @@ app.use(function(req, res, next) {
     next();
 });
 
-// app.use(session({
-//     name : 'app.sid',
-//     secret: "1234567890QWERTY",
-//     resave: true,
-//     store: new MemoryStore(),
-//     saveUninitialized: true
-// }));
 //Firebase Config
 var config = {
     apiKey: "AIzaSyACMgec6EghmqZ5eRZGKablbh5LXvGz4Cw",
@@ -75,7 +68,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 //Checks if user is logged in
-//c
 function loggedIn() {
     var user = firebase.auth().currentUser;
     if (user) {
@@ -86,8 +78,8 @@ function loggedIn() {
     }
 }
 
-//input: curreetn user's uid
-///output: boolean
+//input: current user's uid (taken directly from firebase auth)
+///output: boolean (true is logged in)
 function isFarmSet() {
     //Checks whether a farm has been assigned to a user
     firebase.database().ref('/users/' + firebase.auth().currentUser.uid).once('value').then(function(snapshot) {
@@ -208,7 +200,7 @@ app.post('/login', upload.array(), function(req, res, next) {
             sid = JSON.stringify(snapshot.val());
 
             console.log(sid);
-            console.log(sid[1]);
+            console.log(sid[1]);\
 
             siteid = sid[1];
             console.log("Site Id in login " + siteid);
@@ -221,9 +213,8 @@ app.post('/login', upload.array(), function(req, res, next) {
         });
 
 
-    }, function() {
+    }).catch(function (err){
         res.redirect('/login');
-
     });
 
 
