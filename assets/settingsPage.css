@@ -1,8 +1,8 @@
 
 .login-page {
     width: 720px;
-    padding: 4% 0 0;
-    margin: auto;
+    padding: 1% 0 0 0;
+    margin: auto auto auto auto;
   }
   .form {
     position: relative;
@@ -127,4 +127,35 @@ input[type="number"].mod::-webkit-inner-spin-button {
     width: 1em;
     border-left: 1px solid #BBB;
     opacity: .5; /* shows Spin Buttons per default (Chrome >= 39) */
+}
+
+
+/* The close button */
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+  color: black;
+}
+label {
+  font-family: "Roboto", sans-serif;
+  outline: 1;
+  
+  
+  border: 0;
+ 
+
+  box-sizing: border-box;
+  font-size: 14px;
+
+  padding-right:10px;
 }

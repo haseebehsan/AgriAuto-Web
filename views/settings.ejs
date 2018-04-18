@@ -13,10 +13,15 @@
     </header>
 
     <div class="login-page" id="login-page">
+        
+<div class="alert alert-warning fade out" id="bsalert">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Error:</strong><span id="errorText">Please select a date for the schedule</span> 
+      </div>
         <div class="form">
             <div class="register-form">
 
-                <h2 style="text-align:center; background-color:#43A047;" class="panel">Settings</h2>
+                <h2 style="text-align:center; " class="panel">Settings</h2>
                 <table style="text-align:center; " align="center" width="100%" >
                     <tr style="text-align:center; " >
                         <td  colspan="4">
@@ -146,7 +151,7 @@
         
         
             
-                    });
+        });
                     $('.message a').click(function () {
                         $('form').animate({
                             height: "toggle",
