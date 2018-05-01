@@ -748,10 +748,11 @@ app.post('/api/webGetSensorData', function(req, res) {
     console.log(req.body.siteid);
     console.log(req.body.startdate);
     console.log(req.body.enddate);
+    console.log(req.body.sensor);
 
     var startDate = req.body.startdate;
     var endDate = req.body.enddate;
-    var returnData = "{ \"" + req.body.siteid + "\": [ ";
+    var returnData = "{ \"sensordata\": [ ";
     var count = 0;
 
     firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').once('value').then(function(snapshot) {
@@ -767,11 +768,11 @@ app.post('/api/webGetSensorData', function(req, res) {
 
                 childSnapshot.forEach(function(dataSnapshot) {
 
-                    var HUM = dataSnapshot.child('hum').val();
-                    var SM = dataSnapshot.child('sm').val();
-                    var TEMP = dataSnapshot.child('temp').val();
+                    var sensorvalue = dataSnapshot.child(sensor).val();
+                    // var SM = dataSnapshot.child('sm').val();
+                    // var TEMP = dataSnapshot.child('temp').val();
 
-                    var childst = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
+                    var childst = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"value\":  \"" + sensorvalue + "\" }";
 
                     if (count == 0) {
 
