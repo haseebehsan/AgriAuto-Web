@@ -768,7 +768,7 @@ app.post('/api/webGetSensorData', function(req, res) {
 
                 childSnapshot.forEach(function(dataSnapshot) {
 
-                    var sensorvalue = dataSnapshot.child(sensor).val();
+                    var sensorvalue = dataSnapshot.child(req.body.sensor).val();
                     // var SM = dataSnapshot.child('sm').val();
                     // var TEMP = dataSnapshot.child('temp').val();
 
