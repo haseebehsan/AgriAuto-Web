@@ -988,17 +988,17 @@ app.post('/api/setIrrigationStatus', function(req, res) {
 //inputs:
 //  farmid
 //  siteid
-//  last payment: date
+//  expiry: date
 //output
 //  status
 /////////////
-app.post('/api/setLastPayment', function(req, res) {
+app.post('/api/setExpiry', function(req, res) {
 
 
-    console.log(req.body.lastpayment);
+    console.log(req.body.paymentexpiry);
     if (req.body.status == '0' || req.body.status == '1') {
         firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').set({
-            status: req.body.paymentexpiry
+            paymentexpiry : req.body.paymentexpiry
         });
         console.log("inside.");
     }
@@ -1014,18 +1014,18 @@ app.post('/api/setLastPayment', function(req, res) {
 //inputs:
 //  farmid
 //  siteid
-//  last payment: date
+//  expiry: date
 //output
 //  status
 /////////////
-app.post('/api/getLastPayment', function(req, res) {
+app.post('/api/getExpiry', function(req, res) {
 
 
     firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').once('value').then(function(snapshot) {
         // snapshot.forEach(function(childSnapshot) {
         //     console.log(JSON.stringify(childSnapshot.val()));
         //   });
-        //snapshot has info uncluding last payment
+        //snapshot has info uncluding expiry
         console.log(snapshot.val());
         if (snapshot != null) {
             res.json(snapshot.val());
