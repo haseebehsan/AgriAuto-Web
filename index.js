@@ -996,12 +996,11 @@ app.post('/api/setExpiry', function(req, res) {
 
 
     console.log(req.body.paymentexpiry);
-    if (req.body.status == '0' || req.body.status == '1') {
         firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').update({
             paymentexpiry: req.body.paymentexpiry
         });
         console.log("inside.");
-    }
+    
 
     res.status(200).json({
         status: '1'
