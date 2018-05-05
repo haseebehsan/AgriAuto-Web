@@ -983,6 +983,71 @@ app.post('/api/setIrrigationStatus', function(req, res) {
     // res.render('index');
 });
 
+
+/////////////
+//inputs:
+//  farmid
+//  siteid
+//  last payment: date
+//output
+//  status
+/////////////
+app.post('/api/setLastPayment', function(req, res) {
+
+
+    console.log(req.body.lastpayment);
+    if (req.body.status == '0' || req.body.status == '1') {
+        firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').set({
+            status: req.body.paymentexpiry
+        });
+        console.log("inside.");
+    }
+
+    res.status(200).json({
+        status: '1'
+    });
+    // res.render('index');
+});
+
+
+/////////////
+//inputs:
+//  farmid
+//  siteid
+//  last payment: date
+//output
+//  status
+/////////////
+app.post('/api/getLastPayment', function(req, res) {
+
+
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/info/').once('value').then(function(snapshot) {
+        // snapshot.forEach(function(childSnapshot) {
+        //     console.log(JSON.stringify(childSnapshot.val()));
+        //   });
+        //snapshot has info uncluding last payment
+        console.log(snapshot.val());
+        if (snapshot != null) {
+            res.json(snapshot.val());
+
+        } else {
+            res.json({
+                status: -1
+            });
+        }
+        //var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        // ...
+    });
+
+
+    res.status(200)
+    // res.render('index');
+});
+
+
+
+
+
 /////////////
 //inputs
 //  fieldid: 0000-9999
