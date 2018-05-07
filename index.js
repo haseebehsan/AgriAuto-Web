@@ -566,7 +566,7 @@ app.post('/generateReport', function (req, res) {
                     var TEMP = parseFloat(dataSnapshot.child('temp').val());
 
                     var childst = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
-
+                    console.log("child snapshot key: "+ childSnapshot.key +" \n dataSnapshot key: "+dataSnapshot.key);
                     if (count == 0) {
                         minSM = SM;
                         maxSM = SM;
