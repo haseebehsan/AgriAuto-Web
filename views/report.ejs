@@ -17,29 +17,28 @@
 
 </header>
 
-    <div class="report-page" id="report-page">
-
-    <div class="alert alert-warning fade out" id="bsalert">
-      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      <strong>Error:</strong> Please select start and end date for report.
-    </div>
-        <div class="form">
-        <div id="error"></div>
-       
-        <center class=""> <h4>Report</h4>  </center>
-       
+    <div class="" id="report-page">
+<center class=""> <h3 color="ite">Report</h3>  </center>
+      <div class="alert alert-warning fade out" id="bsalert">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Error:</strong> Please select start and end date for report.
+      </div>
+      <center class="">
+        <form class="form center" >
+        <div class="flex-container ">
+        <label for="startdate" class=" col-sm-2 col-md-2 col-xs-2">Start Date</label> 
+        <input name="date" type="date" id="startdate"  class="min-today  col-sm-2 col-md-2 col-xs-2"  required="true"  />
         
-        <hr>
-        <form >
-        <label for="startdate">Start Date</label> 
-        <input name="date" type="date" id="startdate"  class="min-today" required="true"  />
-        <label for="dateend">End Date</label> 
-        <input type="date" id="dateend" name="ttime" placeholder="" required="true"/>
+        <label for="dateend" class=" col-sm-2 col-md-2 col-xs-2" >End Date</label> 
+        <input type="date" id="dateend"class="col-sm-2 col-md-2 col-xs-2" name="ttime" placeholder="" required="true"/>
+     
         </form>
-          <button  onclick="getReport()" id="rbtn" type="submit">Generate Report</button>
+          <button  onclick="getReport()" class="col-sm-2 col-xs-2  col-md-2" id="rbtn" >Generate Report</button>
     
- 
-      
+    </div>
+       </center>
+       </div>
+
 
 <script>
 function toggleAlert(){
@@ -48,12 +47,13 @@ function toggleAlert(){
 }
 
 function getReport(){
+
   var sdate=document.getElementById('startdate').value;
   var edate=document.getElementById('dateend').value;
   var url="http://agripronode.herokuapp.com/generateReport";
   console.log("sdate "+sdate);
   console.log("edate "+edate);
-
+if(sdate && edate){
   data ="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&startdate="+sdate+"&enddate="+edate;
 
   var xhttp = new XMLHttpRequest();
@@ -62,10 +62,10 @@ function getReport(){
       if (this.readyState == 4 && this.status == 200) {
 
 
-          console.log(JSON.stringify(this.responseText));
+          console.log(this.responseText);
           // console.log(this.responseText.length);
      
-       
+       populateData(this.responseText);
       } else {
           console.log("error in output: " + this.responseText);
 
@@ -75,6 +75,11 @@ function getReport(){
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
   xhttp.send(data);
+
+}
+
+}
+function populateData(recievedData){
 
 
 
@@ -98,31 +103,14 @@ $('#bsalert').on('close.bs.alert', toggleAlert);
 <style> 
   
   
-  
-.report-page {
-    width: 460px;
-    padding: 1% 0 0;
-    margin: auto;
-  }
-  .form {
-    position: relative;
-    z-index: 1;
-    background: #FFFFFF;
-    max-width: 460px;
-    margin: 0 0 100px;
-    padding: 35px;
-    text-align: center;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-  padding-top:10px;
-  }
+ 
   .form input {
     font-family: "Roboto", sans-serif;
     outline: 0;
     background: #f2f2f2;
-    width: 75%;
+  
     border: 0;
-    margin:   0 0 15px;
-    padding: 15px;
+      border-radius: 5px;
     box-sizing: border-box;
     font-size: 14px;
   }
@@ -131,10 +119,9 @@ $('#bsalert').on('close.bs.alert', toggleAlert);
     text-transform: uppercase;
     outline: 0; 
     background: #4CAF50;
-    width: 100%;
+border-radius: 5px;
     border: 0;
-    
-    padding: 15px;
+     margin-left: 25px;
     color: #FFFFFF;
     font-size: 14px;
     -webkit-transition: all 0.3 ease;
@@ -153,9 +140,7 @@ $('#bsalert').on('close.bs.alert', toggleAlert);
     color: #4CAF50;
     text-decoration: none;
   }
-  .form .register-form {
-    display: none;
-  }
+  
   .container {
     position: relative;
     z-index: 1;
@@ -225,15 +210,17 @@ $('#bsalert').on('close.bs.alert', toggleAlert);
 label {
     font-family: "Roboto", sans-serif;
     outline: 1;
-    
-    
     border: 0;
-   
-  
     box-sizing: border-box;
     font-size: 14px;
-
     padding-right:10px;
+}
+input:invalid {
+  border: 1px solid red;
+}
+
+input:valid {
+  border:none;
 }
 </style>
 </body>
