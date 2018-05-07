@@ -49,7 +49,7 @@ function getReport(){
   var url="http://agripronode.herokuapp.com/generateReport";
 console.log("sdate "+sdate);
 console.log("edate "+edate);
-  data ="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&startdate="+sdate+"&enddate"+edate;
+  data ="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&startdate="+sdate+"&enddate="+edate;
 
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", url, true);
