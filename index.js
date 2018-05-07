@@ -543,6 +543,7 @@ app.post('/generateReport', function (req, res) {
     var endDate = req.body.enddate;
     var childstring;
     var childst;
+    var childst2;
     var minSM, maxSM, minHUM, maxHUM, minTEMP, maxTEMP;
     var count = 0;
     var sumSM = 0,
@@ -566,10 +567,15 @@ app.post('/generateReport', function (req, res) {
                     var SM = parseFloat(dataSnapshot.child('sm').val());
                     var TEMP = parseFloat(dataSnapshot.child('temp').val());
 
-                    var childst1 = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
-                    console.log(childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP);
-                   
-                    childst = "," + childst1;
+                   // var childst1 = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
+                  
+                    console.log("{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}");
+                   if (childst2){
+                  childst2+=",{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}";
+                   }
+                   else{
+                    childst2="{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}";
+                   }
                     if (count == 0) {
                         minSM = SM;
                         maxSM = SM;
@@ -577,10 +583,10 @@ app.post('/generateReport', function (req, res) {
                         maxTEMP = TEMP;
                         minHUM = HUM;
                         maxHUM = HUM;
-                        childst = childst1;
-                        console.log("datString : " + childst);
+                        childst = childst2;
+                        console.log("datString : " + childst2);
                     } else {
-                        childst = "," + childst;
+                        childst += "," + childst2;
                     }
 
                     if (HUM < minHUM) {
@@ -662,7 +668,7 @@ app.post('/generateReport', function (req, res) {
         console.log("average HUM: " + aveHUM);
 
 
-        res.json({"allData":childst, "minsm": minSM, "maxsm": maxSM, "mintemp": minTEMP, "maxtemp": maxTEMP, "minhum": minHUM, "maxhum": maxHUM, "avesm": aveSM, "avetemp": aveTEMP, "avehum": aveHUM });
+        res.json({"allData":childst2, "minsm": minSM, "maxsm": maxSM, "mintemp": minTEMP, "maxtemp": maxTEMP, "minhum": minHUM, "maxhum": maxHUM, "avesm": aveSM, "avetemp": aveTEMP, "avehum": aveHUM });
 
 
 
