@@ -533,14 +533,14 @@ app.get('/report', function (req, res) {
 
 app.post('/generateReport', function (req, res) {
 
-    console.log(req.query.farmid)
-    console.log(req.query.siteid)
-    console.log(req.query.startdate)
-    console.log(req.query.enddate)
+    console.log(req.body.farmid)
+    console.log(req.body.siteid)
+    console.log(req.body.startdate)
+    console.log(req.body.enddate)
 
 
-    var startDate = req.query.startdate;
-    var endDate = req.query.enddate;
+    var startDate = req.body.startdate;
+    var endDate = req.body.enddate;
     var childstring;
     var minSM, maxSM, minHUM, maxHUM, minTEMP, maxTEMP;
     var count = 0;
@@ -551,7 +551,7 @@ app.post('/generateReport', function (req, res) {
         aveTEMP = 0,
         aveHUM = 0;
 
-    firebase.database().ref('/farms/' + req.query.farmid + '/' + req.query.siteid + '/sensor/').once('value').then(function (snapshot) {
+    firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').once('value').then(function (snapshot) {
 
         snapshot.forEach(function (childSnapshot) {
              console.log("key: "+childSnapshot.key);
