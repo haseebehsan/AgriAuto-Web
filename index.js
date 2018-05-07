@@ -567,7 +567,7 @@ app.post('/generateReport', function (req, res) {
                     var TEMP = parseFloat(dataSnapshot.child('temp').val());
 
                     var childst1 = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
-                    console.log("child snapshot key: "+ childSnapshot.key +" \n dataSnapshot key: "+dataSnapshot.key);
+                    console.log(childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP);
                    
                     childst = "," + childst1;
                     if (count == 0) {
