@@ -566,10 +566,10 @@ app.post('/generateReport', function (req, res) {
                     var SM = parseFloat(dataSnapshot.child('sm').val());
                     var TEMP = parseFloat(dataSnapshot.child('temp').val());
 
-                    var childst = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
+                    var childst1 = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
                     console.log("child snapshot key: "+ childSnapshot.key +" \n dataSnapshot key: "+dataSnapshot.key);
                    
-                    
+                    childst = "," + childst1;
                     if (count == 0) {
                         minSM = SM;
                         maxSM = SM;
@@ -577,6 +577,8 @@ app.post('/generateReport', function (req, res) {
                         maxTEMP = TEMP;
                         minHUM = HUM;
                         maxHUM = HUM;
+                        childst = childst1;
+                        console.log("datString : " + childst);
                     } else {
                         childst = "," + childst;
                     }
