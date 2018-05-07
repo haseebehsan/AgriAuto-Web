@@ -542,6 +542,7 @@ app.post('/generateReport', function (req, res) {
     var startDate = req.body.startdate;
     var endDate = req.body.enddate;
     var childstring;
+    var childst;
     var minSM, maxSM, minHUM, maxHUM, minTEMP, maxTEMP;
     var count = 0;
     var sumSM = 0,
@@ -567,6 +568,8 @@ app.post('/generateReport', function (req, res) {
 
                     var childst = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
                     console.log("child snapshot key: "+ childSnapshot.key +" \n dataSnapshot key: "+dataSnapshot.key);
+                   
+                    
                     if (count == 0) {
                         minSM = SM;
                         maxSM = SM;
@@ -647,9 +650,9 @@ app.post('/generateReport', function (req, res) {
         console.log("max TEMP: " + maxTEMP);
 
         if (count != 0) {
-            aveSM = sumSM / count;
-            aveTEMP = sumTEMP / count;
-            aveHUM = sumHUM / count;
+            aveSM =parseFloat( sumSM / count);
+            aveTEMP = parseFloat(sumTEMP / count);
+            aveHUM =parseFloat( sumHUM / count);
         }
 
         console.log("average SM: " + aveSM);
@@ -657,7 +660,7 @@ app.post('/generateReport', function (req, res) {
         console.log("average HUM: " + aveHUM);
 
 
-        res.json({ "minsm": minSM, "maxsm": maxSM, "mintemp": minTEMP, "maxtemp": maxTEMP, "minhum": minHUM, "maxhum": maxHUM, "avesm": aveSM, "avetemp": aveTEMP, "avehum": aveHUM });
+        res.send(json({"allData":childst, "minsm": minSM, "maxsm": maxSM, "mintemp": minTEMP, "maxtemp": maxTEMP, "minhum": minHUM, "maxhum": maxHUM, "avesm": aveSM, "avetemp": aveTEMP, "avehum": aveHUM }));
 
 
 
