@@ -30,11 +30,12 @@
        
         
         <hr>
+        <form>
         <label for="startdate">Start Date</label> 
         <input name="date" type="date" id="startdate"  class="min-today" required="true"  />
         <label for="dateend">End Date</label> 
         <input type="date" id="dateend" name="ttime" placeholder="" required="true"/>
-      
+      </form>
         <button  onclick="getReport()" id="rbtn">Generate Report</button>
       
 
@@ -43,12 +44,14 @@ function toggleAlert(){
     $(".alert").toggleClass('in out'); 
     return false; // Keep close.bs.alert event from removing from DOM
 }
+
 function getReport(){
   var sdate=document.getElementById('startdate').value;
   var edate=document.getElementById('dateend').value;
   var url="http://agripronode.herokuapp.com/generateReport";
-console.log("sdate "+sdate);
-console.log("edate "+edate);
+  console.log("sdate "+sdate);
+  console.log("edate "+edate);
+
   data ="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&startdate="+sdate+"&enddate="+edate;
 
   var xhttp = new XMLHttpRequest();
