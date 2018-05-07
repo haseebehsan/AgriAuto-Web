@@ -23,7 +23,7 @@
       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
       <strong>Error:</strong> Please select start and end date for report.
     </div>
-        <div class="">
+        <div class="form">
         <div id="error"></div>
        
         <center class=""> <h4>Report</h4>  </center>
@@ -38,14 +38,6 @@
         <button  onclick="getReport()" id="rbtn">Generate Report</button>
       
 
-
-      
-
-
-    </div>
-    </div>
-
-
 <script>
 function toggleAlert(){
     $(".alert").toggleClass('in out'); 
@@ -55,8 +47,9 @@ function getReport(){
   var sdate=document.getElementById('startdate').value;
   var edate=document.getElementById('dateend').value;
   var url="http://agripronode.herokuapp.com/generateReport";
-
-  data = 
+console.log("sdate "+sdate);
+console.log("edate "+edate);
+  data ="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&startdate="+sdate+"&enddate"+edate;
 
   var xhttp = new XMLHttpRequest();
   xhttp.open("GET", url, true);
@@ -64,7 +57,7 @@ function getReport(){
       if (this.readyState == 4 && this.status == 200) {
 
 
-          console.log(this.responseText);
+          console.log(JSON.stringify(this.responseText));
           // console.log(this.responseText.length);
      
        
@@ -85,6 +78,14 @@ function getReport(){
 // $("#btn").on("click", toggleAlert);
 $('#bsalert').on('close.bs.alert', toggleAlert);
 </script>
+
+      
+
+
+    </div>
+    </div>
+
+
 <footer>
 <% include ./partials/footer.ejs %>
 </footer>
