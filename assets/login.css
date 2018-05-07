@@ -100,7 +100,7 @@
   }
   .alert {
     padding: 20px;
-    background-color: #f44336; /* Red */
+    background-color: #f48236; /* Red */
     color: white;
     margin-bottom: 15px;
 }
@@ -131,4 +131,17 @@ input:invalid {
 
 input:valid {
   border:none;
+}
+label {
+  font-family: "Roboto", sans-serif;
+  outline: 1;
+  
+  
+  border: 0;
+ 
+
+  box-sizing: border-box;
+  font-size: 14px;
+
+  padding-right:10px;
 }

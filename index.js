@@ -309,22 +309,21 @@ app.get('/signup', function(req, res) {
     res.render('signup');
 });
 
-//opens the Forgot password page, where user enters his//her email address
+//opens/renders the Forgot password page, where user enters his//her email address
+
 app.get('/forgotPassword', function(req, res) {
 
-    if (loggedIn())
+    
         res.render('forgotPassword');
-    else
-        res.redirect('login',{err:"Please Login"});
+   
 });
 
 app.post('/forgotpassword', function(req, res) {
     if (loggedIn()) {
         firebase.auth().sendPasswordResetEmail(req.body.u_email.toString());
-
         res.send("Password reset email sent");
     } else {
-        res.redirect('login',{err:"Please Login"});
+        res.render('login',{err:"Please Login"});
     }
 });
 
@@ -342,7 +341,7 @@ app.get('/changePassword', function(req, res) {
     if (loggedIn())
         res.redirect('changePassword');
     else
-        res.render('login',{err:"Please Login"});
+        res.render('login',{err:"Something went wrong, please login again."});
 });
 
 function getFarmid() {
@@ -365,12 +364,23 @@ function getFarmid() {
     return farmid;
 }
 
+
+function isFarmSiteDataSet(){
+    if(req.session.farmId && req.session.siteId){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
 app.get('/irrigation', function(req, res) {
     // res.status(200).json({ status: 'working' });
     var user = firebase.auth().currentUser;
     var irrigationMode;
-
-    if (loggedIn()) {
+    
+    
+    if (loggedIn() && req.session.farmId && req.session.siteId) {
 
         firebase.database().ref('/farms/' + req.session.farmId + '/' + req.session.siteId + '/irrigation/mode/mode').once('value').then(function(snapshot) {
             // snapshot.forEach(function(childSnapshot) {
@@ -423,15 +433,11 @@ app.get('/addSchedule', function(req, res) {
 
     } else {
 
-        res.render('login',{err:"Please Login"});
+        res.render('login',{err:"Something went wrong, Please login again."});
 
     }
 
 });
-
-
-
-
 
 ///Settings Page
 // onLoad: the page loads the set ranges of the sensors of the current user's selected site
@@ -439,7 +445,6 @@ app.get('/addSchedule', function(req, res) {
 //step 2: get siteid
 //step 3: get ranges
 //load page
-
 
 app.get('/settings', function(req, res) {
     // res.status(200).json({ status: 'working' });
@@ -472,8 +477,6 @@ app.get('/settings', function(req, res) {
 
             });
 
-
-
         }).then(function() {
 
             minsm = minsm.substring(1, minsm.length - 1);
@@ -482,8 +485,6 @@ app.get('/settings', function(req, res) {
             maxhum = maxhum.substring(1, maxhum.length - 1);
             mintemp = mintemp.substring(1, mintemp.length - 1);
             maxtemp = maxtemp.substring(1, maxtemp.length - 1);
-
-
 
             res.render('settings', {
                 smmin: minsm,
@@ -496,15 +497,11 @@ app.get('/settings', function(req, res) {
                 sid: req.session.siteId
             });
         }, function() {
-            res.send('none');
+            res.send('Network Error');
         });
     } else {
-        res.render('login',{err:"Please Login"});
+        res.render('login',{err:"Please Login."});
     }
-
-
-
-
 
 });
 
@@ -546,8 +543,6 @@ app.get('/generateReport', function(req, res) {
     var aveSM = 0,
         aveTEMP = 0,
         aveHUM = 0;
-    // var returnData = "{ ";
-    // var count = 0;
 
     firebase.database().ref('/farms/' + req.query.farmid + '/' + req.query.siteid + '/sensor/').once('value').then(function(snapshot) {
 
@@ -616,7 +611,6 @@ app.get('/generateReport', function(req, res) {
 
                 });
 
-
                 // childstring = JSON.stringify(childSnapshot.val());
                 // // console.log(childstring);
                 // // childstring = childstring.substring(1, childstring.length -1);
@@ -630,7 +624,6 @@ app.get('/generateReport', function(req, res) {
 
                 // returnData += childstring;
                 // console.log(returnData);
-
             }
 
         });
@@ -760,10 +753,6 @@ app.post('/api/webGetSensorData', function(req, res) {
         snapshot.forEach(function(childSnapshot) {
             // console.log("key: "+childSnapshot.key);
 
-
-
-
-
             if (childSnapshot.key >= startDate && childSnapshot.key <= endDate) {
 
                 childSnapshot.forEach(function(dataSnapshot) {
@@ -784,13 +773,6 @@ app.post('/api/webGetSensorData', function(req, res) {
                     returnData += childst;
 
                 });
-
-
-
-
-
-
-
 
 
                 // // console.log("key: "+childSnapshot.key);
@@ -838,10 +820,6 @@ app.post('/api/getLatestSensorData', function(req, res) {
 
     console.log(req.body.farmid);
     console.log(req.body.siteid);
-
-
-
-
 
     firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').orderByKey().limitToLast(1).on("child_added", function(snapshot) {
         var childstring;
@@ -915,13 +893,6 @@ app.post('/api/getFarmSites', function(req, res) {
 });
 
 
-
-
-
-
-
-
-
 /////////////
 //inputs:
 //  farmid
@@ -976,6 +947,7 @@ app.post('/api/setIrrigationStatus', function(req, res) {
         });
         console.log("inside.");
     }
+
 
     res.status(200).json({
         status: '1'
@@ -1119,10 +1091,7 @@ app.post('/api/sendAlert', function(req, res) {
 
                 var firstKey = Object.keys(JSON.parse(JSON.stringify(snapshot2)));
 
-
-
-
-
+                var secondKey=Objet.keys
                 console.log(typeof firstKey);
                 firstKey = String(firstKey);
                 console.log(typeof firstKey);

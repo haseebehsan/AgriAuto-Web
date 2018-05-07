@@ -16,31 +16,34 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
 </header>
-  
-                                    <div class="login-page" id="login-page">
 
-                                    <div class="alert alert-warning fade out" id="bsalert">
-                                      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                      <strong>Error:</strong> Please select a dat for the schedule
-                                    </div>
-                                        <div class="form">
-                                        <div id="error"></div>
-                                        <center> <h4>Add Schedule </h4>  </center>
-                                        <hr>
-                                        <label for="startdate">Start Date</label> 
-                                        <input name="date" type="date" id="startdate"  class="min-today" required="true"  />
-                                        <label for="dateend">End Date</label> 
-                                        <input type="date" id="dateend" name="ttime" placeholder="" required="true"/>
-                                      
-                                        <button  onclick="getReport()" id="rbtn">Generate Report</button>
-                                      
-                                    
-                                    
-                                     
-                                    
-                                    
-                                    </div>
-                                    </div>
+    <div class="report-page" id="report-page">
+
+    <div class="alert alert-warning fade out" id="bsalert">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>Error:</strong> Please select start and end date for report.
+    </div>
+        <div class="">
+        <div id="error"></div>
+       
+        <center class=""> <h4>Report</h4>  </center>
+       
+        
+        <hr>
+        <label for="startdate">Start Date</label> 
+        <input name="date" type="date" id="startdate"  class="min-today" required="true"  />
+        <label for="dateend">End Date</label> 
+        <input type="date" id="dateend" name="ttime" placeholder="" required="true"/>
+      
+        <button  onclick="getReport()" id="rbtn">Generate Report</button>
+      
+
+
+      
+
+
+    </div>
+    </div>
 
 
 <script>
@@ -51,12 +54,12 @@ function toggleAlert(){
 function getReport(){
   var sdate=document.getElementById('startdate').value;
   var edate=document.getElementById('dateend').value;
-var url="http://agripronode.herokuapp.com/irrigation";
+  var url="http://agripronode.herokuapp.com/generateReport";
 
   data = 
 
   var xhttp = new XMLHttpRequest();
-  xhttp.open("POST", url, true);
+  xhttp.open("GET", url, true);
   xhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
 
@@ -90,7 +93,7 @@ $('#bsalert').on('close.bs.alert', toggleAlert);
   
   
   
-.login-page {
+.report-page {
     width: 460px;
     padding: 1% 0 0;
     margin: auto;

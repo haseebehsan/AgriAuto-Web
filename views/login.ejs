@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
     <% include ./partials/head.ejs %>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<!-- bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
     <script>
     function checkPasswordMatch() {
     var password = $("#txtpassword").val();
@@ -21,7 +27,27 @@
 $("#txtpassword, #txtconfirmpassword").keyup(checkPasswordMatch);
 $(document).ready(function () {
    $("#txtpassword, #txtconfirmpassword").keyup(checkPasswordMatch);
+     var val= '<%=err%>';
+
+if(val){
+toggleAlert();
+val=null;
+ }
 });
+  
+
+ 
+ //Alert code
+function toggleAlert(){
+    $(".alert").toggleClass('in out'); 
+    return false; // Keep close.bs.alert event from removing from DOM
+}
+
+
+// $("#btn").on("click", toggleAlert);
+$('#bsalert').on('close.bs.alert', toggleAlert);
+
+///alert code end
 
     </script>
 </head>
@@ -32,31 +58,30 @@ $(document).ready(function () {
   
 </header><nav class="navbar   navbar-default navbar-fixed-top" role="navigation">
 <div class="container-fluid ">
-
-    <div class="navbar-header ">
-    <div class>    
-
-        <ul class="nav navbar-nav card" style="background-color:white;">
+  <img height="100px" width="100px" src="../assets/favicon.png" style="padding-top=0px;"> </img>
+ <div class="navbar-brand navbar-header nav navbar " style="">
         
-            <li><a href="/"><strong>AgriAuto</strong></a></li>
+     
             
-        </ul>
-    </div>
+        </div>
+    <div class=" ">
+    
 
 </div>
 </nav>
 
 <div class="login-page" id="login-page">
  
+   
     <div class="form">
-       <% if (err) { %>
-  <h2><%= err %></h2>
-<% } %>
-      <form class="register-form" method="POST" action="/signup">
-     <p>   <div class="Error" id="Error">
- 
+ <div class="alert alert-danger fade out" id="bsalert">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Error:</strong><span id="errorText"><%= err %></span> 
+</div>
+  
 
-</div></p>
+      <form class="register-form" method="POST" action="/signup">
+     
       <input name="firstName" type="text" placeholder="First Name" required="true" title="first name" autocomplete/>
         <input name="middleName" type="text" placeholder="Middle Name" autocomplete/>
         <input name="lastName" type="text" placeholder="Last Name"  required="true" autocomplete/>
@@ -77,10 +102,11 @@ $(document).ready(function () {
       </form>
     </div>
   </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  
 
   <script>
-    $('.message a').click(function(){
+   
+  $('.message a').click(function(){
    $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
 });
 </script>
