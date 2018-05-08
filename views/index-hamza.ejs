@@ -1,4 +1,4 @@
-<!--
+
 <html >
 
 <meta charset="utf-8">
@@ -14,202 +14,14 @@
 <script>
 
 
-var  url=    "https://agripronode.herokuapp.com/api/getSensorData";
+var  url=    "https://agripronode.herokuapp.com/api/webGetSensorData";
 //var reqData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=";
-
-
-var jdata = [{
-            "date": "2013-01",
-            "value": "53"
-        }, {
-            "date": "2013-02",
-            "value": "165"
-        }, {
-            "date": "2013-03",
-            "value": "269"
-        }, {
-            "date": "2013-04",
-            "value": "344"
-        }, {
-            "date": "2013-05",
-            "value": "376"
-        }, {
-            "date": "2013-06",
-            "value": "410"
-        }, {
-            "date": "2013-07",
-            "value": "421"
-        }, {
-            "date": "2013-08",
-            "value": "405"
-        }, {
-            "date": "2013-09",
-            "value": "376"
-        }, {
-            "date": "2013-10",
-            "value": "359"
-        }, {
-            "date": "2013-11",
-            "value": "392"
-        }, {
-            "date": "2013-12",
-            "value": "433"
-        }, {
-            "date": "2014-01",
-            "value": "455"
-        }, {
-            "date": "2014-02",
-            "value": "478"
-        }
-        , {
-            "date": "2013-03",
-            "value": "269"
-        }, {
-            "date": "2013-04",
-            "value": "344"
-        }, {
-            "date": "2013-05",
-            "value": "376"
-        }, {
-            "date": "2013-06",
-            "value": "410"
-        }, {
-            "date": "2013-07",
-            "value": "421"
-        }, {
-            "date": "2013-08",
-            "value": "405"
-        }, {
-            "date": "2013-09",
-            "value": "376"
-        }, {
-            "date": "2013-10",
-            "value": "359"
-        }, {
-            "date": "2013-11",
-            "value": "392"
-        }, {
-            "date": "2013-12",
-            "value": "433"
-        }, {
-            "date": "2014-01",
-            "value": "455"
-        }, {
-            "date": "2014-02",
-            "value": "478"
-        }
-        , {
-            "date": "2013-03",
-            "value": "269"
-        }, {
-            "date": "2013-04",
-            "value": "344"
-        }, {
-            "date": "2013-05",
-            "value": "376"
-        }, {
-            "date": "2013-06",
-            "value": "410"
-        }, {
-            "date": "2013-07",
-            "value": "421"
-        }, {
-            "date": "2013-08",
-            "value": "405"
-        }, {
-            "date": "2013-09",
-            "value": "376"
-        }, {
-            "date": "2013-10",
-            "value": "359"
-        }, {
-            "date": "2013-11",
-            "value": "392"
-        }, {
-            "date": "2013-12",
-            "value": "433"
-        }, {
-            "date": "2014-01",
-            "value": "455"
-        }, {
-            "date": "2014-02",
-            "value": "478"
-        }
-        , {
-            "date": "2013-03",
-            "value": "269"
-        }, {
-            "date": "2013-04",
-            "value": "344"
-        }, {
-            "date": "2013-05",
-            "value": "376"
-        }, {
-            "date": "2013-06",
-            "value": "410"
-        }, {
-            "date": "2013-07",
-            "value": "421"
-        }, {
-            "date": "2013-08",
-            "value": "405"
-        }, {
-            "date": "2013-09",
-            "value": "376"
-        }, {
-            "date": "2013-10",
-            "value": "359"
-        }, {
-            "date": "2013-11",
-            "value": "392"
-        }, {
-            "date": "2013-12",
-            "value": "433"
-        }, {
-            "date": "2014-01",
-            "value": "455"
-        }, {
-            "date": "2014-02",
-            "value": "478"
-        }
-        , {
-            "date": "2013-03",
-            "value": "269"
-        }, {
-            "date": "2013-04",
-            "value": "344"
-        }, {
-            "date": "2013-05",
-            "value": "376"
-        }, {
-            "date": "2013-06",
-            "value": "410"
-        }, {
-            "date": "2013-07",
-            "value": "421"
-        }, {
-            "date": "2013-08",
-            "value": "405"
-        }, {
-            "date": "2013-09",
-            "value": "376"
-        }, {
-            "date": "2013-10",
-            "value": "359"
-        }, {
-            "date": "2013-11",
-            "value": "392"
-        }, {
-            "date": "2013-12",
-            "value": "433"
-        }, {
-            "date": "2014-01",
-            "value": "455"
-        }, {
-            "date": "2014-02",
-            "value": "478"
-        }]; //root = JSON.parse(jdata), //***EDIT*** jdata is not a string as required by JSON.parse //it's already well formed so just use it 
-        data = jdata;
+var requestData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=2018-01-01&enddate=2018-05-05";
+ //root = JSON.parse(jdata), //***EDIT*** jdata is not a string as required by JSON.parse //it's already well formed so just use it 
+      var rdata =  ajaxRequest(url, requestData);
+        var data=JSON.parse(rdata);
+        
+       
         margin = {
             top: 20,
             right: 20,
@@ -262,6 +74,7 @@ var jdata = [{
                 xhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
                         console.log("ajax request success: "+this.responseText);
+                        return this.responseText;
                     }
                     else{
                         console.log("error in output: " + this.responseText);
@@ -291,8 +104,8 @@ var jdata = [{
 </body>
 
 </html>
+<!--
 
--->
 
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <div id="chart_div"></div>
@@ -365,3 +178,4 @@ function drawAxisTickColors() {
       chart.draw(data, options);
     }
     </script>
+-->

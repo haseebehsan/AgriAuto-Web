@@ -76,7 +76,7 @@ function getReport(){
 
   var sdate=document.getElementById('startdate').value;
   var edate=document.getElementById('dateend').value;
-  var url="http://localhost:5000/generateReport";
+  var url="http://agripronode.herokuapp.com/generateReport";
   console.log("sdate "+sdate);
   console.log("edate "+edate);
 if(sdate && edate){
@@ -109,6 +109,8 @@ function populateData(recievedData){
 
 //  $('#tbody1').append('<tr align=\"center\" id=\"Date: '+sdate+' Time: '+stime+'\"><td>'+ sdate +'</td><td>' + stime +  '</td><td><button class=\"btn btn-danger\" onclick=\"delSchedule(this)\"><span class=\"glyphicon glyphicon-trash\"></span></button></td></tr>');
 console.log("R data : "+recievedData);
+var x=JSON.parse(recievedData);
+console.log("R data : "+x.minsm);
 
 
 
@@ -137,8 +139,9 @@ console.log("R data : "+recievedData);
   //                               sdate=splittedDateNode[1]; //date
   //                               stime=splittedDateNode[3]; //time
                       
- $('#tbody1').append('<tr align=\"center\" ><td>Soil Moisture</td><td>  '+c['minsm']+' </td><td> 4 </td>  <td>  4 </td>     </tr>');
-
+ $('#tbody1').append('<tr align=\"center\" ><td>Soil Moisture</td><td>  '+x.minsm+' </td><td> '+x.maxsm+' </td>  <td>  '+ x.avesm+' </td>     </tr>');
+$('#tbody1').append('<tr align=\"center\" ><td>Humidity</td><td>  '+x.minhum+' </td><td> '+x.maxhum+' </td>  <td>  '+ x.avehum+' </td>     </tr>');
+$('#tbody1').append('<tr align=\"center\" ><td>Temperature</td><td>  '+x.mintemp+' </td><td> '+x.maxtemp+' </td>  <td>  '+ x.avetemp+' </td>     </tr>');
 }
 
 // $("#btn").on("click", toggleAlert);
@@ -158,7 +161,11 @@ $('#bsalert').on('close.bs.alert', toggleAlert);
 -->
 <style> 
   
-  
+  table{
+    padding=15px;
+      box-sizing: border-box;
+      margin:auto auto auto auto;
+  }
  
   .form input {
     font-family: "Roboto", sans-serif;
