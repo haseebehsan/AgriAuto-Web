@@ -19,7 +19,7 @@
 </header>
 
     <div class="" id="report-page">
-<center class=""> <h3 color="ite">Report</h3>  </center>
+<center class=""> <h3 font-color="white">Report</h3>  </center>
      
       <center class="">
     
@@ -28,20 +28,21 @@
         <input name="date" type="date" id="startdate"  class="min-today  col-sm-2 col-md-2 col-xs-2"  required="true"  />
         
         <label for="dateend" class=" col-sm-2 col-md-2 col-xs-2" >End Date</label> 
-        <input type="date" id="dateend"class="col-sm-2 col-md-2 col-xs-2" name="ttime" placeholder="" required="true"/>
+        <input type="date" id="dateend"class="col-sm-2 col-md-2 col-xs-2" name="ttime" value="Date.now()" required="true"/>
      
  
-          <button  onclick="getReport()" class="col-sm-2 col-xs-2  col-md-2" id="rbtn" >Generate Report</button>
+          <button  onclick="getReport()" class="col-sm-2 col-xs-2  col-md-2 panel" id="rbtn" >Generate Report</button>
     
     </div>
        </center>
-       <div>
-           <table class="table" id="reportTableMinMAx"  align="center" >
+       <div class="">
+           <table class="table panel" id="reportTableMinMAx"  align="center" >
+                        <thead>
                         <th ><center>Sensor </center></th>
-                        <th> <center> Minimum Value</center></th>
-                        <th><center> Maximum value</center></th>
-                         <th><center>Average</center></th>
-                      
+                        <th title="Minimum value reached in the specified time period"> <center> Minimum Value</center></th>
+                        <th title="Maximum value reached in the specified time period"><center> Maximum value</center></th>
+                         <th title="Average value of all the collected data in the specified time period"><center>Average</center></th>
+                      </thead>
                         <tbody id="tbody1">
                         </tbody>
                        
@@ -50,13 +51,15 @@
                     </div>
 <hr>
 <div>
-           <table class="table" id="reportTable"  align="center" hidden="True">
+           <table class="table panel" id="reportTable"  align="center" >
+                          <thead>
                         <th ><center>Date Time </center></th>
                         <th> <center> Soil Moisture</center></th>
                         <th><center> Humidity</center></th>
                          <th><center> Temperature</center></th>
-                      
+                              </thead>
                         <tbody id="tbody2">
+
                         </tbody>
                        
 
@@ -110,38 +113,24 @@ function populateData(recievedData){
 //  $('#tbody1').append('<tr align=\"center\" id=\"Date: '+sdate+' Time: '+stime+'\"><td>'+ sdate +'</td><td>' + stime +  '</td><td><button class=\"btn btn-danger\" onclick=\"delSchedule(this)\"><span class=\"glyphicon glyphicon-trash\"></span></button></td></tr>');
 console.log("R data : "+recievedData);
 var x=JSON.parse(recievedData);
-console.log("R data : "+x.minsm);
+ console.log("R data : "+x.allData.alldata[0].date);
+
+// for(var i=0;i<x.length;i++)
+
+ $("#reportTableMinMAx tbody tr").remove();                 
+ $('#tbody1').append('<tr align=\"center\" ><td>Soil Moisture</td><td>  '+x.minsm.toFixed(2)+' </td><td> '+x.maxsm.toFixed(2)+' </td>  <td>  '+ x.avesm.toFixed(2)+' </td>     </tr>');
+$('#tbody1').append('<tr align=\"center\" ><td>Humidity</td><td>  '+x.minhum.toFixed(2)+' </td><td> '+x.maxhum.toFixed(2)+' </td>  <td>  '+ x.avehum.toFixed(2)+' </td>     </tr>');
+$('#tbody1').append('<tr align=\"center\" ><td>Temperature</td><td>  '+x.mintemp.toFixed(2)+' </td><td> '+x.maxtemp.toFixed(2)+' </td>  <td>  '+ x.avetemp.toFixed(2)+' </td>     </tr>');
+
+ $("#reportTable tbody tr").remove();
+ var count=0;                 
+ for(i in x.allData.alldata){
+$('#tbody2').append('<tr align=\"center\" ><td>'+x.allData.alldata[count].date+'</td><td>  '+x.allData.alldata[count].sm+' </td><td> '+x.allData.alldata[count].hum+' </td>  <td>  '+ x.allData.alldata[count].temp+' </td>     </tr>');
+count++;
+ }
+ 
 
 
-
-  //  var revData = JSON.parse(recievedData);
-                           
-                           
-                           
-  //                           var timeArr = [];
-  //                           console.log("type of object: ------" + revData);
-
-  //                           // var oldTable = document.getElementById('scheduleTable'),
-  //                           // newTable = oldTable.cloneNode(true);
-  //                           // var row;
-  //                           Object.keys(revData).forEach(function (dateNode) {
-  //                               // console.log(dateNode);
-  //                               timeArr.push(allData);
-  //                               // console.log(dateNode["addtime"]);
-  //                               var child = revData[dateNode];
-  //                               console.log(dateNode);
-  //                               //console.log("child---- " + JSON.stringify(child['addtime']));
-  //                               // console.log(dateNode[0]);
-  //                               var sdate,stime;
-                              
-  //                             //Spilitting the recieved schdule, and using without the descriptions
-  //                               splittedDateNode=dateNode.split(" ");
-  //                               sdate=splittedDateNode[1]; //date
-  //                               stime=splittedDateNode[3]; //time
-                      
- $('#tbody1').append('<tr align=\"center\" ><td>Soil Moisture</td><td>  '+x.minsm+' </td><td> '+x.maxsm+' </td>  <td>  '+ x.avesm+' </td>     </tr>');
-$('#tbody1').append('<tr align=\"center\" ><td>Humidity</td><td>  '+x.minhum+' </td><td> '+x.maxhum+' </td>  <td>  '+ x.avehum+' </td>     </tr>');
-$('#tbody1').append('<tr align=\"center\" ><td>Temperature</td><td>  '+x.mintemp+' </td><td> '+x.maxtemp+' </td>  <td>  '+ x.avetemp+' </td>     </tr>');
 }
 
 // $("#btn").on("click", toggleAlert);
@@ -162,9 +151,10 @@ $('#bsalert').on('close.bs.alert', toggleAlert);
 <style> 
   
   table{
-    padding=15px;
+ background-color:white;
       box-sizing: border-box;
-      margin:auto auto auto auto;
+      margin:10px 10px 10px auto ;
+      z-index:-2;
   }
  
   .form input {
@@ -204,6 +194,9 @@ border-radius: 5px;
     text-decoration: none;
   }
   
+  h3{
+    color:white;
+  }
   .container {
     position: relative;
     z-index: 1;

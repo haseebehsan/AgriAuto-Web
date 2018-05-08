@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <head>
 
-  
+     <% include ./partials/head.ejs %>
 </head>
 
 
@@ -18,8 +18,8 @@ var  url=    "https://agripronode.herokuapp.com/api/webGetSensorData";
 //var reqData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=";
 var requestData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=2018-01-01&enddate=2018-05-05";
  //root = JSON.parse(jdata), //***EDIT*** jdata is not a string as required by JSON.parse //it's already well formed so just use it 
-      var rdata =  ajaxRequest(url, requestData);
-        var data=JSON.parse(rdata);
+      var data =  ajaxRequest(url, requestData);
+        //var data=JSON.parse(rdata);
         
        
         margin = {
