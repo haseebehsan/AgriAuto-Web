@@ -10,6 +10,7 @@
 <header>
 <% include ./partials/header.ejs %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <!-- bootstrap -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -19,24 +20,49 @@
 
     <div class="" id="report-page">
 <center class=""> <h3 color="ite">Report</h3>  </center>
-      <div class="alert alert-warning fade out" id="bsalert">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Error:</strong> Please select start and end date for report.
-      </div>
+     
       <center class="">
-        <form class="form center" >
-        <div class="flex-container ">
+    
+        <div class="flex-container form">
         <label for="startdate" class=" col-sm-2 col-md-2 col-xs-2">Start Date</label> 
         <input name="date" type="date" id="startdate"  class="min-today  col-sm-2 col-md-2 col-xs-2"  required="true"  />
         
         <label for="dateend" class=" col-sm-2 col-md-2 col-xs-2" >End Date</label> 
         <input type="date" id="dateend"class="col-sm-2 col-md-2 col-xs-2" name="ttime" placeholder="" required="true"/>
      
-        </form>
+ 
           <button  onclick="getReport()" class="col-sm-2 col-xs-2  col-md-2" id="rbtn" >Generate Report</button>
     
     </div>
        </center>
+       <div>
+           <table class="table" id="reportTableMinMAx"  align="center" >
+                        <th ><center>Sensor </center></th>
+                        <th> <center> Minimum Value</center></th>
+                        <th><center> Maximum value</center></th>
+                         <th><center>Average</center></th>
+                      
+                        <tbody id="tbody1">
+                        </tbody>
+                       
+
+                    </table>
+                    </div>
+<hr>
+<div>
+           <table class="table" id="reportTable"  align="center" hidden="True">
+                        <th ><center>Date Time </center></th>
+                        <th> <center> Soil Moisture</center></th>
+                        <th><center> Humidity</center></th>
+                         <th><center> Temperature</center></th>
+                      
+                        <tbody id="tbody2">
+                        </tbody>
+                       
+
+                    </table>
+                    </div>
+
        </div>
 
 
@@ -50,7 +76,7 @@ function getReport(){
 
   var sdate=document.getElementById('startdate').value;
   var edate=document.getElementById('dateend').value;
-  var url="http://agripronode.herokuapp.com/generateReport";
+  var url="http://localhost:5000/generateReport";
   console.log("sdate "+sdate);
   console.log("edate "+edate);
 if(sdate && edate){
@@ -62,12 +88,12 @@ if(sdate && edate){
       if (this.readyState == 4 && this.status == 200) {
 
 
-          console.log(this.responseText);
+          // console.log(this.responseText);
           // console.log(this.responseText.length);
      
-       populateData(this.responseText);
+  populateData(this.responseText);
       } else {
-          console.log("error in output: " + this.responseText);
+          // console.log("error in output: " + this.responseText);
 
       }
   };
@@ -81,7 +107,37 @@ if(sdate && edate){
 }
 function populateData(recievedData){
 
+//  $('#tbody1').append('<tr align=\"center\" id=\"Date: '+sdate+' Time: '+stime+'\"><td>'+ sdate +'</td><td>' + stime +  '</td><td><button class=\"btn btn-danger\" onclick=\"delSchedule(this)\"><span class=\"glyphicon glyphicon-trash\"></span></button></td></tr>');
+console.log("R data : "+recievedData);
 
+
+
+  //  var revData = JSON.parse(recievedData);
+                           
+                           
+                           
+  //                           var timeArr = [];
+  //                           console.log("type of object: ------" + revData);
+
+  //                           // var oldTable = document.getElementById('scheduleTable'),
+  //                           // newTable = oldTable.cloneNode(true);
+  //                           // var row;
+  //                           Object.keys(revData).forEach(function (dateNode) {
+  //                               // console.log(dateNode);
+  //                               timeArr.push(allData);
+  //                               // console.log(dateNode["addtime"]);
+  //                               var child = revData[dateNode];
+  //                               console.log(dateNode);
+  //                               //console.log("child---- " + JSON.stringify(child['addtime']));
+  //                               // console.log(dateNode[0]);
+  //                               var sdate,stime;
+                              
+  //                             //Spilitting the recieved schdule, and using without the descriptions
+  //                               splittedDateNode=dateNode.split(" ");
+  //                               sdate=splittedDateNode[1]; //date
+  //                               stime=splittedDateNode[3]; //time
+                      
+ $('#tbody1').append('<tr align=\"center\" ><td>Soil Moisture</td><td>  '+c['minsm']+' </td><td> 4 </td>  <td>  4 </td>     </tr>');
 
 }
 
@@ -95,11 +151,11 @@ $('#bsalert').on('close.bs.alert', toggleAlert);
     </div>
     </div>
 
-
+<!--
 <footer>
 <% include ./partials/footer.ejs %>
 </footer>
-
+-->
 <style> 
   
   

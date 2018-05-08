@@ -554,7 +554,7 @@ app.post('/generateReport', function (req, res) {
         aveHUM = 0;
 
     firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').once('value').then(function (snapshot) {
-
+        var childst = "{ \"alldata\" :[ ";
         snapshot.forEach(function (childSnapshot) {
              console.log("key: "+childSnapshot.key);
 
@@ -567,15 +567,20 @@ app.post('/generateReport', function (req, res) {
                     var SM = parseFloat(dataSnapshot.child('sm').val());
                     var TEMP = parseFloat(dataSnapshot.child('temp').val());
 
-                   // var childst1 = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
+
+                   var childst2 = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
                   
-                    console.log("{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}");
-                   if (childst2){
-                  childst2+=",{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}";
-                   }
-                   else{
-                    childst2="{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}";
-                   }
+                //     console.log("{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}");
+                //    if (childst2){
+                //   childst2+=",{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}";
+                //    }
+                //    else{
+                //     childst2="{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}";
+                //    }
+
+
+
+
                     if (count == 0) {
                         minSM = SM;
                         maxSM = SM;
@@ -583,8 +588,8 @@ app.post('/generateReport', function (req, res) {
                         maxTEMP = TEMP;
                         minHUM = HUM;
                         maxHUM = HUM;
-                        childst = childst2;
-                        console.log("datString : " + childst2);
+                        childst += childst2;
+                        // console.log("datString : " + childst2);
                     } else {
                         childst += "," + childst2;
                     }
@@ -646,6 +651,8 @@ app.post('/generateReport', function (req, res) {
 
         });
 
+        childst += "]}"
+
 
 
         // returnData += " }";
@@ -666,9 +673,9 @@ app.post('/generateReport', function (req, res) {
         console.log("average SM: " + aveSM);
         console.log("average TEMP: " + aveTEMP);
         console.log("average HUM: " + aveHUM);
-
-
-        res.json({"allData":childst2, "minsm": minSM, "maxsm": maxSM, "mintemp": minTEMP, "maxtemp": maxTEMP, "minhum": minHUM, "maxhum": maxHUM, "avesm": aveSM, "avetemp": aveTEMP, "avehum": aveHUM });
+        console.log(childst);
+        childst = JSON.parse(childst)
+        res.json({"allData":childst, "minsm": minSM, "maxsm": maxSM, "mintemp": minTEMP, "maxtemp": maxTEMP, "minhum": minHUM, "maxhum": maxHUM, "avesm": aveSM, "avetemp": aveTEMP, "avehum": aveHUM });
 
 
 
