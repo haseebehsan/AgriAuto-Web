@@ -70,10 +70,10 @@
 
 
 <script>
-function toggleAlert(){
-    $(".alert").toggleClass('in out'); 
-    return false; // Keep close.bs.alert event from removing from DOM
-}
+  function toggleAlert(){
+      $(".alert").toggleClass('in out'); 
+      return false; // Keep close.bs.alert event from removing from DOM
+  }
 
 function getReport(){
 
@@ -82,6 +82,7 @@ function getReport(){
   var url="http://agripronode.herokuapp.com/generateReport";
   console.log("sdate "+sdate);
   console.log("edate "+edate);
+
 if(sdate && edate){
   data ="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&startdate="+sdate+"&enddate="+edate;
 
@@ -113,20 +114,20 @@ function populateData(recievedData){
 //  $('#tbody1').append('<tr align=\"center\" id=\"Date: '+sdate+' Time: '+stime+'\"><td>'+ sdate +'</td><td>' + stime +  '</td><td><button class=\"btn btn-danger\" onclick=\"delSchedule(this)\"><span class=\"glyphicon glyphicon-trash\"></span></button></td></tr>');
 console.log("R data : "+recievedData);
 var x=JSON.parse(recievedData);
- console.log("R data : "+x.allData.alldata[0].date);
+console.log("R data : "+x.allData.alldata[0].date);
 
 // for(var i=0;i<x.length;i++)
 
- $("#reportTableMinMAx tbody tr").remove();                 
- $('#tbody1').append('<tr align=\"center\" ><td>Soil Moisture</td><td>  '+x.minsm.toFixed(2)+' </td><td> '+x.maxsm.toFixed(2)+' </td>  <td>  '+ x.avesm.toFixed(2)+' </td>     </tr>');
+$("#reportTableMinMAx tbody tr").remove();                 
+$('#tbody1').append('<tr align=\"center\" ><td>Soil Moisture</td><td>  '+x.minsm.toFixed(2)+' </td><td> '+x.maxsm.toFixed(2)+' </td>  <td>  '+ x.avesm.toFixed(2)+' </td>     </tr>');
 $('#tbody1').append('<tr align=\"center\" ><td>Humidity</td><td>  '+x.minhum.toFixed(2)+' </td><td> '+x.maxhum.toFixed(2)+' </td>  <td>  '+ x.avehum.toFixed(2)+' </td>     </tr>');
 $('#tbody1').append('<tr align=\"center\" ><td>Temperature</td><td>  '+x.mintemp.toFixed(2)+' </td><td> '+x.maxtemp.toFixed(2)+' </td>  <td>  '+ x.avetemp.toFixed(2)+' </td>     </tr>');
 
  $("#reportTable tbody tr").remove();
  var count=0;                 
  for(i in x.allData.alldata){
-$('#tbody2').append('<tr align=\"center\" ><td>'+x.allData.alldata[count].date+'</td><td>  '+x.allData.alldata[count].sm+' </td><td> '+x.allData.alldata[count].hum+' </td>  <td>  '+ x.allData.alldata[count].temp+' </td>     </tr>');
-count++;
+  $('#tbody2').append('<tr align=\"center\" ><td>'+x.allData.alldata[count].date+'</td><td>  '+x.allData.alldata[count].sm+' </td><td> '+x.allData.alldata[count].hum+' </td>  <td>  '+ x.allData.alldata[count].temp+' </td>     </tr>');
+  count++;
  }
  
 

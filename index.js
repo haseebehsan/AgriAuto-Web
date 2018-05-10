@@ -800,20 +800,6 @@ app.post('/api/webGetSensorData', function (req, res) {
                 });
 
 
-                // // console.log("key: "+childSnapshot.key);
-                // childstring = JSON.stringify(childSnapshot.val());
-                // // console.log(childstring);
-                // // childstring = childstring.substring(1, childstring.length -1);
-                // childstring = "\"" + childSnapshot.key + "\":" + childstring;
-                // if (count == 0) {
-
-                //   count = 1
-                // } else {
-                //   childstring = "," + childstring;
-                // }
-
-                // returnData += childstring;
-
 
             }
 
@@ -1113,10 +1099,9 @@ app.post('/api/sendAlert', function (req, res) {
                 var highest = '';
                 console.log(JSON.stringify(snapshot2));
 
-
                 var firstKey = Object.keys(JSON.parse(JSON.stringify(snapshot2)));
 
-                var secondKey = Objet.keys
+                var secondKey = Object.keys
                 console.log(typeof firstKey);
                 firstKey = String(firstKey);
                 console.log(typeof firstKey);
@@ -1202,7 +1187,8 @@ app.post('/api/sendAlert', function (req, res) {
 
             }
             res.json(snapshot2);
-        });
+        }, function onReject(err){
+console.log("Error in sending ::"+ err)        });
 
 
 

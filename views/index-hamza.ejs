@@ -18,10 +18,19 @@ var  url=    "https://agripronode.herokuapp.com/api/webGetSensorData";
 //var reqData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=";
 var requestData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=2018-01-01&enddate=2018-05-05";
  //root = JSON.parse(jdata), //***EDIT*** jdata is not a string as required by JSON.parse //it's already well formed so just use it 
-      var data =  ajaxRequest(url, requestData);
-        //var data=JSON.parse(rdata);
-        
-       
+    var data =  ajaxRequest(url, requestData);
+  //  console.log()
+  //  rdata=JSON.parse(rdata);
+    // var count=0;                 
+    // var data;
+    
+    // for(i in rdata.sensordata){
+    // mydata+=
+    // count++;
+    // }
+        // var data=rdata.sensordata;
+        // console.log("Graph data"+mydata);
+        console.log("Graph data"+data);
         margin = {
             top: 20,
             right: 20,
@@ -73,11 +82,15 @@ var requestData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=20
                 xhttp.open("POST", url, true);
                 xhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
-                        console.log("ajax request success: "+this.responseText);
-                        return this.responseText;
+                      
+                     var x=JSON.parse(this.responseText);
+                       console.log(this.responseText);
+                        return x;
                     }
                     else{
-                        console.log("error in output: " + this.responseText);
+                      var x=JSON.parse(this.responseText);
+                       console.log(x);
+                        return x;
                     }
                 };
         
