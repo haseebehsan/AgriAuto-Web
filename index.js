@@ -477,6 +477,9 @@ app.get('/settings', function (req, res) {
 
             });
 
+
+
+            
         }).then(function () {
 
             minsm = minsm.substring(1, minsm.length - 1);
@@ -1171,15 +1174,8 @@ app.post('/api/sendAlert', function (req, res) {
                                     console.log("error in msg sending" + err);
                                 }
 
-
-
                             }
                         });
-
-
-
-
-
 
                     });
                 }

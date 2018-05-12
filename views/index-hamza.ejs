@@ -1,4 +1,4 @@
-
+<!--
 <html >
 
 <meta charset="utf-8">
@@ -11,95 +11,88 @@
 
 <body>
 <script src="http://d3js.org/d3.v3.js"></script>
-<script>
+// <script>
 
 
-var  url=    "https://agripronode.herokuapp.com/api/webGetSensorData";
-//var reqData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=";
-var requestData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=2018-01-01&enddate=2018-05-05";
- //root = JSON.parse(jdata), //***EDIT*** jdata is not a string as required by JSON.parse //it's already well formed so just use it 
-    var data =  ajaxRequest(url, requestData);
-  //  console.log()
-  //  rdata=JSON.parse(rdata);
-    // var count=0;                 
-    // var data;
-    
-    // for(i in rdata.sensordata){
-    // mydata+=
-    // count++;
-    // }
-        // var data=rdata.sensordata;
-        // console.log("Graph data"+mydata);
-        console.log("Graph data"+data);
-        margin = {
-            top: 20,
-            right: 20,
-            bottom: 70,
-            left: 40
-        };
-        width = 600 - margin.left - margin.right;
-        height = 300 - margin.top - margin.bottom; // Parse the date / time //***a better comment would be "for parsing the date and time"... 
-        parseDate = d3.time.format("%Y-%m").parse;
-        x = d3.scale.ordinal().rangeRoundBands([0,
-            width
-        ], .05);
-        y = d3.scale.linear().range([height, 0]);
-        xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format("%Y-%m"));
-        yAxis = d3.svg.axis().scale(y).orient("left").ticks(10);
-        svg = d3.select("body").append("svg") //***EDIT***
-        //the data method returns the enter collection and your not ready for it yet... //
-        .data(data).attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left +
-            "," + margin.top + ")"); //d3.json //d3.csv("bar-data.csv", function(error, data) { //d3.selectAll('g').data(function(data){ 
-    data.forEach(function(d) {
-        //NOW is parsing the date and time 
-        d.date = parseDate(d.date);
-        d.value = +d.value;
-    });
-    x.domain(data.map(function(d) {
-        return d.date;
-    }));
-    y.domain([0, d3.max(data, function(d) {
-        return d.value;
-    })]);
-    svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + height + ")").call(xAxis).selectAll("text").style("text-anchor", "end").attr("dx", "-.8em")
-        .attr("dy", "-.55em").attr("transform", "rotate(-90)");
-    svg.append("g").attr("class", "y axis").call(yAxis).append("text").attr("transform", "rotate(-90)").attr("y", 6).attr("dy", ".71em").style("text-anchor", "end").text("Value ($)");
-    svg.selectAll("bar")
-        .data(data).enter().append("rect").style("fill", "steelblue").attr("x", function(d) {
-            return x(d.date);
-        }).attr("width", x.rangeBand()).attr("y", function(d) {
-            return y(d.value);
-        }).attr("height", function(d) {
-            return height - y(d.value);
-        });
+// var  url=    "https://agripronode.herokuapp.com/api/webGetSensorData";
+// //var reqData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=";
+// var requestData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=2018-01-01&enddate=2018-05-05";
+//  //root = JSON.parse(jdata), //***EDIT*** jdata is not a string as required by JSON.parse //it's already well formed so just use it 
+//     var data = ajaxRequest(url, requestData);
+//   //  console.log()
+//   //  rdata=JSON.parse(rdata);
+//     // var count=0;                 
+//     // var data;
+
+//         margin = {
+//             top: 20,
+//             right: 20,
+//             bottom: 70,
+//             left: 40
+//         };
+//         width = 600 - margin.left - margin.right;
+//         height = 300 - margin.top - margin.bottom; // Parse the date / time //***a better comment would be "for parsing the date and time"... 
+//         parseDate = d3.time.format("%Y-%m").parse;
+//         x = d3.scale.ordinal().rangeRoundBands([0,
+//             width
+//         ], .05);
+//         y = d3.scale.linear().range([height, 0]);
+//         xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format("%Y-%m"));
+//         yAxis = d3.svg.axis().scale(y).orient("left").ticks(10);
+//         svg = d3.select("body").append("svg") //***EDIT***
+//         //the data method returns the enter collection and your not ready for it yet... //
+//         .data(data).attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left +
+//             "," + margin.top + ")"); //d3.json //d3.csv("bar-data.csv", function(error, data) { //d3.selectAll('g').data(function(data){ 
+//     data.forEach(function(d) {
+//         //NOW is parsing the date and time 
+//         d.date = parseDate(d.date);
+//         d.value = +d.value;
+//     });
+//     x.domain(data.map(function(d) {
+//         return d.date;
+//     }));
+//     y.domain([0, d3.max(data, function(d) {
+//         return d.value;
+//     })]);
+//     svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + height + ")").call(xAxis).selectAll("text").style("text-anchor", "end").attr("dx", "-.8em")
+//         .attr("dy", "-.55em").attr("transform", "rotate(-90)");
+//     svg.append("g").attr("class", "y axis").call(yAxis).append("text").attr("transform", "rotate(-90)").attr("y", 6).attr("dy", ".71em").style("text-anchor", "end").text("Value ($)");
+//     svg.selectAll("bar")
+//         .data(data).enter().append("rect").style("fill", "steelblue").attr("x", function(d) {
+//             return x(d.date);
+//         }).attr("width", x.rangeBand()).attr("y", function(d) {
+//             return y(d.value);
+//         }).attr("height", function(d) {
+//             return height - y(d.value);
+//         });
   
 
 
-        function ajaxRequest(url, data){
-    var xhttp = new XMLHttpRequest();
-    ///////////////////////////////////////////MIN value set            
-    //Sets the SM's min value
-                xhttp.open("POST", url, true);
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
+//         function ajaxRequest(url, data){
+//     var xhttp = new XMLHttpRequest();
+//     ///////////////////////////////////////////MIN value set            
+//     //Sets the SM's min value
+//                 xhttp.open("POST", url, true);
+//                 xhttp.onreadystatechange = function () {
+//                     if (this.readyState == 4 && this.status == 200) {
                       
-                     var x=JSON.parse(this.responseText);
-                       console.log(this.responseText);
-                        return x;
-                    }
-                    else{
-                      var x=JSON.parse(this.responseText);
-                       console.log(x);
-                        return x;
-                    }
-                };
+//                      var x=JSON.parse(this.responseText);
+//                        console.log(this.responseText);
+//                         return x.sensordata;
+//                     }
+//                     else{
+//                     //      var x=JSON.parse(this.responseText);
+//                     //    console.log(x.sensordata);
+//                     //     return x.sensordata;
+//                     }
+//                 };
         
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     
-                xhttp.send(data);
+//                 xhttp.send(data);
 
-}
-</script>
+// }
+// </script>
 <style>
 
 .axis {
@@ -117,21 +110,42 @@ var requestData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=20
 </body>
 
 </html>
-<!--
+-->
 
 
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <div id="chart_div"></div>
 <script> 
-var urlGetSensorData="http://agripronode.herokuapp.com/ap";
+var  url=    "https://agripronode.herokuapp.com/api/webGetSensorData";
+//var reqData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=";
+var requestData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=2018-01-01&enddate=2018-05-05";
+ 
 
-google.charts.load('current', {packages: ['corechart', 'line']});
-google.charts.setOnLoadCallback(drawAxisTickColors);
-
-function AjaxGetSensorData(){
-
+     function ajaxRequest(url, data){
+    var xhttp = new XMLHttpRequest();
+    ///////////////////////////////////////////MIN value set            
+    //Sets the SM's min value
+                xhttp.open("POST", url, true);
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                      
+                     var x=JSON.parse(this.responseText);
+                       console.log(this.responseText);
+                        return x.sensordata;
+                    }
+                    else{
+                    //      var x=JSON.parse(this.responseText);
+                    //    console.log(x.sensordata);
+                    //     return x.sensordata;
+                    }
+                };
+        
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    
+                xhttp.send(data);
 
 }
+
 
 function drawAxisTickColors() {
       var data = new google.visualization.DataTable();
@@ -191,4 +205,3 @@ function drawAxisTickColors() {
       chart.draw(data, options);
     }
     </script>
--->
