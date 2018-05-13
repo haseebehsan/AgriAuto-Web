@@ -9,20 +9,52 @@
       rel="stylesheet">
 <script src="//cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.5/all/gauge.min.js"></script>
 <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<style>
+table, th, td {
+    text-align:center;
+    border: 1px ;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 10px;
+}
+</style>
 
-<script src="jquery.AshAlom.gaugeMeter-2.0.0.min.js"></script>
 <body>
   <link rel="stylesheet" type="text/css" href="../assets/login.css">
   <header>
     <% include ./partials/header %>
   </header>
 
-<canvas data-type="radial-gauge"
-    data-width="200"
-    data-height="200"
-    data-units="Humidity %"
-    data-min-value="0"
-    data-max-value="100"
+<div class="col-md-6 col-lg-6 col-sm-12">
+asda
+</div>
+<div class="col-md-6 col-lg-6 col-sm-12">
+
+<table>
+  <thead>
+    <th>
+    Humidity
+    </th>
+    <th>
+    Temperature
+    </th>
+    <th>
+    Soil Moisture
+    </th>
+    
+  </thead>
+  <tbody>
+  <tr>
+<td>
+<canvas 
+    id="humidityGuage"
+    name="humidityGuage"
+    data-type="radial-gauge"
+    data-width="250"
+    data-height="250"
+    data-units="%"
+ 
     data-major-ticks="0,20,40,60,80,100"
     data-minor-ticks="2"
     data-stroke-ticks="true"
@@ -30,7 +62,7 @@
         {"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}
     ]'
     data-value="10" 
-    data-label="Humidity "
+    title="Humidity"
     data-color-plate="#fff"
     data-border-shadow-width="0"
     data-borders="true"
@@ -42,44 +74,233 @@
     data-animation-duration="1500"
     data-animation-rule="linear"
 ></canvas>
-
+ 
+</td>
+ <td>
+<canvas 
+    style="padding-left=10px;"
+     id="TemperatureGuage"
+    name="TemperatureGuage"
+     Title ="Average Temperature (°C) at the site"
+    data-type="radial-gauge"
+    data-width="250"
+    data-height="250"
+    data-units="°C"
+    data-min-value="0"
+    data-max-value="100"
+    data-major-ticks="0,20,40,60,80,100"
+    data-minor-ticks="2"
+    data-stroke-ticks="true"
+    data-highlights='[
+        {"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}
+    ]'
+    data-value="10" 
+    data-label="Temperaure in Centigrade"
+    data-color-plate="#fff"
+    data-border-shadow-width="0"
+    data-borders="true"
+    data-needle-type="arrow"
+    data-needle-width="2"
+    data-needle-circle-size="7"
+    data-needle-circle-outer="  "
+    data-needle-circle-inner="true"
+    data-animation-duration="1500"
+    data-animation-rule="linear"
+></canvas>
+ 
+</td>
+<td   style="padding=100">
+<canvas 
+       id="SoilMoistureGuage"
+    name="SoilMoistureGuage"
+    padding-left="10px"
+      style="padding-left=10px;"
+    data-type="radial-gauge"
+    data-width="250"
+    data-height="250"
+    data-units="%"
+    data-min-value="0"
+    data-max-value="100"
+    data-major-ticks="0,20,40,60,80,100"
+    data-minor-ticks="2"
+    data-stroke-ticks="true"
+    data-highlights='[
+        {"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}
+    ]'
+    data-value="10" 
+    title="Volumetric Soil Moisture Content "
+    data-color-plate="#fff"
+    data-border-shadow-width="0"
+    data-borders="true"
+    data-needle-type="arrow"
+    data-needle-width="2"
+    data-needle-circle-size="7"
+    data-needle-circle-outer="  "
+    data-needle-circle-inner="true"
+    data-animation-duration="1500"
+    data-animation-rule="linear"
+></canvas>
+ 
+ </td>
+   <tr>
+ </tbody>
+ </table>
+ </div>
+ 
 <script>
 
-var gauge = new RadialGauge({
-    renderTo: 'canvas-id',
-    width: 300,
-    height: 300,
-    units: "Km/h",
-    minValue: 0,
-    maxValue: 220,
-    majorTicks: [
-        "0",
-        "20",
-        "40",
-        "60",
-        "80",
-        "100"
-    ],
-    minorTicks: 2,
-    strokeTicks: true,
-    highlights: [
-        {
-            "from": 160,
-            "to": 220,
-            "color": "rgba(200, 50, 50, .75)"
+//output: numebr oof keys / indexes
+function count(obj) { 
+      return Object.keys(obj).length; 
+ }
+
+ // Function to get the nth key from the object
+Object.prototype.getByIndex = function(index) {
+  return this[Object.keys(this)[index]];
+};
+
+
+GetRanges();
+GetSensorData();
+
+function GetSensorData(){
+
+    var url = "https://agripronode.herokuapp.com/api/getLatestSensorData";
+    var data = "farmid=" +<%=fid%> +"&siteid=" +<%=sid %>;
+    var xhttp = new XMLHttpRequest();
+            
+           
+            xhttp.open("POST", url, true);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    // return this.responseText;
+                      
+                  if(this.responseText){
+                   
+                  var x = JSON.parse(this.responseText);
+                    var Keylength = count(x);
+                    Keylength=Keylength-1;
+                    console.log("x length "+ Keylength);
+              
+                    console.log("last key "+Object.keys(x)[Keylength]);
+                    var lastkey= Object.keys(x)[Keylength]
+                // lastkey=JSON.stringify(lastkey);
+                    console.log("last  key value "+ x[lastkey].hum);
+                    // console.log("x last "+ x.lastkey);
+                    // setHighLights(x);
+setGuageValues(x);
+                    }
+                }
+                else {
+                    console.log("error in output: " + this.responseText);
+                  
+                  if(this.responseText){
+                   
+                    var x = JSON.parse(this.responseText);
+                 setGuageValues(x);
+                    }
+                   
+                }
+            };
+
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            xhttp.send(data);
+}
+
+
+
+//input: farm id, site id
+//process: get site's ranges of the sensors, generate list for data hightligts of gauges
+//output: sets the highlights in the gauges
+
+//@TODO: fix temperature ganuge max-value and min- value according to the ranges recieved i.e. add around 10-15 value difference in upper and lower limit
+function GetRanges(){
+
+    var url = "https://agripronode.herokuapp.com/api/getMinMax";
+    var data = "farmid=" +<%=fid%> +"&siteid=" +<%=sid %>;
+    var xhttp = new XMLHttpRequest();
+            
+           
+            xhttp.open("POST", url, true);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    // return this.responseText;
+                      
+                  if(this.responseText){
+                   
+                    var x = JSON.parse(this.responseText);
+                    console.log("x"+ x.hum.max);
+                    setHighLights(x);
+
+                    }
+                }
+                else {
+                    console.log("error in output: " + this.responseText);
+                  
+                  if(this.responseText){
+                   
+                    var x = JSON.parse(this.responseText);
+                    console.log("x"+ x.hum.max);
+                    setHighLights(x);
+
+                    }
+                   
+                }
+            };
+
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            xhttp.send(data);
+               
+}
+
+
+function setGuageValues(data){
+    var Keylength = count(data);
+    Keylength=Keylength-1;
+    console.log("x length "+ Keylength);
+
+    console.log("last key "+Object.keys(data)[Keylength]);
+    var lastkey= Object.keys(data)[Keylength]
+
+    console.log("latest humidity "+ data[lastkey].hum);
+    console.log("latest humidity "+ data[lastkey].temp);
+    console.log("latest humidity "+ data[lastkey].sm);
+    document.getElementById("humidityGuage").setAttribute("data-value",data[lastkey].hum);
+    document.getElementById("TemperatureGuage").setAttribute("data-value",data[lastkey].temp);
+    document.getElementById("SoilMoistureGuage").setAttribute("data-value",data[lastkey].sm);
+
+
+}
+//sets the hightls of the gauges
+function setHighLights(x){
+//generating list for data highlists in the gauge for humidity
+                    var Humidityhighlight='[{"from": 0, "to":'+x.hum.min +', "color": "rgba(200, 50, 50, .75)"},{"from": '+x.hum.max +', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';               
+                    console.log("highlight"+Humidityhighlight);
+                    document.getElementById("humidityGuage").setAttribute("data-highlights",Humidityhighlight);
+//generating list for data highlists in the gauge for temperaure
+                    var Temperaturehighlight='[{"from": 0, "to":'+x.temp.min +', "color": "rgba(200, 50, 50, .75)"},{"from": '+x.temp.max +', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';               
+                    console.log("highlight"+Temperaturehighlight);
+                    document.getElementById("TemperatureGuage").setAttribute("data-highlights",Temperaturehighlight);
+//generating list for data highlists in the gauge for Soil moisture
+                    var SoilMoisturehighlight='[{"from": 0, "to":'+x.sm.min +', "color": "rgba(200, 50, 50, .75)"},{"from": '+x.sm.max +', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';               
+                    console.log("highlight"+SoilMoisturehighlight);
+                    document.getElementById("SoilMoistureGuage").setAttribute("data-highlights",SoilMoisturehighlight);
+
+}
+
+
+//returns teh number of keys in teh json object
+//input: json
+
+
+        function ajaxRequest(url, data) {
+           
+
         }
-    ],
-    colorPlate: "#fff",
-    borderShadowWidth: 0,
-    borders: false,
-    needleType: "arrow",
-    needleWidth: 2,
-    needleCircleSize: 7,
-    needleCircleOuter: true,
-    needleCircleInner: false,
-    animationDuration: 1500,
-    animationRule: "linear"
-}).draw();
 </script>
   <style> /* set the CSS */
 
@@ -93,9 +314,6 @@ var gauge = new RadialGauge({
 
 
 
-  <footer>
-    <% include ./partials/footer %>
-  </footer>
 </body>
 
 </html>

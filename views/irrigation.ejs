@@ -75,7 +75,10 @@
             </div>
          
 
-
+</div>
+<footer>
+                <% include ./partials/footer.ejs %>
+            </footer>
 
             <script>
                 /* When the user clicks on the button, 
@@ -108,36 +111,39 @@
                         xhttp.open("POST", "https://agripronode.herokuapp.com/api/getIrrigationStatus", true);
                         xhttp.onreadystatechange = function () {
                             if (this.readyState == 4 && this.status == 200) {
-                                console.log("irrigation status ="+this.responseText);
-                                console.log(this.responseText.status);
-                                var x=JSON.parse(this.responseText);
-                                console.log('ss'+ x.status);
-                               
-                               console.log("button val"+ $("#ManualtogBtn").val());
-                                if(x.status=='0' || x.status==0 ){
-                                    console.log('ss0'+ x.status);
-                                    $("#ManualtogBtn").val()="Off";
+                                if(this.responseText){
+                                    console.log("irrigation status ="+this.responseText);
+                                    console.log(this.responseText.status);
+                                    var x=JSON.parse(this.responseText);
+                                    console.log('ss'+ x.status);
+                                
+                                console.log("button val 1"+ $("#ManualtogBtn").val());
+                                    if(x.status=='0' || x.status==0 ){
+                                        console.log('ss0'+ x.status);
+                                        $("#ManualtogBtn").val("Off");
+                                    }
+                                    else if(x.status=='1' || x.status==1){
+                                        console.log('ss1'+ x.status);
+                                        $("#ManualtogBtn").val("On");
+                                    }
                                 }
-                                else if(x.status=='1' || x.status==1){
-                                    console.log('ss1'+ x.status);
-                                    $("#ManualtogBtn").val("On");
-                                }
-
                             } else {
-
+ if(this.responseText){
                                 console.log("error in output: " + this.responseText);
                                 var x=JSON.parse(this.responseText);
                                 console.log('ss'+ x.status);
                                
-                               console.log("button val"+ $("#ManualtogBtn").val());
+                               console.log(" 0 button val "+ $("#ManualtogBtn").val());
                                 if(x.status=='0' || x.status==0 ){
                                     console.log('ss0'+ x.status);
-                                    $("#ManualtogBtn").val()="Off";
+                                    $("#ManualtogBtn").val("Off");
                                 }
                                 else if(x.status=='1' || x.status==1){
                                     console.log('ss1'+ x.status);
                                     $("#ManualtogBtn").val("On");
+                                     $("#ManualtogBtn").attr('checked',"checked");
                                 }
+                            }
                             }
                         };
 
@@ -385,9 +391,7 @@
                 }
             </script>
 
-            <footer>
-                <% include ./partials/footer.ejs %>
-            </footer>
+            
     </body>
 
 </html>

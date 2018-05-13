@@ -17,18 +17,19 @@
         <div class="alert alert-warning fade out" id="bsalert">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <strong>Error:</strong>
-            <span id="errorText">Please select a date for the schedule</span>
+            <span id="errorText"></span>
         </div>
         <div class="form">
             <div class="register-form">
 
                 <h2 style="text-align:center; " class="panel">Settings</h2>
-
+<form>
                 <label style="padding: 0px 10px 15px 5px;" for="MinSoilMoisture">Crop Type</label>
 
                 <input style="padding: 0px 10px 5px 5px;" name="CropType" type="text"  title="Crop Type e.g Wheat, rice etc" placeholder="Crop Type e.g Wheat, rice etc" required="true" id="CropType" />
 
                 <button id="saveCropBtn" width="100px" class="btn btn-rounded btn-submit">Save</button>
+                </form>
                 <table style="text-align:center;" align="center" width="100%">
                     <tr style="text-align:center; ">
                         <td colspan="4">
@@ -126,15 +127,64 @@
     </div>
     </div>
     <script>
+getCropType();
+
+
+function getCropType(){
+ var urlgetCroptype = "https://agripronode.herokuapp.com/api/getCropType";
+            // var cropType = document.getElementById("CropType").value;
+
+var data = "farmid=" +<%=fid%> +"&siteid=" +<%=sid %>;
+// var RecievedCropType = ajaxRequest(urlgetCroptype, data);
+// console.log(" result crop "+RecievedCropType.croptype);
+ 
+
+
+
+  var xhttp = new XMLHttpRequest();
+            ///////////////////////////////////////////MIN value set            
+            //Sets the SM's min value
+            xhttp.open("POST", urlgetCroptype, true);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    // var x=JSON.stringify(this.responseText);
+                    // x=JSON.parse(x);
+                     var x=this.responseText;
+                    console.log("type   "+typeof(x));
+                    x= x.split('"');
+                    RecievedCropType= x[3];
+
+                    $("#CropType").val(RecievedCropType);
+                }
+                else {
+                    console.log("error in output: " + this.responseText);
+                    console.log(this.responseText);
+                    var x=JSON.stringify(this.responseText);
+                    x=JSON.parse(x);
+                    // var x=this.responseText;
+                    console.log(x['croptype']);
+               $("#CropType").val(x.croptype);
+                }
+            };
+
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            xhttp.send(data);
+
+}
+
 
         $("#saveCropBtn").click(function () {
             //set crop type reqauest
             var urlCroptype = "https://agripronode.herokuapp.com/api/setCropType";
             var cropType = document.getElementById("CropType").value;
-
-            console.log("crop " + typeof (cropType) + " value" + cropType);
-            var dataCropType = "farmid=" +<%=fid%> +"&siteid=" +<%=sid %> +"&croptype=" + cropType;
-            ajaxRequest(urlCroptype,dataCropType);
+           
+            if(cropType){
+                console.log("crop " + typeof (cropType) + " value" + cropType);
+                var dataCropType = "farmid=" +<%=fid%> +"&siteid=" +<%=sid %> +"&croptype=" + cropType;
+                ajaxRequest(urlCroptype,dataCropType);
+            }
         });
 
 
@@ -188,9 +238,11 @@
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
+                    return this.responseText;
                 }
                 else {
                     console.log("error in output: " + this.responseText);
+                          return this.responseText;
                 }
             };
 
@@ -206,7 +258,8 @@
             $('form').animate({ height: "toggle", opacity: "toggle" }, "slow");
         });
     </script>
-    <footer>
+    <footer class="footer">
+      
         <% include ./partials/footer %>
     </footer>
 </body>

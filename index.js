@@ -103,6 +103,9 @@ function isFarmSet() {
 app.get('/', function (req, res) {
 
     if (firebase.auth().currentUser) {
+      
+        firebase
+      
         res.render('index', {
             fid: req.session.farmId,
             sid: req.session.siteId
@@ -275,12 +278,8 @@ app.post('/signup', upload.array(), function (req, res) {
                     lastname: req.body.lastName,
                     phone: req.body.phoneNumber
                 }
-
-
                 )
             });
-
-
         console.log(req.body.u_email);
         res.send("Signed up \n" + req.body.u_email + " -- " + req.body.password + "   ");
 
