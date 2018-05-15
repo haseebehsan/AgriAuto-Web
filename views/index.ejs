@@ -4,11 +4,16 @@
 <head>
   <% include ./partials/head.ejs %>
 
-</head>
+ 
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Orbitron"
       rel="stylesheet">
 <script src="//cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.5/all/gauge.min.js"></script>
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+</head>
+
 <style>
 table, th, td {
     text-align:center;
@@ -26,11 +31,166 @@ th, td {
     <% include ./partials/header %>
   </header>
 
-<div class="col-md-6 col-lg-6 col-sm-12">
-asda
-</div>
-<div class="col-md-6 col-lg-6 col-sm-12">
+<div class="">
 
+  <div id="chartDiv">
+    
+    </div>
+  
+  <script>
+var xAxis=[];
+var yAxis=[];
+
+GetChartData();    
+function GetChartData(){
+    
+    var  url=    "https://agripronode.herokuapp.com/api/webGetSensorData";
+//var reqData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=";
+    var data="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=2018-01-01&enddate=2018-05-05";
+    
+    
+
+ 
+    var xhttp = new XMLHttpRequest();
+    ///////////////////////////////////////////MIN value set            
+    //Sets the SM's min value
+                xhttp.open("POST", url, true);
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                      if(this.responseText){
+                        var recievedData=JSON.parse(this.responseText);
+                        console.log(this.responseText);
+                        for(i in recievedData.sensordata){
+                            var d=recievedData.sensordata[i].date;
+                            xAxis.push(JSON.stringify(d+':00'));
+                            
+                            var v=parseFloat(recievedData.sensordata[i].value);
+                            yAxis.push(v.toFixed(2));
+                        
+                            // console.log(xAxis);
+                            //    console.log("X Axis  "+xAxis);
+                        }
+                    var xArray=    Object.values(recievedData.sensordata[1]);
+          
+                    console.log("array "+typeof(xArray));
+          var myArray=xArray[0];
+                    console.log("Myarray "+typeof(myArray));
+                         yAxis.pop();
+                         xAxis.pop();
+                         
+                        
+                        console.log("X Axis  "+xAxis);
+                        console.log("Y Axis  "+yAxis);
+                        // populateChart(xAxis,yAxis);
+                         console.log("plot "+ xAxis);
+                        //   console.log(graphs); 
+// console.log(Plotly.version);
+// var d3 = Plotly.d3;
+// console.log(d3);
+
+// var WIDTH_IN_PERCENT_OF_PARENT = 80,
+//     HEIGHT_IN_PERCENT_OF_PARENT = 80;
+
+// var gd3 = d3.select('#chartDiv')
+//     .append('div')
+//     .style({
+//         width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+//         'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%',
+
+//         height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh',
+//         'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) / 2 + 'vh',class: "col-lg-6 col-md-6 col-xl-6"
+//     });
+
+// var gd = gd3.node();
+// Plotly.plot(gd, [{
+//     type: 'bar',
+//         x: ['2018-04-03','2018-04-03'],
+//     y: ['618.08','596.18'],
+//     marker: {
+//         color: '#C8A2C8',
+//         line: {
+//             width: 2.5
+//         }
+//     }
+// }], {
+//     title: 'Soil Moisture',
+//     font: {
+//         size: 16
+//     }
+// });
+console.log(typeof(Object.values(xAxis)))
+console.log(typeof(yAxis))
+var trace1 = {
+  x: Object.values(xAxis), 
+  y: Object.values(yAxis), 
+  type: 'scatter'
+};
+
+var data = [trace1];
+Plotly.newPlot('chartDiv', data);
+                        }
+
+                    }
+                    else{
+                    //      var x=JSON.parse(this.responseText);
+                    //    console.log(x.sensordata);
+                    //     return x.sensordata;
+                    }
+                };
+        
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    
+                xhttp.send(data);
+}
+
+
+// (function x() {
+//     console.log("plot "+ xAxis)
+//     var d3 = Plotly.d3;
+
+//     var WIDTH_IN_PERCENT_OF_PARENT = 80,
+//     HEIGHT_IN_PERCENT_OF_PARENT = 80;
+
+//     var gd3 = d3.select('#chartDiv')
+//         .append('div')
+//         .style({
+//             width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+//             'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%',
+
+//             height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh',
+//             'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) / 2 + 'vh'
+//         });
+
+//     var gd = gd3.node();
+
+//     Plotly.plot(gd, [{
+//         type: 'bar',
+//         x: yAxis,
+//         y: xAxis,
+//         marker: {
+//             color: '#C8A2C8',
+//             line: {
+//                 width: 2.5
+//             }
+//         }
+//     }], {
+//         title: 'Soil Moisture',
+//         font: {
+//             size: 16
+//         }
+//     });
+
+//     window.onresize = function() {
+//         Plotly.Plots.resize(gd);
+//     };
+
+// })();
+
+  </script>
+
+</div>
+<div class="">
+<center>
 <table>
   <thead>
     <th>
@@ -62,7 +222,7 @@ asda
         {"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}
     ]'
     data-value="10" 
-    title="Humidity"
+    title="Humidity (%)"
     data-color-plate="#fff"
     data-border-shadow-width="0"
     data-borders="true"
@@ -145,6 +305,7 @@ asda
    <tr>
  </tbody>
  </table>
+ </center>
  </div>
  
 <script>
@@ -158,10 +319,26 @@ function count(obj) {
 Object.prototype.getByIndex = function(index) {
   return this[Object.keys(this)[index]];
 };
-
+var xAxis=[];
+var yAxis=[];
 
 GetRanges();
 GetSensorData();
+// GetChartData();
+
+// function populateChart(X,Y){
+
+// console.log('X '+X);
+// console.log('Y '+Y);
+
+//     var data=[{
+//         x:X,
+//         y:Y,
+//         type:'bar'
+//     }];
+
+//     Plotly.newPlot('chartDiv', data);
+// }
 
 function GetSensorData(){
 
@@ -189,7 +366,10 @@ function GetSensorData(){
                     console.log("last  key value "+ x[lastkey].hum);
                     // console.log("x last "+ x.lastkey);
                     // setHighLights(x);
-setGuageValues(x);
+                   //
+                    setGuageValues(x);
+                   
+                   
                     }
                 }
                 else {

@@ -18,22 +18,23 @@
 
 </header>
 
-    <div class="" id="report-page">
+    <div class="" id="report-page" style="margin-left:25px; margin-right:25px;">
 <center class=""> <h3 font-color="white">Report</h3>  </center>
-     
-      <center class="">
+     <hr>
+      <center class=" form">
     
-        <div class="flex-container form">
+        <div class="flex-container form"  style="margin-left:25px; margin-right:25px;  margin-top:10px;">
         <label for="startdate" class=" col-sm-2 col-md-2 col-xs-2">Start Date</label> 
-        <input name="date" type="date" id="startdate"  class="min-today  col-sm-2 col-md-2 col-xs-2"  required="true"  />
+        <input name="date" type="date" id="startdate"  class="min-today  col-sm-2 col-md-2 col-xs-2"  required="true"   />
         
         <label for="dateend" class=" col-sm-2 col-md-2 col-xs-2" >End Date</label> 
         <input type="date" id="dateend"class="col-sm-2 col-md-2 col-xs-2" name="ttime" value="Date.now()" required="true"/>
      
  
-          <button  onclick="getReport()" class="col-sm-2 col-xs-2  col-md-2 panel" id="rbtn" >Generate Report</button>
+          <button  onclick="getReport()" class="col-sm-2 col-xs-2  col-md-2 " id="rbtn" >Generate Report</button>
     
     </div>
+ 
        </center>
        <div class="">
            <table class="table panel" id="reportTableMinMAx"  align="center" >
@@ -53,7 +54,7 @@
 <div>
            <table class="table panel" id="reportTable"  align="center" >
                           <thead>
-                        <th ><center>Date Time </center></th>
+                        <th ><center>Reading Time </center></th>
                         <th> <center> Soil Moisture</center></th>
                         <th><center> Humidity</center></th>
                          <th><center> Temperature</center></th>
@@ -119,14 +120,15 @@ console.log("R data : "+x.allData.alldata[0].date);
 // for(var i=0;i<x.length;i++)
 
 $("#reportTableMinMAx tbody tr").remove();                 
-$('#tbody1').append('<tr align=\"center\" ><td>Soil Moisture</td><td>  '+x.minsm.toFixed(2)+' </td><td> '+x.maxsm.toFixed(2)+' </td>  <td>  '+ x.avesm.toFixed(2)+' </td>     </tr>');
-$('#tbody1').append('<tr align=\"center\" ><td>Humidity</td><td>  '+x.minhum.toFixed(2)+' </td><td> '+x.maxhum.toFixed(2)+' </td>  <td>  '+ x.avehum.toFixed(2)+' </td>     </tr>');
-$('#tbody1').append('<tr align=\"center\" ><td>Temperature</td><td>  '+x.mintemp.toFixed(2)+' </td><td> '+x.maxtemp.toFixed(2)+' </td>  <td>  '+ x.avetemp.toFixed(2)+' </td>     </tr>');
+$('#tbody1').append('<tr align=\"center\" ><td>Soil Moisture</td><td>  '+x.minsm.toFixed(2)+' %</td><td> '+x.maxsm.toFixed(2)+' %</td>  <td>  '+ x.avesm.toFixed(2)+' %</td>     </tr>');
+$('#tbody1').append('<tr align=\"center\" ><td>Humidity</td><td>  '+x.minhum.toFixed(2)+' %</td><td> '+x.maxhum.toFixed(2)+' %</td>  <td>  '+ x.avehum.toFixed(2)+' %</td>     </tr>');
+$('#tbody1').append('<tr align=\"center\" ><td>Temperature</td><td>  '+x.mintemp.toFixed(2)+' °C</td><td> '+x.maxtemp.toFixed(2)+' °C</td>  <td>  '+ x.avetemp.toFixed(2)+' °C</td>     </tr>');
 
  $("#reportTable tbody tr").remove();
  var count=0;                 
  for(i in x.allData.alldata){
-  $('#tbody2').append('<tr align=\"center\" ><td>'+x.allData.alldata[count].date+'</td><td>  '+x.allData.alldata[count].sm+' </td><td> '+x.allData.alldata[count].hum+' </td>  <td>  '+ x.allData.alldata[count].temp+' </td>     </tr>');
+
+  $('#tbody2').append('<tr align=\"center\" ><td>'+x.allData.alldata[count].date+'</td><td>  '+parseFloat(x.allData.alldata[count].sm).toFixed(2)+' %</td><td> '+parseFloat(x.allData.alldata[count].hum).toFixed(2)+' %</td>  <td>  '+ parseFloat(x.allData.alldata[count].temp).toFixed(2)+' °C</td>     </tr>');
   count++;
  }
  
@@ -162,25 +164,31 @@ $('#bsalert').on('close.bs.alert', toggleAlert);
     font-family: "Roboto", sans-serif;
     outline: 0;
     background: #f2f2f2;
-  
+    margin-bottom:25px;
     border: 0;
-      border-radius: 5px;
+    border-radius: 5px;
     box-sizing: border-box;
     font-size: 14px;
+    width:10%;
+    height:100%;
   }
   .form button {
     font-family: "Roboto", sans-serif;
     text-transform: uppercase;
     outline: 0; 
-    background: #4CAF50;
+    background: rgb(255, 255, 255);
     border-radius: 5px;
     border: 0;
+    margin-top: 3px;
      margin-left: 25px;
-    color: #FFFFFF;
-    font-size: 14px;
+    color: black;
+    font-size: 16px;
     -webkit-transition: all 0.3 ease;
     transition: all 0.3 ease;
     cursor: pointer;
+    width:15%;
+    height:100%;
+    padding: 5px 5px 5px 5px;
   }
   .form button:hover,.form button:active,.form button:focus {
     background: #43A047;
@@ -270,7 +278,8 @@ label {
     border: 0;
     box-sizing: border-box;
     font-size: 14px;
-    padding-right:10px;
+    padding-right:15px;
+    margin-top: 5px;
 }
 input:invalid {
   border: 1px solid red;
