@@ -79,7 +79,7 @@ function loggedIn() {
 }
 
 //input: current user's uid (taken directly from firebase auth)
-///output: boolean (true is logged in)
+///output: boolean (true: if logged in)
 function isFarmSet() {
     //Checks whether a farm has been assigned to a user
     firebase.database().ref('/users/' + firebase.auth().currentUser.uid).once('value').then(function (snapshot) {
@@ -103,9 +103,9 @@ function isFarmSet() {
 app.get('/', function (req, res) {
 
     if (firebase.auth().currentUser) {
-      
+
         firebase
-      
+
         res.render('index', {
             fid: req.session.farmId,
             sid: req.session.siteId
@@ -118,8 +118,17 @@ app.get('/', function (req, res) {
 app.get('/me', function (req, res) {
 
     if (loggedIn()) {
+        //get the current user's ID
+        var cUser = firebase.auth().currentUser;
+        //get the users profile details
+        firebase.database().ref('/users/' + cUser.uid + '/').once('value').then(function (snapshot) {
+            var c = JSON.parse(JSON.stringify(snapshot));
 
-        res.render('me');
+            console.log(c);
+            console.log(typeof (c));
+            res.render('profile', {firstName : c.firstName, middleName:c.middleName, lastName:c.lastName, phone:c.phone, farm:c.farm, site:c.site});
+        });
+
     } else {
         res.redirect('login');
     }
@@ -136,7 +145,7 @@ app.get('/chart', function (req, res) {
 
     // req.session.ferro='1';
     if (loggedIn()) {
-        res.render('index-hamza', { fid: req.session.farmId, sid: req.session.siteId });
+        res.render('indextest', { fid: req.session.farmId, sid: req.session.siteId });
     }
     else {
         res.render('login', { err: "Please Login" });
@@ -157,12 +166,14 @@ app.get('/login', function (req, res) {
 app.get('/signout', function (req, res) {
     // res.status(200).json({ status: 'working' });
     firebase.auth().signOut();
-    res.render('login', { err: "Please Login" });
+    res.render('login', { err: "" });
 });
 
 
 
-//Asynchronously signs in using an email and password.
+//Asynchronously signs in using an email and password. 
+// Then verifies if the email is verified or not
+//then gets and stores the farm and selected site id in the SESSION and loads the homepage.
 app.post('/login', upload.array(), function (req, res, next) {
     // res.status(200).json({ status: 'working' });
     // console.log(req.body.username);
@@ -338,7 +349,7 @@ app.get('/setFarm', function (req, res) {
 app.get('/changePassword', function (req, res) {
     // res.status(200).json({ status: 'working' });
     if (loggedIn())
-        res.redirect('changePassword');
+        res.render('changePassword');
     else
         res.render('login', { err: "Something went wrong, please login again." });
 });
@@ -478,7 +489,7 @@ app.get('/settings', function (req, res) {
 
 
 
-            
+
         }).then(function () {
 
             minsm = minsm.substring(1, minsm.length - 1);
@@ -522,7 +533,7 @@ app.get('/report', function (req, res) {
         if (req.session.farmId && req.session.siteId) {
             res.render('report', { fid: req.session.farmId, sid: req.session.siteId });
         }
-        else{
+        else {
             res.render('login', { err: "Connection Error, Please login" });
         }
     }
@@ -558,7 +569,7 @@ app.post('/generateReport', function (req, res) {
     firebase.database().ref('/farms/' + req.body.farmid + '/' + req.body.siteid + '/sensor/').once('value').then(function (snapshot) {
         var childst = "{ \"alldata\" :[ ";
         snapshot.forEach(function (childSnapshot) {
-             console.log("key: "+childSnapshot.key);
+            console.log("key: " + childSnapshot.key);
 
             if (childSnapshot.key >= startDate && childSnapshot.key <= endDate) {
                 // console.log("key: "+childSnapshot.key);
@@ -570,15 +581,15 @@ app.post('/generateReport', function (req, res) {
                     var TEMP = parseFloat(dataSnapshot.child('temp').val());
 
 
-                   var childst2 = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
-                  
-                //     console.log("{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}");
-                //    if (childst2){
-                //   childst2+=",{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}";
-                //    }
-                //    else{
-                //     childst2="{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}";
-                //    }
+                    var childst2 = "{ \"date\": \"" + childSnapshot.key + " " + dataSnapshot.key + "\"  ,  \"sm\":  \"" + SM + "\" , \"temp\": \"" + TEMP + "\" , \"hum\": \"" + HUM + "\" }";
+
+                    //     console.log("{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}");
+                    //    if (childst2){
+                    //   childst2+=",{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}";
+                    //    }
+                    //    else{
+                    //     childst2="{"+childSnapshot.key +" "+dataSnapshot.key+","+ SM  +","+ HUM  +","+ TEMP+"}";
+                    //    }
 
 
 
@@ -667,9 +678,9 @@ app.post('/generateReport', function (req, res) {
         console.log("max TEMP: " + maxTEMP);
 
         if (count != 0) {
-            aveSM =parseFloat( sumSM / count);
+            aveSM = parseFloat(sumSM / count);
             aveTEMP = parseFloat(sumTEMP / count);
-            aveHUM =parseFloat( sumHUM / count);
+            aveHUM = parseFloat(sumHUM / count);
         }
 
         console.log("average SM: " + aveSM);
@@ -677,7 +688,7 @@ app.post('/generateReport', function (req, res) {
         console.log("average HUM: " + aveHUM);
         console.log(childst);
         childst = JSON.parse(childst)
-        res.json({"allData":childst, "minsm": minSM, "maxsm": maxSM, "mintemp": minTEMP, "maxtemp": maxTEMP, "minhum": minHUM, "maxhum": maxHUM, "avesm": aveSM, "avetemp": aveTEMP, "avehum": aveHUM });
+        res.json({ "allData": childst, "minsm": minSM, "maxsm": maxSM, "mintemp": minTEMP, "maxtemp": maxTEMP, "minhum": minHUM, "maxhum": maxHUM, "avesm": aveSM, "avetemp": aveTEMP, "avehum": aveHUM });
 
 
 
@@ -1182,8 +1193,9 @@ app.post('/api/sendAlert', function (req, res) {
 
             }
             res.json(snapshot2);
-        }, function onReject(err){
-console.log("Error in sending ::"+ err)        });
+        }, function onReject(err) {
+            console.log("Error in sending ::" + err)
+        });
 
 
 

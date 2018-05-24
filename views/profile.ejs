@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include ./partials/head.ejs %>
+    <link rel="stylesheet" type="text/css" href="../assets/profile.css">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <header>
+   <% include ./partials/header.ejs %>
+  </header>
+  <div class="login-page">
+    <div class="form">
+    <button type="button" style=" width:12.5%;" class="topright button" id="editBtn">Edit</button>
+      <div class="register-form " style="display: block;">
+        
+        <table>
+          <tr>
+            <td>
+              <label for="firstName">First Name</label>
+            </td>
+            <td>
+              <input name="FirstName" id="firstName" type="text" placeholder="First Name" required="true" readonly="readonly" autocomplete='given-name' />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="middleName">Middle name</label>
+            </td>
+            <td>
+              <input name="middleName" id="middleName" type="text" placeholder="Middle Name" readonly="readonly" autocomplete='additional-name' /> </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="lastName">Last Name</label>
+            </td>
+            <td>
+              <input name="lastName" id="lastName" type="text" placeholder="Last Name" readonly="readonly" autocomplete='family-name'/>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="phoneNumber">Phone Number</label>
+            </td>
+            <td>
+              <input name="phone-Number" id="phoneNumber" type="text" placeholder="Phone Number" readonly="readonly" autocomplete='tel-national' />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="farm">Farm</label>
+            </td>
+            <td>
+              <input name="farmid" id="farm" type="text" placeholder="Farm" readonly="readonly" />
+            </td>
+          </tr>
+
+
+        </table>
+        <form action="/changePassword">
+        <button class="button-rnd" >Change Password </button>
+</div>
+
+    </div>
+  </div>
+ 
+
+  <script>
+
+    $('.message a').click(function () {
+      $('form').animate({ height: "toggle", opacity: "toggle" }, "slow");
+    });
+var fn='<%=firstName%>';
+  $('#firstName:text').val('<%=firstName%>');
+  $('#middleName:text').val('<%=middleName%>');
+  $('#lastName:text').val('<%=lastName%>');
+  $('#phoneNumber:text').val('<%=phone%>');
+  $('#farm:text').val('<%=farm%>');
+  $('#site:text').val('<%=site%>');
+
+
+$( "#editBtn" ).click(function() {
+  console.log("edit");
+    $('input').removeAttr('readonly');
+});
+  </script>
+  <footer>
+    <% include ./partials/footer %>
+  </footer>
+</body>
+
+</html>

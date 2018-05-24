@@ -2,146 +2,177 @@
 <html lang="en">
 
 <head>
-  <% include ./partials/head.ejs %>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+  <script src="http://cdn.oesmith.co.uk/morris-0.4.1.min.js"></script>
+  <!--<% include ./partials/head.ejs %>-->
 
- 
-<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-  <!-- Plotly.js -->
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<link href="https://fonts.googleapis.com/css?family=Orbitron"
-      rel="stylesheet">
-<script src="//cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.5/all/gauge.min.js"></script>
+
+
+        <!-- Plotly.js -->
+         <!-- <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>-->
+        <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+        <script src="//cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.5/all/gauge.min.js"></script>
 
 </head>
 
 <style>
-table, th, td {
-    text-align:center;
-    border: 1px ;
-    border-collapse: collapse;
-}
-th, td {
-    padding: 10px;
-}
+    table,
+    th,
+    td {
+        text-align: center;
+        border: 1px;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 10px;
+    }
+
+    #area-chart,
+    #line-chart,
+    #bar-chart,
+    #stacked,
+    #pie-chart{
+        min-height: 250px;
+    }   
 </style>
 
 <body>
-  <link rel="stylesheet" type="text/css" href="../assets/login.css">
-  <header>
-    <% include ./partials/header %>
-  </header>
-
-<div class="">
-
-  <div id="chartDiv">
+    <link rel="stylesheet" type="text/css" href="../assets/login.css">
+    <header>
+        <% include ./partials/header %>
     
-    </div>
-  
-  <script>
-var xAxis=[];
-var yAxis=[];
+    </header>
 
-GetChartData();    
-function GetChartData(){
-    
-    var  url=    "https://agripronode.herokuapp.com/api/webGetSensorData";
-//var reqData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=";
-    var data="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=2018-01-01&enddate=2018-05-05";
-    
-    
+    <div class="">
+<div id="line-example">
 
- 
-    var xhttp = new XMLHttpRequest();
-    ///////////////////////////////////////////MIN value set            
-    //Sets the SM's min value
+</div>
+<script>
+  Morris.Line({
+  element: 'line-example',
+  data: [
+    { y: '2006', a: 100, b: 90 },
+    { y: '2007', a: 75,  b: 65 },
+    { y: '2008', a: 50,  b: 40 },
+    { y: '2009', a: 75,  b: 65 },
+    { y: '2010', a: 50,  b: 40 },
+    { y: '2011', a: 75,  b: 65 },
+    { y: '2012', a: 100, b: 90 }
+  ],
+  xkey: 'y',
+  ykeys: ['a', 'b'],
+  labels: ['Series A', 'Series B']
+});
+</script>
+        <script>
+      
+            var xAxis = [];
+            var yAxis = [];
+
+            GetChartData();
+            function GetChartData() {
+
+                var url = "https://agripronode.herokuapp.com/api/webGetSensorData";
+                //var reqData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=";
+                var data = "farmid=" +<%=fid%> +"&siteid=" +<%=sid %> +"&sensor=sm&startdate=2018-01-01&enddate=2018-05-05";
+
+
+
+
+                var xhttp = new XMLHttpRequest();
+                ///////////////////////////////////////////MIN value set            
+                //Sets the SM's min value
                 xhttp.open("POST", url, true);
                 xhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
-                      if(this.responseText){
-                        var recievedData=JSON.parse(this.responseText);
-                        console.log(this.responseText);
-                        for(i in recievedData.sensordata){
-                            var d=recievedData.sensordata[i].date;
-                            xAxis.push(JSON.stringify(d+':00'));
-                            
-                            var v=parseFloat(recievedData.sensordata[i].value);
-                            yAxis.push(v.toFixed(2));
-                        
-                            // console.log(xAxis);
-                            //    console.log("X Axis  "+xAxis);
-                        }
-                    var xArray=    Object.values(recievedData.sensordata[1]);
-          
-                    console.log("array "+typeof(xArray));
-          var myArray=xArray[0];
-                    console.log("Myarray "+typeof(myArray));
-                         yAxis.pop();
-                         xAxis.pop();
-                         
-                        
-                        console.log("X Axis  "+xAxis);
-                        console.log("Y Axis  "+yAxis);
-                        // populateChart(xAxis,yAxis);
-                         console.log("plot "+ xAxis);
-                        //   console.log(graphs); 
-// console.log(Plotly.version);
-// var d3 = Plotly.d3;
-// console.log(d3);
+                        if (this.responseText) {
+                            var recievedData = JSON.parse(this.responseText);
+                            console.log(this.responseText);
+                            for (i in recievedData.sensordata) {
+                                var d = recievedData.sensordata[i].date;
+                                xAxis.push(JSON.stringify(d + ':00'));
 
-// var WIDTH_IN_PERCENT_OF_PARENT = 80,
-//     HEIGHT_IN_PERCENT_OF_PARENT = 80;
+                                var v = parseFloat(recievedData.sensordata[i].value);
+                                yAxis.push(v.toFixed(2));
 
-// var gd3 = d3.select('#chartDiv')
-//     .append('div')
-//     .style({
-//         width: WIDTH_IN_PERCENT_OF_PARENT + '%',
-//         'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%',
+                                // console.log(xAxis);
+                                //    console.log("X Axis  "+xAxis);
+                            }
+                            var xArray = Object.values(recievedData.sensordata[1]);
 
-//         height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh',
-//         'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) / 2 + 'vh',class: "col-lg-6 col-md-6 col-xl-6"
-//     });
+                            console.log("array " + typeof (xArray));
+                            var myArray = xArray[0];
+                            console.log("Myarray " + typeof (myArray));
+                            yAxis.pop();
+                            xAxis.pop();
 
-// var gd = gd3.node();
-// Plotly.plot(gd, [{
-//     type: 'bar',
-//         x: ['2018-04-03','2018-04-03'],
-//     y: ['618.08','596.18'],
-//     marker: {
-//         color: '#C8A2C8',
-//         line: {
-//             width: 2.5
-//         }
-//     }
-// }], {
-//     title: 'Soil Moisture',
-//     font: {
-//         size: 16
-//     }
-// });
-console.log(typeof(Object.values(xAxis)))
-console.log(typeof(yAxis))
-var trace1 = {
-  x: Object.values(xAxis), 
-  y: Object.values(yAxis), 
-  type: 'scatter'
-};
 
-var data = [trace1];
-Plotly.newPlot('chartDiv', data);
+                            console.log("X Axis  " + xAxis);
+                            console.log("Y Axis  " + yAxis);
+                            // populateChart(xAxis,yAxis);
+                            console.log("plot " + xAxis);
+                            //   console.log(graphs); 
+                            // console.log(Plotly.version);
+                            // var d3 = Plotly.d3;
+                            // console.log(d3);
+
+                            // var WIDTH_IN_PERCENT_OF_PARENT = 80,
+                            //     HEIGHT_IN_PERCENT_OF_PARENT = 80;
+
+                            // var gd3 = d3.select('#chartDiv')
+                            //     .append('div')
+                            //     .style({
+                            //         width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+                            //         'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%',
+
+                            //         height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh',
+                            //         'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) / 2 + 'vh',class: "col-lg-6 col-md-6 col-xl-6"
+                            //     });
+
+                            // var gd = gd3.node();
+                            // Plotly.plot(gd, [{
+                            //     type: 'bar',
+                            //         x: ['2018-04-03','2018-04-03'],
+                            //     y: ['618.08','596.18'],
+                            //     marker: {
+                            //         color: '#C8A2C8',
+                            //         line: {
+                            //             width: 2.5
+                            //         }
+                            //     }
+                            // }], {
+                            //     title: 'Soil Moisture',
+                            //     font: {
+                            //         size: 16
+                            //     }
+                            // });
+                            console.log(typeof (Object.values(xAxis)))
+                            console.log(typeof (yAxis))
+                            var trace1 = {
+                                x: Object.values(xAxis),
+                                y: Object.values(yAxis),
+                                type: 'scatter'
+                            };
+
+                            var data = [trace1];
+                            Plotly.newPlot('chartDiv', data);
                         }
 
                     }
-                    else{
-                    //      var x=JSON.parse(this.responseText);
-                    //    console.log(x.sensordata);
-                    //     return x.sensordata;
+                    else {
+                        //      var x=JSON.parse(this.responseText);
+                        //    console.log(x.sensordata);
+                        //     return x.sensordata;
                     }
                 };
-        
+
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    
+
                 xhttp.send(data);
-}
+            }
 
 
 // (function x() {
@@ -186,311 +217,294 @@ Plotly.newPlot('chartDiv', data);
 
 // })();
 
-  </script>
+        </script>
 
-</div>
-<div class="">
-<center>
-<table>
-  <thead>
-    <th>
-    Humidity
-    </th>
-    <th>
-    Temperature
-    </th>
-    <th>
-    Soil Moisture
-    </th>
-    
-  </thead>
-  <tbody>
-  <tr>
-<td>
-<canvas 
-    id="humidityGuage"
-    name="humidityGuage"
-    data-type="radial-gauge"
-    data-width="250"
-    data-height="250"
-    data-units="%"
- 
-    data-major-ticks="0,20,40,60,80,100"
-    data-minor-ticks="2"
-    data-stroke-ticks="true"
-    data-highlights='[
+    </div>
+    <div class="">
+        <center>
+            <table>
+                <thead>
+                    <th>
+                        Humidity
+                    </th>
+                    <th>
+                        Temperature
+                    </th>
+                    <th>
+                        Soil Moisture
+                    </th>
+
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <canvas id="humidityGuage" name="humidityGuage" data-type="radial-gauge" data-width="250" data-height="250" data-units="%"
+                                data-major-ticks="0,20,40,60,80,100" data-minor-ticks="2" data-stroke-ticks="true" data-highlights='[
         {"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}
-    ]'
-    data-value="10" 
-    title="Humidity (%)"
-    data-color-plate="#fff"
-    data-border-shadow-width="0"
-    data-borders="true"
-    data-needle-type="arrow"
-    data-needle-width="2"
-    data-needle-circle-size="7"
-    data-needle-circle-outer="  "
-    data-needle-circle-inner="true"
-    data-animation-duration="1500"
-    data-animation-rule="linear"
-></canvas>
- 
-</td>
- <td>
-<canvas 
-    style="padding-left=10px;"
-     id="TemperatureGuage"
-    name="TemperatureGuage"
-     Title ="Average Temperature (°C) at the site"
-    data-type="radial-gauge"
-    data-width="250"
-    data-height="250"
-    data-units="°C"
-    data-min-value="0"
-    data-max-value="100"
-    data-major-ticks="0,20,40,60,80,100"
-    data-minor-ticks="2"
-    data-stroke-ticks="true"
-    data-highlights='[
-        {"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}
-    ]'
-    data-value="10" 
-    data-label="Temperaure in Centigrade"
-    data-color-plate="#fff"
-    data-border-shadow-width="0"
-    data-borders="true"
-    data-needle-type="arrow"
-    data-needle-width="2"
-    data-needle-circle-size="7"
-    data-needle-circle-outer="  "
-    data-needle-circle-inner="true"
-    data-animation-duration="1500"
-    data-animation-rule="linear"
-></canvas>
- 
-</td>
-<td   style="padding=100">
-<canvas 
-       id="SoilMoistureGuage"
-    name="SoilMoistureGuage"
-    padding-left="10px"
-      style="padding-left=10px;"
-    data-type="radial-gauge"
-    data-width="250"
-    data-height="250"
-    data-units="%"
-    data-min-value="0"
-    data-max-value="100"
-    data-major-ticks="0,20,40,60,80,100"
-    data-minor-ticks="2"
-    data-stroke-ticks="true"
-    data-highlights='[
-        {"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}
-    ]'
-    data-value="10" 
-    title="Volumetric Soil Moisture Content "
-    data-color-plate="#fff"
-    data-border-shadow-width="0"
-    data-borders="true"
-    data-needle-type="arrow"
-    data-needle-width="2"
-    data-needle-circle-size="7"
-    data-needle-circle-outer="  "
-    data-needle-circle-inner="true"
-    data-animation-duration="1500"
-    data-animation-rule="linear"
-></canvas>
- 
- </td>
-   <tr>
- </tbody>
- </table>
- </center>
- </div>
- 
-<script>
+    ]' data-value="10" title="Humidity (%)" data-color-plate="#fff" data-border-shadow-width="0" data-borders="true" data-needle-type="arrow"
+                                data-needle-width="2" data-needle-circle-size="7" data-needle-circle-outer="  " data-needle-circle-inner="true"
+                                data-animation-duration="1500" data-animation-rule="linear"></canvas>
 
-//output: numebr oof keys / indexes
-function count(obj) { 
-      return Object.keys(obj).length; 
- }
+                        </td>
+                        <td>
+                            <canvas style="padding-left=10px;" 
+                                id="TemperatureGuage" 
+                                name="TemperatureGuage" 
+                                Title="Average Temperature (°C) at the site"
+                                data-type="radial-gauge" 
+                                data-width="250" 
+                                data-height="250" 
+                                data-units="°C" 
+                                data-min-value="0"
+                                data-max-value="100" 
+                                data-major-ticks="0,20,40,60,80,100" 
+                                data-minor-ticks="2" 
+                                data-stroke-ticks="true"
+                                data-highlights='[
+                                    {"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}
+                                    ]' 
+                                data-value="0" 
+                                data-label="Temperaure in Centigrade" 
+                                data-color-plate="#fff" 
+                                data-border-shadow-width="0"
+                                data-borders="true"
+                                data-needle-type="arrow" 
+                                data-needle-width="2" 
+                                data-needle-circle-size="7" 
+                                data-needle-circle-outer="  "
+                                data-needle-circle-inner="true" 
+                                data-animation-duration="1500" 
+                                data-animation-rule="linear"></canvas>
 
- // Function to get the nth key from the object
-Object.prototype.getByIndex = function(index) {
-  return this[Object.keys(this)[index]];
-};
-var xAxis=[];
-var yAxis=[];
+                        </td>
+                        <td style="padding=100">
+                            <canvas 
+                                id="SoilMoistureGuage" 
+                                name="SoilMoistureGuage" 
+                                title="Volumetric Soil Moisture Content "
+                                padding-left="10px" 
+                                style="padding-left=10px;" 
+                                data-type="radial-gauge"
+                                data-width="250" 
+                                data-height="250" 
+                                data-units="%" 
+                                data-min-value="0" 
+                                data-max-value="100" 
+                                data-major-ticks="0,20,40,60,80,100"
+                                data-minor-ticks="2"
+                                data-stroke-ticks="true" 
+                                data-highlights='[{"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}]' 
+                                data-value="0" 
+                                data-color-plate="#fff" 
+                                data-border-shadow-width="0" 
+                                data-borders="true"
+                                data-needle-type="arrow" 
+                                data-needle-width="2" 
+                                data-needle-circle-size="7" 
+                                data-needle-circle-outer="  "
+                                data-needle-circle-inner="true" 
+                                data-animation-duration="1500"
+                                data-animation-rule="linear"></canvas>
 
-GetRanges();
-GetSensorData();
-// GetChartData();
+                        </td>
+                        <tr>
+                </tbody>
+            </table>
+        </center>
+    </div>
 
-// function populateChart(X,Y){
+    <script>
+        //input: JSON Object
+        //process: calculate the number of keys in the object
+        //output: numebr oof keys / indexes in a certain object
+        function count(obj) {
+            return Object.keys(obj).length;
+        }
 
-// console.log('X '+X);
-// console.log('Y '+Y);
+        // Function to get the nth key from the object
+        Object.prototype.getByIndex = function (index) {
+            return this[Object.keys(this)[index]];
+        };
+        var xAxis = [];
+        var yAxis = [];
 
-//     var data=[{
-//         x:X,
-//         y:Y,
-//         type:'bar'
-//     }];
+        GetRanges();
+        GetSensorData();
+        // GetChartData();
 
-//     Plotly.newPlot('chartDiv', data);
-// }
+        // function populateChart(X,Y){
 
-function GetSensorData(){
+        // console.log('X '+X);
+        // console.log('Y '+Y);
 
-    var url = "https://agripronode.herokuapp.com/api/getLatestSensorData";
-    var data = "farmid=" +<%=fid%> +"&siteid=" +<%=sid %>;
-    var xhttp = new XMLHttpRequest();
-            
-           
+        //     var data=[{
+        //         x:X,
+        //         y:Y,
+        //         type:'bar'
+        //     }];
+
+        //     Plotly.newPlot('chartDiv', data);
+        // }
+        
+        //Input: farm id, site id 
+        //Process: get teh latest sensor data by makign a POST request, recieve data, parse it into JSON
+        //output: Invoke the setGuageValues(data) funtion and pass the recieved 
+        function GetSensorData() {
+
+            var url = "https://agripronode.herokuapp.com/api/getLatestSensorData";
+            var data = "farmid=" +<%=fid%> +"&siteid=" +<%=sid %>;
+            var xhttp = new XMLHttpRequest();
+
+
             xhttp.open("POST", url, true);
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
                     // return this.responseText;
-                      
-                  if(this.responseText){
-                   
-                  var x = JSON.parse(this.responseText);
-                    var Keylength = count(x);
-                    Keylength=Keylength-1;
-                    console.log("x length "+ Keylength);
-              
-                    console.log("last key "+Object.keys(x)[Keylength]);
-                    var lastkey= Object.keys(x)[Keylength]
-                // lastkey=JSON.stringify(lastkey);
-                    console.log("last  key value "+ x[lastkey].hum);
-                    // console.log("x last "+ x.lastkey);
-                    // setHighLights(x);
-                   //
-                    setGuageValues(x);
-                   
-                   
+
+                    if (this.responseText) {
+
+                        var x = JSON.parse(this.responseText);
+                        
+                        //-----------------------------------
+                        //Code written for debugging
+                        var Keylength = count(x);
+                        Keylength = Keylength - 1;
+                        console.log("x length " + Keylength);
+
+                        console.log("last key " + Object.keys(x)[Keylength]);
+                        var lastkey = Object.keys(x)[Keylength]
+                        
+                        console.log("last  key value " + x[lastkey].hum);
+                        //------------------------------------
+
+                        //passing the reieceved response as JSON 
+                        setGuageValues(x);
+
+
                     }
                 }
                 else {
                     console.log("error in output: " + this.responseText);
-                  
-                  if(this.responseText){
-                   
-                    var x = JSON.parse(this.responseText);
-                 setGuageValues(x);
-                    }
-                   
+
+                    // if (this.responseText) {
+
+                    //     var x = JSON.parse(this.responseText);
+                    //     setGuageValues(x);
+                    // }
+
                 }
             };
 
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
             xhttp.send(data);
-}
+        }
+
+        //input: farm id, site id
+        //process: get site's ranges of the sensors, generate list for data hightligts of gauges
+        //output: sets the highlights in the gauges
+
+        //@TODO: fix temperature ganuge max-value and min- value according to the ranges recieved i.e. add around 10-15 value difference in upper and lower limit
+        function GetRanges() {
+
+            var url = "https://agripronode.herokuapp.com/api/getMinMax";
+            var data = "farmid=" +<%=fid%> +"&siteid=" +<%=sid %>;
+            var xhttp = new XMLHttpRequest();
 
 
-
-//input: farm id, site id
-//process: get site's ranges of the sensors, generate list for data hightligts of gauges
-//output: sets the highlights in the gauges
-
-//@TODO: fix temperature ganuge max-value and min- value according to the ranges recieved i.e. add around 10-15 value difference in upper and lower limit
-function GetRanges(){
-
-    var url = "https://agripronode.herokuapp.com/api/getMinMax";
-    var data = "farmid=" +<%=fid%> +"&siteid=" +<%=sid %>;
-    var xhttp = new XMLHttpRequest();
-            
-           
             xhttp.open("POST", url, true);
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
                     // return this.responseText;
-                      
-                  if(this.responseText){
-                   
-                    var x = JSON.parse(this.responseText);
-                    console.log("x"+ x.hum.max);
-                    setHighLights(x);
+
+                    if (this.responseText) {
+
+                        var x = JSON.parse(this.responseText);
+                        console.log("x" + x.hum.max);
+                        setHighLights(x);
 
                     }
                 }
                 else {
                     console.log("error in output: " + this.responseText);
-                  
-                  if(this.responseText){
-                   
-                    var x = JSON.parse(this.responseText);
-                    console.log("x"+ x.hum.max);
-                    setHighLights(x);
+
+                    if (this.responseText) {
+
+                        var x = JSON.parse(this.responseText);
+                        console.log("x" + x.hum.max);
+                        setHighLights(x);
 
                     }
-                   
+
                 }
             };
 
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
             xhttp.send(data);
-               
-}
+
+        }
+
+        //Input: The latest humidty, temperature and soil moisture of a field for the day
+        //process: As there are multiple times of reading on a certain day, the function finds the last key in the current date child
+        //         and considers this as the latest value of sensors in the field
+        //Output: updates the data-value attribute of the Linear-guages
+        function setGuageValues(data) {
+            var Keylength = count(data);
+            Keylength = Keylength - 1;
+            console.log("x length " + Keylength);
+
+            console.log("last key " + Object.keys(data)[Keylength]);
+            var lastkey = Object.keys(data)[Keylength]
+
+            console.log("latest humidity " + data[lastkey].hum);
+            console.log("latest humidity " + data[lastkey].temp);
+            console.log("latest humidity " + data[lastkey].sm);
+            document.getElementById("humidityGuage").setAttribute("data-value", data[lastkey].hum);
+            document.getElementById("TemperatureGuage").setAttribute("data-value", data[lastkey].temp);
+            document.getElementById("SoilMoistureGuage").setAttribute("data-value", data[lastkey].sm);
 
 
-function setGuageValues(data){
-    var Keylength = count(data);
-    Keylength=Keylength-1;
-    console.log("x length "+ Keylength);
+        }
+        //Input: 
+        //Process: sets the highlights of the linear-gauges
+        function setHighLights(x) {
+            //generating list for data highlists in the gauge for humidity
+            var Humidityhighlight = '[{"from": 0, "to":' + x.hum.min + ', "color": "rgba(200, 50, 50, .75)"},{"from": ' + x.hum.max + ', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';
+            console.log("highlight" + Humidityhighlight);
+            document.getElementById("humidityGuage").setAttribute("data-highlights", Humidityhighlight);
+            //generating list for data highlights in the gauge for temperaure
+            var Temperaturehighlight = '[{"from": 0, "to":' + x.temp.min + ', "color": "rgba(200, 50, 50, .75)"},{"from": ' + x.temp.max + ', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';
+            console.log("highlight" + Temperaturehighlight);
+            document.getElementById("TemperatureGuage").setAttribute("data-highlights", Temperaturehighlight);
+            //generating list for data highlists in the gauge for Soil moisture
+            var SoilMoisturehighlight = '[{"from": 0, "to":' + x.sm.min + ', "color": "rgba(200, 50, 50, .75)"},{"from": ' + x.sm.max + ', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';
+            console.log("highlight" + SoilMoisturehighlight);
+            document.getElementById("SoilMoistureGuage").setAttribute("data-highlights", SoilMoisturehighlight);
 
-    console.log("last key "+Object.keys(data)[Keylength]);
-    var lastkey= Object.keys(data)[Keylength]
-
-    console.log("latest humidity "+ data[lastkey].hum);
-    console.log("latest humidity "+ data[lastkey].temp);
-    console.log("latest humidity "+ data[lastkey].sm);
-    document.getElementById("humidityGuage").setAttribute("data-value",data[lastkey].hum);
-    document.getElementById("TemperatureGuage").setAttribute("data-value",data[lastkey].temp);
-    document.getElementById("SoilMoistureGuage").setAttribute("data-value",data[lastkey].sm);
-
-
-}
-//sets the hightls of the gauges
-function setHighLights(x){
-//generating list for data highlists in the gauge for humidity
-                    var Humidityhighlight='[{"from": 0, "to":'+x.hum.min +', "color": "rgba(200, 50, 50, .75)"},{"from": '+x.hum.max +', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';               
-                    console.log("highlight"+Humidityhighlight);
-                    document.getElementById("humidityGuage").setAttribute("data-highlights",Humidityhighlight);
-//generating list for data highlists in the gauge for temperaure
-                    var Temperaturehighlight='[{"from": 0, "to":'+x.temp.min +', "color": "rgba(200, 50, 50, .75)"},{"from": '+x.temp.max +', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';               
-                    console.log("highlight"+Temperaturehighlight);
-                    document.getElementById("TemperatureGuage").setAttribute("data-highlights",Temperaturehighlight);
-//generating list for data highlists in the gauge for Soil moisture
-                    var SoilMoisturehighlight='[{"from": 0, "to":'+x.sm.min +', "color": "rgba(200, 50, 50, .75)"},{"from": '+x.sm.max +', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';               
-                    console.log("highlight"+SoilMoisturehighlight);
-                    document.getElementById("SoilMoistureGuage").setAttribute("data-highlights",SoilMoisturehighlight);
-
-}
+        }
 
 
-//returns teh number of keys in teh json object
-//input: json
+        //returns teh number of keys in teh json object
+        //input: json
 
 
         function ajaxRequest(url, data) {
-           
+
 
         }
-</script>
-  <style> /* set the CSS */
+    </script>
+    <style>
+        /* set the CSS */
 
-.line {
-  fill: none;
-  stroke: steelblue;
-  stroke-width: 2px;
-}
-
-</style>
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 2px;
+        }
+    </style>
 
 
 

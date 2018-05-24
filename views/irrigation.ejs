@@ -1,10 +1,7 @@
 <html>
     <head>
         <% include ./partials/head.ejs %>
-            <link rel="stylesheet" type="text/css" href="../assets/css/irrigation/irrigation.css">
-            
-            
-            
+            <link rel="stylesheet" type="text/css" href="../assets/css/irrigation/irrigation.css">            
             <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head>
@@ -16,8 +13,7 @@
             <div class="SelectedMode" style="padding-top:20px">
 
                 <div class="dropdown">
-                    <label for="myDropdown"><strong> Irrigation Mode </strong> &nbsp; &nbsp;</label>
-
+                    <label for="myDropdown"><strong> Irrigation Mode </strong> &nbsp; &nbsp;</label> 
                     <select id="myDropdown">
 					<option value="1" <% if (irrigationmode == 'auto') { %>selected<% } %>  ><strong>Auto</strong></option>
                     <option value="2" <% if (irrigationmode == 'scheduled') { %>selected<% } %>><strong>Scheduled</strong></option>
