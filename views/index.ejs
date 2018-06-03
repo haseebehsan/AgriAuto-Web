@@ -2,17 +2,11 @@
 <html lang="en">
 
 <head>
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-  <script src="http://cdn.oesmith.co.uk/morris-0.4.1.min.js"></script>
-  <!--<% include ./partials/head.ejs %>-->
-
-
-
-        <!-- Plotly.js -->
-         <!-- <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>-->
-        <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
-        <script src="//cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.5/all/gauge.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script src="http://cdn.oesmith.co.uk/morris-0.4.1.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+    <script src="//cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.5/all/gauge.min.js"></script>
 
 </head>
 
@@ -34,41 +28,45 @@
     #line-chart,
     #bar-chart,
     #stacked,
-    #pie-chart{
+    #pie-chart {
         min-height: 250px;
-    }   
+    }
+
+    body {
+        background: white;
+    }
 </style>
 
 <body>
-    <link rel="stylesheet" type="text/css" href="../assets/login.css">
+    <link rel="stylesheet" type="text/css" href="../assets/index.css">
     <header>
         <% include ./partials/header %>
-    
+
     </header>
 
     <div class="">
-<div id="line-example">
+        <div id="line-example">
 
-</div>
-<script>
-  Morris.Line({
-  element: 'line-example',
-  data: [
-    { y: '2006', a: 100, b: 90 },
-    { y: '2007', a: 75,  b: 65 },
-    { y: '2008', a: 50,  b: 40 },
-    { y: '2009', a: 75,  b: 65 },
-    { y: '2010', a: 50,  b: 40 },
-    { y: '2011', a: 75,  b: 65 },
-    { y: '2012', a: 100, b: 90 }
-  ],
-  xkey: 'y',
-  ykeys: ['a', 'b'],
-  labels: ['Series A', 'Series B']
-});
-</script>
+        </div>
         <script>
-      
+            Morris.Line({
+                element: 'line-example',
+                data: [
+                    { y: '2006', a: 100, b: 90 },
+                    { y: '2007', a: 75, b: 65 },
+                    { y: '2008', a: 50, b: 40 },
+                    { y: '2009', a: 75, b: 65 },
+                    { y: '2010', a: 50, b: 40 },
+                    { y: '2011', a: 75, b: 65 },
+                    { y: '2012', a: 100, b: 90 }
+                ],
+                xkey: 'y',
+                ykeys: ['a', 'b'],
+                labels: ['Series A', 'Series B']
+            });
+        </script>
+        <script>
+
             var xAxis = [];
             var yAxis = [];
 
@@ -241,70 +239,31 @@
                             <canvas id="humidityGuage" name="humidityGuage" data-type="radial-gauge" data-width="250" data-height="250" data-units="%"
                                 data-major-ticks="0,20,40,60,80,100" data-minor-ticks="2" data-stroke-ticks="true" data-highlights='[
         {"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}
-    ]' data-value="10" title="Humidity (%)" data-color-plate="#fff" data-border-shadow-width="0" data-borders="true" data-needle-type="arrow"
+    ]' data-value="0" title="Humidity (%)" data-color-plate="#fff" data-border-shadow-width="0" data-borders="true" data-needle-type="arrow"
                                 data-needle-width="2" data-needle-circle-size="7" data-needle-circle-outer="  " data-needle-circle-inner="true"
                                 data-animation-duration="1500" data-animation-rule="linear"></canvas>
 
                         </td>
                         <td>
-                            <canvas style="padding-left=10px;" 
-                                id="TemperatureGuage" 
-                                name="TemperatureGuage" 
-                                Title="Average Temperature (°C) at the site"
-                                data-type="radial-gauge" 
-                                data-width="250" 
-                                data-height="250" 
-                                data-units="°C" 
-                                data-min-value="0"
-                                data-max-value="100" 
-                                data-major-ticks="0,20,40,60,80,100" 
-                                data-minor-ticks="2" 
-                                data-stroke-ticks="true"
+                            <canvas style="padding-left=10px;" id="TemperatureGuage" name="TemperatureGuage" Title="Average Temperature (°C) at the site"
+                                data-type="linear-gauge" data-width="100" data-height="250" data-units="°C" data-min-value="0"
+                                data-max-value="100" data-major-ticks="0,20,40,60,80,100" data-minor-ticks="2" data-stroke-ticks="true"
                                 data-highlights='[
                                     {"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}
-                                    ]' 
-                                data-value="0" 
-                                data-label="Temperaure in Centigrade" 
-                                data-color-plate="#fff" 
-                                data-border-shadow-width="0"
-                                data-borders="true"
-                                data-needle-type="arrow" 
-                                data-needle-width="2" 
-                                data-needle-circle-size="7" 
-                                data-needle-circle-outer="  "
-                                data-needle-circle-inner="true" 
-                                data-animation-duration="1500" 
+                                    ]' data-value="0" data-label="Temperaure in Centigrade" data-color-plate="#fff" data-border-shadow-width="0"
+                                data-borders="true" data-needle-type="arrow" data-needle-width="2" data-needle-circle-size="7"
+                                data-needle-circle-outer="  " data-needle-circle-inner="true" data-animation-duration="1500"
                                 data-animation-rule="linear"></canvas>
 
                         </td>
                         <td style="padding=100">
-                            <canvas 
-                                id="SoilMoistureGuage" 
-                                name="SoilMoistureGuage" 
-                                title="Volumetric Soil Moisture Content "
-                                padding-left="10px" 
-                                style="padding-left=10px;" 
-                                data-type="radial-gauge"
-                                data-width="250" 
-                                data-height="250" 
-                                data-units="%" 
-                                data-min-value="0" 
-                                data-max-value="100" 
-                                data-major-ticks="0,20,40,60,80,100"
-                                data-minor-ticks="2"
-                                data-stroke-ticks="true" 
-                                data-highlights='[{"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}]' 
-                                data-value="0" 
-                                data-color-plate="#fff" 
-                                data-border-shadow-width="0" 
-                                data-borders="true"
-                                data-needle-type="arrow" 
-                                data-needle-width="2" 
-                                data-needle-circle-size="7" 
-                                data-needle-circle-outer="  "
-                                data-needle-circle-inner="true" 
-                                data-animation-duration="1500"
-                                data-animation-rule="linear"></canvas>
+                            <canvas id="SoilMoistureGuage" name="SoilMoistureGuage" title="Volumetric Soil Moisture Content " padding-left="10px" style="padding-left=10px;"
+                                data-type="radial-gauge" data-width="250" data-height="250" data-units="%" data-min-value="0"
+                                data-max-value="100" data-major-ticks="0,20,40,60,80,100" data-minor-ticks="2" data-stroke-ticks="true"
+                                data-highlights='[{"from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)"}]' data-value="0"
+                                data-color-plate="#fff" data-border-shadow-width="0" data-borders="true" data-needle-type="arrow"
+                                data-needle-width="2" data-needle-circle-size="7" data-needle-circle-outer="  " data-needle-circle-inner="true"
+                                data-animation-duration="1500" data-animation-rule="linear"></canvas>
 
                         </td>
                         <tr>
@@ -345,7 +304,7 @@
 
         //     Plotly.newPlot('chartDiv', data);
         // }
-        
+
         //Input: farm id, site id 
         //Process: get teh latest sensor data by makign a POST request, recieve data, parse it into JSON
         //output: Invoke the setGuageValues(data) funtion and pass the recieved 
@@ -365,7 +324,7 @@
                     if (this.responseText) {
 
                         var x = JSON.parse(this.responseText);
-                        
+
                         //-----------------------------------
                         //Code written for debugging
                         var Keylength = count(x);
@@ -374,7 +333,7 @@
 
                         console.log("last key " + Object.keys(x)[Keylength]);
                         var lastkey = Object.keys(x)[Keylength]
-                        
+
                         console.log("last  key value " + x[lastkey].hum);
                         //------------------------------------
 
@@ -472,15 +431,18 @@
         //Process: sets the highlights of the linear-gauges
         function setHighLights(x) {
             //generating list for data highlists in the gauge for humidity
-            var Humidityhighlight = '[{"from": 0, "to":' + x.hum.min + ', "color": "rgba(200, 50, 50, .75)"},{"from": ' + x.hum.max + ', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';
+            var Humidityhighlight = '[{"from": 0, "to":' + x.hum.min + ', "color": "rgba(200, 50, 50, .75)"},{"from": ' + x.hum.min + ', "to": ' + x.hum.max + ', "color": "rgb(67,160,71) "},{"from": ' + x.hum.max + ', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';
             console.log("highlight" + Humidityhighlight);
             document.getElementById("humidityGuage").setAttribute("data-highlights", Humidityhighlight);
+
+
             //generating list for data highlights in the gauge for temperaure
-            var Temperaturehighlight = '[{"from": 0, "to":' + x.temp.min + ', "color": "rgba(200, 50, 50, .75)"},{"from": ' + x.temp.max + ', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';
+            var Temperaturehighlight = '[{"from": 0, "to":' + x.temp.min + ', "color": "rgba(200, 50, 50, .75)"},{"from": ' + x.temp.min + ', "to": ' + x.temp.max + ', "color": "rgb(67,160,71) "},{"from": ' + x.temp.max + ', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';
             console.log("highlight" + Temperaturehighlight);
             document.getElementById("TemperatureGuage").setAttribute("data-highlights", Temperaturehighlight);
+
             //generating list for data highlists in the gauge for Soil moisture
-            var SoilMoisturehighlight = '[{"from": 0, "to":' + x.sm.min + ', "color": "rgba(200, 50, 50, .75)"},{"from": ' + x.sm.max + ', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';
+            var SoilMoisturehighlight = '[{"from": 0, "to":' + x.sm.min + ', "color": "rgba(200, 50, 50, .75)"},{"from": ' + x.sm.min + ', "to": ' + x.sm.max + ', "color": "rgb(67,160,71) "},{"from": ' + x.sm.max + ', "to": 100, "color": "rgba(200, 50, 50, .75)"} ]';
             console.log("highlight" + SoilMoisturehighlight);
             document.getElementById("SoilMoistureGuage").setAttribute("data-highlights", SoilMoisturehighlight);
 

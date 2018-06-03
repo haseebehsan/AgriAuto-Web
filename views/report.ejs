@@ -19,7 +19,7 @@
 </header>
 
     <div class="" id="report-page" style="margin-left:25px; margin-right:25px;">
-<center class=""> <h3 font-color="white">Report</h3>  </center>
+<center class=""> <h3 >Report</h3>  </center>
      <hr>
       <center class=" form">
     
@@ -96,7 +96,7 @@ if(sdate && edate){
           // console.log(this.responseText);
           // console.log(this.responseText.length);
      
-  populateData(this.responseText);
+        opulateData(this.responseText);
       } else {
           // console.log("error in output: " + this.responseText);
 
@@ -127,9 +127,17 @@ $('#tbody1').append('<tr align=\"center\" ><td>Temperature</td><td>  '+x.mintemp
  $("#reportTable tbody tr").remove();
  var count=0;                 
  for(i in x.allData.alldata){
+  
+  var ts=x.allData.alldata[count].date;
+  var tsSlpit= ts.split(' ');
 
-  $('#tbody2').append('<tr align=\"center\" ><td>'+x.allData.alldata[count].date+'</td><td>  '+parseFloat(x.allData.alldata[count].sm).toFixed(2)+' %</td><td> '+parseFloat(x.allData.alldata[count].hum).toFixed(2)+' %</td>  <td>  '+ parseFloat(x.allData.alldata[count].temp).toFixed(2)+' °C</td>     </tr>');
+  var d = new Date(ts);
+  var s= d.toString("hh:mm tt").split('G')[0];
+  
+ 
+  $('#tbody2').append('<tr align=\"center\" ><td>'+s+'</td><td>  '+parseFloat(x.allData.alldata[count].sm).toFixed(2)+' %</td><td> '+parseFloat(x.allData.alldata[count].hum).toFixed(2)+' %</td>  <td>  '+ parseFloat(x.allData.alldata[count].temp).toFixed(2)+' °C</td>     </tr>');
   count++;
+ 
  }
  
 
@@ -240,11 +248,11 @@ $('#bsalert').on('close.bs.alert', toggleAlert);
     color: #EF3B3A;
   }
   body {
-    background: #76b852; /* fallback for old browsers */
-    background: -webkit-linear-gradient(right, #76b852, #8DC26F);
-    background: -moz-linear-gradient(right, #76b852, #8DC26F);
-    background: -o-linear-gradient(right, #76b852, #8DC26F);
-    background: linear-gradient(to left, #76b852, #8DC26F);
+    background: #E9EBED; /* fallback for old browsers */
+    // background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+    // background: -moz-linear-gradient(right, #76b852, #8DC26F);
+    // background: -o-linear-gradient(right, #76b852, #8DC26F);
+    // background: linear-gradient(to left, #76b852, #8DC26F);
     font-family: "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;      

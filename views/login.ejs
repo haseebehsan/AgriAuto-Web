@@ -74,12 +74,16 @@ $('#bsalert').on('close.bs.alert', toggleAlert);
  
    
     <div class="form">
+ <%if(err!=""){ %>
  <div class="alert alert-danger fade out" id="bsalert">
   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  
   <strong>Error:</strong><span id="errorText"><%= err %></span> 
 </div>
-  
-
+<% } %>
+  <center>
+  <img height="100px" width="100px" src="../assets/favicon.png" style="padding-top=0px; padding-bottom=10px"> </img>
+      </center>
       <form class="register-form" method="POST" action="/signup">
      
       <input name="firstName" type="text" placeholder="First Name" required="true" title="first name" autocomplete/>

@@ -111,7 +111,7 @@ app.get('/', function (req, res) {
             sid: req.session.siteId
         });
     } else {
-        res.render('login', { err: "Please Login" });
+        res.render('login', { err: "" });
     }
 });
 
