@@ -12,7 +12,8 @@
 #bar-chart,
 #stacked,
 #pie-chart{
-  min-height: 250px;
+  min-height: 250px;,
+  max-height:250px;
 }
   </style>
 </head>
@@ -23,29 +24,74 @@
 
 
 <div class"row">
+
     <div class="col-sm-6 text-center">
+    Temperature
       <label class="label label-success">Area Chart</label>
-      <div id="area-chart" ></div>
+      <div id="area-chart-temp" ></div>
     </div>
     <div class="col-sm-6 text-center">
        <label class="label label-success">Line Chart</label>
-      <div id="line-chart"></div>
+      <div id="line-chart-temp"></div>
     </div>
     <div  class="col-sm-6 text-center">
        <label class="label label-success">Bar Chart</label>
-      <div id="bar-chart" ></div>
+      <div id="bar-chart-temp" ></div>
     </div>
     <div class="col-sm-6 text-center">
        <label class="label label-success">Bar stacked</label>
-      <div id="stacked" ></div>
+      <div id="stacked-temp" ></div>
     </div>
-    <div class="col-sm-6 col-sm-offset-3 text-center">
-       <label class="label label-success">Pie Chart</label>
-      <div id="pie-chart" ></div>
-    </div>
+   
     
   </div>
 
+
+
+<div class"row">
+    <div class="col-sm-6 text-center">
+    Soil Moisture
+      <label class="label label-success">Area Chart</label>
+      <div id="area-chart-sm" ></div>
+    </div>
+    <div class="col-sm-6 text-center">
+       <label class="label label-success">Line Chart</label>
+      <div id="line-chart-sm"></div>
+    </div>
+    <div  class="col-sm-6 text-center">
+       <label class="label label-success">Bar Chart</label>
+      <div id="bar-chart-sm" ></div>
+    </div>
+    <div class="col-sm-6 text-center">
+       <label class="label label-success">Bar stacked</label>
+      <div id="stacked-sm" ></div>
+    </div>
+   
+    
+  </div>
+
+  
+
+<div class"row">
+    <div class="col-sm-6 text-center">
+      <label class="label label-success">Area Chart</label>
+      <div id="area-chart-hum" ></div>
+    </div>
+    <div class="col-sm-6 text-center">
+       <label class="label label-success">Line Chart</label>
+      <div id="line-chart-hum"></div>
+    </div>
+    <div  class="col-sm-6 text-center">
+       <label class="label label-success">Bar Chart</label>
+      <div id="bar-chart-hum" ></div>
+    </div>
+    <div class="col-sm-6 text-center">
+       <label class="label label-success">Bar stacked</label>
+      <div id="stacked-hum" ></div>
+    </div>
+   
+    
+  </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -58,15 +104,19 @@
 
 //--------------------------------------------------------------------------------------------
 
- var xAxis = [];
+            var xAxis = [];
             var yAxis = [];
 
-            GetChartData();
-            function GetChartData() {
+            GetChartData('sm');
+            GetChartData('hum');
+            GetChartData('temp');
+
+            function GetChartData(SENSOR) {
 
                 var url = "https://agripronode.herokuapp.com/api/webGetSensorData";
                 //var reqData="farmid="+<%=fid%> +"&siteid="+<%=sid%>+"&sensor=sm&startdate=";
-                var data = "farmid=" +<%=fid%> +"&siteid=" +<%=sid %> +"&sensor=sm&startdate=2018-04-25&enddate=2018-05-20";
+              console.log(SENSOR);
+                var data = "farmid=" +<%=fid%> +"&siteid=" +<%=sid %> +"&sensor="+SENSOR+"&startdate=2018-04-25&enddate=2018-06-07";
 
 
 
@@ -80,40 +130,20 @@
                         if (this.responseText) {
                             var recievedData = JSON.parse(this.responseText);
                             console.log(this.responseText);
-                            // for (i in recievedData.sensordata) {
-                            //     var d = recievedData.sensordata[i].date;
-                            //     xAxis.push(JSON.stringify(d + ':00'));
-
-                            //     var v = parseFloat(recievedData.sensordata[i].value);
-                            //     yAxis.push(v.toFixed(2));
-
-                            //     // console.log(xAxis);
-                            //     //    console.log("X Axis  "+xAxis);
-                            // }
-                            // var xArray = Object.values(recievedData.sensordata[1]);
-
-                            // console.log("array " + typeof (xArray));
-                            // var myArray = xArray[0];
-                            // console.log("Myarray " + typeof (myArray));
-                            // yAxis.pop();
-                            // xAxis.pop();
-
-
-                            // console.log("X Axis  " + xAxis);
-                            // console.log("Y Axis  " + yAxis);
-                            
-                            // console.log("plot " + xAxis);
-                         
-                            // console.log(Object.values(xAxis))
-                            // console.log(typeof (yAxis))
-                            // var cdata={y:''};
-
-                            // for(i in xAxis){
-
-                            // }
-
-                          draw(recievedData.sensordata);
-                          console.log("Trace 1: "+ trace1)
+                          
+if(SENSOR==='sm'){
+  drawSM(recievedData.sensordata);
+}
+else if(SENSOR==='hum')
+{
+  drawHUM(recievedData.sensordata);
+}    else{
+      
+ drawTEMP(recievedData.sensordata);
+}                    
+                        
+                          // drawTEMP(recievedData.sensordata);
+                          // console.log("Trace 1: "+ trace1)
                         }
 
                     }
@@ -129,7 +159,7 @@
 
 
 
-function draw(sensorData){
+function drawSM(sensorData){
 
 
 var data = sensorData,
@@ -146,16 +176,68 @@ var data = sensorData,
       pointStrokeColors: ['black'],
       lineColors:['blue','red']
   };
-config.element = 'area-chart';
+config.element = 'area-chart-sm';
 Morris.Area(config);
-config.element = 'line-chart';
+config.element = 'line-chart-sm';
 Morris.Line(config);
-config.element = 'bar-chart';
+config.element = 'bar-chart-sm';
 Morris.Bar(config);
-config.element = 'stacked';
-config.stacked = true;
-Morris.Bar(config);
+
 }
+
+
+function drawHUM(sensorData){
+
+
+var data = sensorData,
+    config = {
+      data: data,
+      xkey: 'date',
+      ykeys: ['value'],
+      labels: ['Value'],
+      fillOpacity: 0.6,
+      hideHover: 'auto',
+      behaveLikeLine: false,
+      resize: true,
+      pointFillColors:['#ffffff'],
+      pointStrokeColors: ['black'],
+      lineColors:['cyan','red']
+  };
+config.element = 'area-chart-hum';
+Morris.Area(config);
+config.element = 'line-chart-hum';
+Morris.Line(config);
+config.element = 'bar-chart-hum';
+Morris.Bar(config);
+
+}
+
+function drawTEMP(sensorData){
+
+
+var data = sensorData,
+    config = {
+      data: data,
+      xkey: 'date',
+      ykeys: ['value'],
+      labels: ['Value'],
+      fillOpacity: 0.6,
+      hideHover: 'auto',
+      behaveLikeLine: false,
+      resize: true,
+      pointFillColors:['#ffffff'],
+      pointStrokeColors: ['black'],
+      lineColors:['red','green']
+  };
+config.element = 'area-chart-temp';
+Morris.Area(config);
+config.element = 'line-chart-temp';
+Morris.Line(config);
+config.element = 'bar-chart-temp';
+Morris.Bar(config);
+
+}
+
   </script>
   <footer>
     <% include ./partials/footer %>

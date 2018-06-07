@@ -2,7 +2,6 @@
 <html>
 <head>
   <% include ./partials/head.ejs %> 
- 
 </head>
 
 <body>
@@ -11,10 +10,11 @@
 <% include ./partials/header.ejs %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+<link rel="stylesheet" href="D:\workspace\AgriAuto-Web\assets\css\weather-icons.css">
 <!-- bootstrap -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
 
 </header>
 
@@ -135,7 +135,7 @@ $('#tbody1').append('<tr align=\"center\" ><td>Temperature</td><td>  '+x.mintemp
   var s= d.toString("hh:mm tt").split('G')[0];
   
  
-  $('#tbody2').append('<tr align=\"center\" ><td>'+s+'</td><td>  '+parseFloat(x.allData.alldata[count].sm).toFixed(2)+' %</td><td> '+parseFloat(x.allData.alldata[count].hum).toFixed(2)+' %</td>  <td>  '+ parseFloat(x.allData.alldata[count].temp).toFixed(2)+' °C</td>     </tr>');
+  $('#tbody2').append('<tr align=\"center\" ><td>'+s+'</td><td> <i class="wi wi-thermometer"></i> '+parseFloat(x.allData.alldata[count].sm).toFixed(2)+' %</td><td> '+parseFloat(x.allData.alldata[count].hum).toFixed(2)+' %</td>  <td> <span class="glyphicon glyphicon-temp"></span>    '+ parseFloat(x.allData.alldata[count].temp).toFixed(2)+' °C </td>     </tr>');
   count++;
  
  }
@@ -212,7 +212,8 @@ $('#bsalert').on('close.bs.alert', toggleAlert);
   }
   
   h3{
-    color:white;
+    color:black;
+    
   }
   .container {
     position: relative;
