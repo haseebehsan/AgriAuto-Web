@@ -431,18 +431,18 @@ h4{
         //Process: sets the highlights of the linear-gauges
         function setHighLights(x) {
             //generating list for data highlists in the gauge for humidity
-            var Humidityhighlight = '[{"from": 0, "to":' + x.hum.min + ', "color": "rgb(244, 65, 65)"},{"from": ' + x.hum.min + ', "to": ' + x.hum.max + ', "color": "rgb(82, 232, 55) "},{"from": ' + x.hum.max + ', "to": 100, "color": "rgb(244, 65, 65)"} ]';
+            var Humidityhighlight = '[{"from": 0, "to":' + x.hum.min + ', "color": "rgb(244, 65, 65)"},{"from": ' + x.hum.min + ', "to": ' + x.hum.max + ', "color": "rgb(58, 196, 86)"},{"from": ' + x.hum.max + ', "to": 100, "color": "rgb(244, 65, 65)"} ]';
             console.log("highlight" + Humidityhighlight);
             document.getElementById("humidityGuage").setAttribute("data-highlights", Humidityhighlight);
 
 
             //generating list for data highlights in the gauge for temperaure
-            var Temperaturehighlight = '[{"from": 0, "to":' + x.temp.min + ', "color": "rgb(244, 65, 65)"},{"from": ' + x.temp.min + ', "to": ' + x.temp.max + ', "color": "rgb(82, 232, 55)"},{"from": ' + x.temp.max + ', "to": 100, "color": "rgb(244, 65, 65)"} ]';
+            var Temperaturehighlight = '[{"from": 0, "to":' + x.temp.min + ', "color": "rgb(244, 65, 65)"},{"from": ' + x.temp.min + ', "to": ' + x.temp.max + ', "color": "rgb(58, 196, 86)"},{"from": ' + x.temp.max + ', "to": 100, "color": "rgb(244, 65, 65)"} ]';
             console.log("highlight" + Temperaturehighlight);
             document.getElementById("TemperatureGuage").setAttribute("data-highlights", Temperaturehighlight);
 
             //generating list for data highlists in the gauge for Soil moisture
-            var SoilMoisturehighlight = '[{"from": 0, "to":' + x.sm.min + ', "color": "rgb(244, 65, 65)"},{"from": ' + x.sm.min + ', "to": ' + x.sm.max + ', "color": "rgb(82, 232, 55) "},{"from": ' + x.sm.max + ', "to": 100, "color": "rgb(244, 65, 65)"} ]';
+            var SoilMoisturehighlight = '[{"from": 0, "to":' + x.sm.min + ', "color": "rgb(244, 65, 65)"},{"from": ' + x.sm.min + ', "to": ' + x.sm.max + ', "color": "rgb(58, 196, 86) "},{"from": ' + x.sm.max + ', "to": 100, "color": "rgb(244, 65, 65)"} ]';
             console.log("highlight" + SoilMoisturehighlight);
             document.getElementById("SoilMoistureGuage").setAttribute("data-highlights", SoilMoisturehighlight);
 
