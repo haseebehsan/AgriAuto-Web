@@ -292,7 +292,7 @@ app.post('/signup', upload.array(), function (req, res) {
                 )
             });
         console.log(req.body.u_email);
-        res.send("Signed up \n" + req.body.u_email + " -- " + req.body.password + "   ");
+        res.render('login');
 
     } else {
         res.render('signup');
