@@ -1,7 +1,7 @@
 const express = require('express');
 const firebase = require("firebase");
 const bodyParser = require('body-parser');
-const client = require('twilio')('ACb0ef32d95a760c7eeb3b21213a515f00', '31d20f11a68d320a6ca4a2085c411493');
+const client = require('twilio')('', '');
 //const flash = require('connect-flash');
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -37,10 +37,10 @@ app.use(function (req, res, next) {
 
 //Firebase Config
 var config = {
-    apiKey: "AIzaSyACMgec6EghmqZ5eRZGKablbh5LXvGz4Cw",
-    authDomain: "narc-agriauto.firebaseapp.com",
-    databaseURL: "https://narc-agriauto.firebaseio.com/",
-    storageBucket: "narc-agriauto.appspot.com",
+    apiKey: "",
+    authDomain: "",
+    databaseURL: "",
+    storageBucket: "",
 };
 firebase.initializeApp(config);
 
